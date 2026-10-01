@@ -29,6 +29,23 @@
 - [x] **Step 14.1: Application Data-Lineage & Statistics Discrepancy Audit**
 - [x] **Step 15: Research-Grade UI/UX Polish & Geospatial Visualization**
 - [x] **Step 16: Final End-to-End System Validation & Release Readiness**
+- [x] **Step 17: Initial GitHub Version Control & Repository Synchronization**
+
+---
+
+## Version Control
+
+**Repository:** [https://github.com/Shishir-1705/Major_Project](https://github.com/Shishir-1705/Major_Project)
+
+### Development & Synchronization Workflow
+1. Make code or feature change
+2. Run validation test suite (`pytest backend/tests/test_api.py`, `npx tsc --noEmit`, `npm run build`)
+3. Review staged changes (`git status`, `git diff`)
+4. Verify security: ensure no `.env` files, API keys, or secrets are staged
+5. Create a descriptive commit (`git commit -m "feat: ..."` or `fix: ...`)
+6. Push to primary branch (`git push origin main`)
+
+> **Security Note:** Local environment configuration files (e.g. `frontend/.env`) containing API keys are strictly excluded from version control via `.gitignore`.
 
 ---
 
