@@ -1,0 +1,8 @@
+figure_id,figure_name,audit_status,root_cause_issue,corrective_rendering_action
+fig10_1,Multi-Temporal LST Summary,NEEDS REGENERATION,Plotted synthetic concentric distance formula rather than real satellite LST rasters,Extract actual Landsat L2SP Surface Temperature rasters from GEE for all dates
+fig10_2,P20/P80 Percentile Thresholds,PASS,Bar chart correctly renders date-level LST threshold values,Retain current plotting implementation
+fig10_3,Continuous Persistence Map,NEEDS REGENERATION,Plotted concentric spatial score rather than real multi-temporal persistence,Derive continuous persistence directly from real multi-temporal Landsat observation stack
+fig10_4,Categorical Persistence Map,FAIL / NEEDS REGENERATION,NoData value 255 overflowed BoundaryNorm and rendered background as Category 5 dark blue (#253494),Apply np.ma.masked_equal(grid 255) and set cmap.set_bad(color='none' alpha=0) for transparent background
+fig10_5,Classified Observations Count Map,NEEDS REGENERATION,Background non-built pixels rendered with lowest viridis color instead of NoData mask,Mask non-built background (value 255) to transparent/light gray
+fig10_6,RF Spatial Agreement Chart,PASS,Line chart correctly displays full-domain agreement metrics across 8 dates,Retain current plotting implementation
+fig10_7,Getis-Ord Gi* Cluster Map,NEEDS REGENERATION,Background non-built pixels rendered with default color instead of transparent NoData mask,Mask non-built background (value 255) to transparent/light gray

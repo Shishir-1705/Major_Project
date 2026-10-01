@@ -1,0 +1,4 @@
+dataset,orig_rows,rec_rows,row_count_match,orig_c0,rec_c0,orig_c1,rec_c1,class_balance_match,schema_match,orig_nulls,rec_nulls,orig_duplicates,rec_duplicates,exact_equal
+Step 7 Features,1000,1000,True,500,500,500,500,True,True,0,0,0,0,True
+Step 8.2 Train,805,805,True,402,402,403,403,True,True,0,0,0,0,True
+Step 8.2 Test,195,195,True,98,98,97,97,True,True,0,0,0,0,True

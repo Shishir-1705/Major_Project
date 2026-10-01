@@ -1,0 +1,13 @@
+mission,system_index,acquisition_utc,wrs_path,wrs_row,cloud_cover_pct,processing_level,st_b10_available,usable_valid_aoi_pct,selection_status,selection_rationale
+Landsat 9,LC09_144051_20230401,2023-04-01 05:10:49 UTC,144,51,0.05,L2SP,Yes,97.2,SELECTED,Baseline Representative Scene; 0% cloud cover; full ST_B10 availability.
+Landsat 8,LC08_144051_20230409,2023-04-09 05:16:50 UTC,144,51,1.82,L2SP,Yes,96.1,SELECTED,Pre-monsoon clear-sky acquisition; <2% cloud cover; full ST_B10 availability.
+Landsat 9,LC09_144051_20230417,2023-04-17 05:10:45 UTC,144,51,1.14,L2SP,Yes,96.8,SELECTED,Pre-monsoon clear-sky acquisition; <2% cloud cover; full ST_B10 availability.
+Landsat 8,LC08_144051_20230425,2023-04-25 05:16:45 UTC,144,51,4.38,L2SP,Yes,94.5,SELECTED,Pre-monsoon clear-sky acquisition; <5% cloud cover; full ST_B10 availability.
+Landsat 9,LC09_144051_20230503,2023-05-03 05:10:40 UTC,144,51,0.62,L2SP,Yes,97.8,SELECTED,Peak summer clear-sky acquisition; <1% cloud cover; full ST_B10 availability.
+Landsat 8,LC08_144051_20230511,2023-05-11 05:16:38 UTC,144,51,2.91,L2SP,Yes,95.4,SELECTED,Peak summer clear-sky acquisition; <3% cloud cover; full ST_B10 availability.
+Landsat 9,LC09_144051_20230519,2023-05-19 05:10:35 UTC,144,51,4.15,L2SP,Yes,94.2,SELECTED,Peak summer acquisition; <5% cloud cover; full ST_B10 availability.
+Landsat 8,LC08_144051_20230527,2023-05-27 05:16:33 UTC,144,51,6.84,L2SP,Yes,91.5,SELECTED,Late pre-monsoon acquisition; <7% cloud cover; full ST_B10 availability.
+Landsat 9,LC09_144051_20230604,2023-06-04 05:10:31 UTC,144,51,48.3,L2SP,Yes,46.2,EXCLUDED,Heavy pre-monsoon cloud cover (>48%); usable AOI coverage <50%.
+Landsat 8,LC08_144051_20230612,2023-06-12 05:16:29 UTC,144,51,62.1,L2SP,Yes,35.8,EXCLUDED,Monsoon cloud contamination (>62%); usable AOI coverage <40%.
+Landsat 9,LC09_144051_20230620,2023-06-20 05:10:28 UTC,144,51,71.4,L2SP,Yes,26.5,EXCLUDED,Severe monsoon cloud contamination (>71%); usable AOI coverage <30%.
+Landsat 8,LC08_144051_20230628,2023-06-28 05:16:26 UTC,144,51,85.9,L2SP,Yes,12.4,EXCLUDED,Severe monsoon cloud contamination (>85%); usable AOI coverage <15%.

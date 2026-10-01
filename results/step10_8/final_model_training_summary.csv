@@ -1,0 +1,2 @@
+model,training_samples,spatial_blocks,class_0_count,class_1_count,predictor_count,predictors,oob_score,random_state
+RandomForestClassifier (Final Step 10.8),805,30,402,403,2,NDVI+NDBI,0.859627,42

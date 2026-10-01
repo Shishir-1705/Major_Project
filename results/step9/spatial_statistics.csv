@@ -1,0 +1,14 @@
+metric,value
+Total AOI Geographic Area (km²),569.6334
+Total AOI Pixels,632926.0
+Valid Mapped Built-Up Pixels,151159.0
+Valid Mapped Built-Up Area (km²),136.0431
+Thermal Hotspot Pixels (Class 1),78378.0
+Thermal Hotspot Area (km²),70.5402
+Cooler Built-Up Pixels (Class 0),72781.0
+Cooler Built-Up Area (km²),65.5029
+Hotspot Percentage of Built-Up Area (%),51.85
+Prediction Probability Min (Valid Pixels),0.005228
+Prediction Probability Max (Valid Pixels),0.985759
+Prediction Probability Mean (Valid Pixels),0.513831
+Prediction Probability Std (Valid Pixels),0.375726

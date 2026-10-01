@@ -1,0 +1,10 @@
+check,status,evidence,notes
+C1.1: Model File Hash Verification,PASS,SHA-256 match: 4cb736e53c66c78d...,
+C2.1: Model Hyperparameters & Feature Order Audit,PASS,"100 estimators, max_depth=5, random_state=42, features=['NDVI', 'NDBI']",
+C3.1: Dataset Sample & Class Distribution Audit,PASS,"Train: 805 (30 blocks, 402/403). Test: 195 (10 blocks, 98/97). No missing values.",
+C4.1: Data Leakage & Predictor Scoping Audit,PASS,LST excluded from predictors. Coordinates excluded from predictors. Fixed 0.50 threshold used.,
+C5.1: Step 10.9 Final Performance Record Audit,PASS,"Acc=0.8667, F1=0.8660, Kappa=0.7333, ROC-AUC=0.9337, PR-AUC=0.9367, Brier=0.1059, CM=[85,13,13,84]",
+C6.1: ML Results Consistency & Context Separation Audit,PASS,"OOB Score (85.96%), Spatial CV (F1=84.99%), Test (F1=86.60%) explicitly differentiated.",
+C7.1: Scientific Terminology Audit,PASS,"No forbidden terms ('ground truth', 'field truth', 'official heatwave labels') found in ML reports.",
+C8.1: Synthetic-Data & Data-Lineage Audit,PASS,Real satellite data pipeline validated (Stage 1 GEE verified). Invalid historical synthetic experiment isolated and excluded.,
+C9.1: Final Artifact Verification Audit,PASS,"All 14 required model, result, figure, and report artifacts present and verified.",

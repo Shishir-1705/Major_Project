@@ -1,0 +1,35 @@
+{
+  "decision": "BASELINE RETAINED",
+  "selected_configuration": "A_BASELINE",
+  "rationale": "The baseline configuration (A_BASELINE) exhibited strong spatial cross-validation performance (Mean F1 = 0.858705, Mean ROC-AUC = 0.919405). Alternative candidate configurations showed marginal variations (maximum F1 delta = +0.005445, maximum ROC-AUC delta = +0.003999), which are within 1 standard deviation of cross-validation fold variance. Applying Occam's razor, the baseline configuration is retained without unnecessary complexity.",
+  "baseline_metrics": {
+    "mean_f1": 0.8587052278692356,
+    "std_f1": 0.03387102117448082,
+    "mean_roc_auc": 0.9194046401082151,
+    "std_roc_auc": 0.02427635367706086,
+    "mean_accuracy": 0.8584884211333487,
+    "std_accuracy": 0.03438013634978225
+  },
+  "selected_metrics": {
+    "mean_f1": 0.8587052278692356,
+    "std_f1": 0.03387102117448082,
+    "mean_roc_auc": 0.9194046401082151,
+    "std_roc_auc": 0.02427635367706086,
+    "mean_accuracy": 0.8584884211333487,
+    "std_accuracy": 0.03438013634978225
+  },
+  "hyperparameters": {
+    "n_estimators": 100,
+    "max_depth": 5,
+    "min_samples_split": 10,
+    "min_samples_leaf": 5,
+    "desc": "Baseline Configuration"
+  },
+  "reproducibility": {
+    "python_version": "3.12.10",
+    "scikit_learn_version": "1.9.0",
+    "n_splits": 5,
+    "n_spatial_blocks": 30,
+    "random_state": 42
+  }
+}

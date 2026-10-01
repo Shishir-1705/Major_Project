@@ -1,0 +1,4 @@
+cluster_type,significance_criteria,pixel_count,area_km2,pct_domain
+Significant Hotspot Cluster,Gi* > 0 and pFDR < 0.05,28140,25.3260,19.65
+Significant Coldspot Cluster,Gi* < 0 and pFDR < 0.05,30950,27.8550,21.61
+Not Significant,pFDR >= 0.05,84120,75.7080,58.74

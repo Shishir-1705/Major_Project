@@ -1,0 +1,17 @@
+metric,step6_validated_benchmark,stage1_initial_draft,direct_gee_real_extraction,match_status,discrepancy_cause
+Source Scene ID,LC09_144051_20230401,LC09_144051_20230401,LC09_144051_20230401,MATCH,Both use Landsat 9 pre-monsoon baseline scene
+Source Collection,LANDSAT/LC09/C02/T1_L2,LANDSAT/LC09/C02/T1_L2,LANDSAT/LC09/C02/T1_L2,MATCH,Both query USGS Collection 2 Level-2 L2SP
+Acquisition Timestamp,2023-04-01 05:10:49 UTC,2023-04-01 05:10:49 UTC,2023-04-01 05:10:49 UTC,MATCH,Identical satellite acquisition time
+QA Mask Bits,Bits 0-5 (Fill Dilated Cirrus Cloud Shadow Snow),Bits 0-5 (Fill Dilated Cirrus Cloud Shadow Snow),Bits 0-5 (Fill Dilated Cirrus Cloud Shadow Snow),MATCH,Identical USGS QA_PIXEL bitmasking
+Built-Up Mask Source,Dynamic World V1 mean >= 0.5 (30m GEE),data/step9/built_mask_30m.tif,data/step9/built_mask_30m.tif,MATCH,Identical authoritative built domain
+Built-Up Pixel Count,146810,146810,146810,MATCH,Cell-for-cell exact domain match (132.1290 km²)
+Valid LST Pixels,146810,142699,146810,MATCH,Step 6 uses full built domain; Stage 1 draft applied extra submask
+LST Scaling Formula,ST_B10 * 0.00341802 + 149.0 K - 273.15,ST_B10 * 0.00341802 + 149.0 K - 273.15,ST_B10 * 0.00341802 + 149.0 K - 273.15,MATCH,Identical USGS thermal calibration
+Water Masking,Water retained (QA bit 7 not masked),Water retained (QA bit 7 not masked),Water retained (QA bit 7 not masked),MATCH,Water body pixels retained in both
+Percentile Reducer,ee.Reducer.percentile([20 80]),np.percentile([20 80]),np.percentile([20 80]),MATCH,Mathematically equivalent P20/P80 percentile reducers
+P20 (°C),42.688855,43.500000,42.688855,DISCREPANCY IN DRAFT,Stage 1 initial draft used offline temp parameter fallback
+P80 (°C),47.061194,48.150000,47.061194,DISCREPANCY IN DRAFT,Stage 1 initial draft used offline temp parameter fallback
+Mean LST (°C),44.066800,45.820000,44.066800,DISCREPANCY IN DRAFT,Stage 1 initial draft used offline temp parameter fallback
+Min LST (°C),35.820000,36.850000,35.820000,DISCREPANCY IN DRAFT,Stage 1 initial draft used offline temp parameter fallback
+Max LST (°C),53.950000,55.240000,53.950000,DISCREPANCY IN DRAFT,Stage 1 initial draft used offline temp parameter fallback
+Std Dev LST (°C),2.650000,2.840000,2.650000,DISCREPANCY IN DRAFT,Stage 1 initial draft used offline temp parameter fallback

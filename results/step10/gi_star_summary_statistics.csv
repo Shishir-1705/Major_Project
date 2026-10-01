@@ -1,0 +1,17 @@
+metric,value
+Total Spatial Nodes Analyzed,104063
+Spatial Contiguity Type,8-neighbor Queen Contiguity
+Multiple Testing Correction Method,Benjamini-Hochberg FDR (p < 0.05)
+Gi* Z-Score Min,-1.0691
+Gi* Z-Score Max,9.0228
+Gi* Z-Score Mean,0.1679
+Gi* Z-Score Std Dev,2.8306
+Statistically Significant Hotspot Cluster Pixels (Class 1),9840
+Statistically Significant Hotspot Cluster Area (km²),8.856
+Hotspot Cluster Percentage of Valid Persistence Domain (%),9.46
+Statistically Significant Coldspot Cluster Pixels (Class 2),0
+Statistically Significant Coldspot Cluster Area (km²),0.0
+Coldspot Cluster Percentage of Valid Persistence Domain (%),0.0
+Non-Significant Spatial Pixels (Class 0),94223
+Non-Significant Spatial Area (km²),84.8007
+Non-Significant Percentage of Valid Persistence Domain (%),90.54

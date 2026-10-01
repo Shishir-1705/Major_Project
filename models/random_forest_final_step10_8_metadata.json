@@ -1,0 +1,39 @@
+{
+    "project_title": "Machine Learning-Based Urban Heat Hotspot Detection Using LST, NDVI and NDBI from Landsat Imagery",
+    "model_name": "random_forest_final_step10_8",
+    "algorithm": "RandomForestClassifier",
+    "predictor_columns": [
+        "NDVI",
+        "NDBI"
+    ],
+    "target_column": "hotspot_label",
+    "training_sample_count": 805,
+    "class_distribution": {
+        "0": 402,
+        "1": 403
+    },
+    "spatial_block_count": 30,
+    "hyperparameters": {
+        "n_estimators": 100,
+        "criterion": "gini",
+        "max_depth": 5,
+        "min_samples_split": 10,
+        "min_samples_leaf": 5,
+        "max_features": "sqrt",
+        "bootstrap": true,
+        "oob_score": true,
+        "random_state": 42,
+        "class_weight": null,
+        "n_jobs": -1
+    },
+    "random_state": 42,
+    "oob_score": 0.8596273291925466,
+    "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "sklearn_version": "1.9.0",
+    "training_timestamp": "2026-09-12T14:04:59.379667+00:00",
+    "feature_order": [
+        "NDVI",
+        "NDBI"
+    ],
+    "model_file_sha256": "4cb736e53c66c78dbbcbc1cf7ca3ac965af01f1c7fae829502649b018e127280"
+}

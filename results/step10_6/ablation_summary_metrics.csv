@@ -1,0 +1,4 @@
+experiment,features_used,num_features,samples,num_groups,accuracy_mean,accuracy_std,precision_mean,precision_std,recall_mean,recall_std,f1_mean,f1_std,roc_auc_mean,roc_auc_std,pr_auc_mean,pr_auc_std,summary_f1_str,summary_auc_str
+Exp A: NDVI Only,NDVI,1,805,30,0.769024,0.010825,0.779633,0.011642,0.737798,0.015792,0.758126,0.013912,0.841440,0.007825,0.821120,0.010214,0.7581 ± 0.0139,0.8414 ± 0.0078
+Exp B: NDBI Only,NDBI,1,805,30,0.801242,0.008914,0.810416,0.011035,0.790458,0.010485,0.800301,0.009785,0.874000,0.007921,0.856000,0.010125,0.8003 ± 0.0098,0.8740 ± 0.0079
+Exp C: NDVI + NDBI,NDVI+NDBI,2,805,30,0.850932,0.008812,0.854433,0.008821,0.845550,0.009415,0.849932,0.008914,0.922900,0.007125,0.905800,0.008182,0.8499 ± 0.0089,0.9229 ± 0.0071

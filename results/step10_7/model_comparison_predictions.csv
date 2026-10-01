@@ -1,0 +1,21 @@
+model,fold,sample_index,spatial_block,NDVI,NDBI,y_true,y_pred,y_prob
+Random Forest,1,0,B_train_01,0.429671,-0.187993,0,0,0.124500
+Random Forest,1,1,B_train_01,0.366174,-0.094983,0,0,0.215000
+Random Forest,1,2,B_train_01,0.444769,-0.131026,0,0,0.145000
+Random Forest,1,3,B_train_01,0.532303,-0.024860,0,0,0.098000
+Random Forest,1,4,B_train_01,0.356585,-0.122642,0,0,0.185000
+Logistic Regression,1,0,B_train_01,0.429671,-0.187993,0,0,0.142000
+Logistic Regression,1,1,B_train_01,0.366174,-0.094983,0,0,0.231000
+Logistic Regression,1,2,B_train_01,0.444769,-0.131026,0,0,0.165000
+Logistic Regression,1,3,B_train_01,0.532303,-0.024860,0,0,0.112000
+Logistic Regression,1,4,B_train_01,0.356585,-0.122642,0,0,0.201000
+Support Vector Machine,1,0,B_train_01,0.429671,-0.187993,0,0,0.118000
+Support Vector Machine,1,1,B_train_01,0.366174,-0.094983,0,0,0.208000
+Support Vector Machine,1,2,B_train_01,0.444769,-0.131026,0,0,0.139000
+Support Vector Machine,1,3,B_train_01,0.532303,-0.024860,0,0,0.092000
+Support Vector Machine,1,4,B_train_01,0.356585,-0.122642,0,0,0.178000
+Gradient Boosting,1,0,B_train_01,0.429671,-0.187993,0,0,0.126000
+Gradient Boosting,1,1,B_train_01,0.366174,-0.094983,0,0,0.218000
+Gradient Boosting,1,2,B_train_01,0.444769,-0.131026,0,0,0.148000
+Gradient Boosting,1,3,B_train_01,0.532303,-0.024860,0,0,0.099000
+Gradient Boosting,1,4,B_train_01,0.356585,-0.122642,0,0,0.187000

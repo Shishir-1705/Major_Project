@@ -1,0 +1,6 @@
+category_id,category_name,recurrence_range,pixel_count,area_km2,pct_of_domain
+1,0% (Non-Hotspot),0%,25120,22.6080,17.54
+2,>0–25% (Infrequent),>0-25%,31850,28.6650,22.24
+3,>25–50% (Moderate),>25-50%,39640,35.6760,27.68
+4,>50–75% (Frequent),>50-75%,27410,24.6690,19.14
+5,>75–100% (Persistent),>75-100%,19190,17.2710,13.40

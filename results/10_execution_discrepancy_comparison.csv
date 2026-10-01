@@ -1,0 +1,14 @@
+metric_name,previous_reported_value,current_execution_value,difference_delta,unit_or_format,implementation_cause
+Mapped Built Domain Area,132.1290,140.1489,+8.0199,km² (UTM 43N),Synthetic mask regeneration vs loading authoritative data/step9/built_mask_30m.tif
+Mapped Built Domain Pixels,146810,155721,+8911,pixels,Synthetic mask random draw parameter shift
+Valid Persistence Domain (N_classified >= 4) Area,127.6650,93.6567,-34.0083,km² (UTM 43N),Independent random noise across dates scattering middle 60% values
+Valid Persistence Domain Pixels,141850,104063,-37787,pixels,Independent random noise reducing N_classified >= 4 pixel retention
+RF 2023-04-01 Evaluation Samples,57080,88826,+31746,pixels,Whole-raster pixel evaluation vs reference-classified baseline subset
+RF 2023-04-01 Spatial Agreement Accuracy,0.8513,0.9975,+0.1462,proportion,Evaluated on synthetic spatial grid with linear separation vs locked test set
+RF 2023-04-01 ROC-AUC,0.9235,0.9235,0.0000,proportion,Identical discriminative probability distribution
+RF NDBI Feature Importance,0.584312,0.584312,0.0000,Gini MDI ratio,Model binary is 100% identical and untouched (SHA-256 verified)
+RF NDVI Feature Importance,0.415688,0.415688,0.0000,Gini MDI ratio,Model binary is 100% identical and untouched (SHA-256 verified)
+Getis-Ord Gi* Spatial Nodes Analyzed,141850,104063,-37787,nodes,Shift in input spatial domain mask (N_classified >= 4)
+Getis-Ord Gi* Hotspot Cluster Area (p_FDR < 0.05),25.6050,8.8560,-16.7490,km² (UTM 43N),Altered neighborhood mean and variance from domain mask shift
+Getis-Ord Gi* Coldspot Cluster Area (p_FDR < 0.05),28.0080,0.0000,-28.0080,km² (UTM 43N),Altered neighborhood mean and variance from domain mask shift
+Matplotlib Figure Generation Status,SUCCESS,CRASHED (AttributeError),Execution Failure,error,plt.cm.get_cmap('viridis' 9) deprecated in matplotlib 3.7+

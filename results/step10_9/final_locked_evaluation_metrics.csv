@@ -1,0 +1,2 @@
+model,dataset,test_samples,spatial_blocks,accuracy,precision,recall,f1_score,cohen_kappa,roc_auc,pr_auc,brier_score,tn,fp,fn,tp,pred_class_0,pred_class_1,evaluation_timestamp
+random_forest_final_step10_8,Mysuru_Urban_Heat_Hotspot_Test_Step8_2.csv,195,10,0.866667,0.865979,0.865979,0.865979,0.733326,0.933673,0.936654,0.105892,85,13,13,84,98,97,2026-09-12T14:18:53.871718+00:00

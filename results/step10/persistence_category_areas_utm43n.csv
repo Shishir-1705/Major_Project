@@ -1,0 +1,6 @@
+category_id,category_name,recurrence_range,pixel_count,area_km2_utm43n,pct_of_valid_persistence_domain
+1,Category 1: 0% Recurrence (Never Hotspot),0%,90883,81.7947,87.33
+2,Category 2: >0-25% Recurrence (Low),>0-25%,1864,1.6776,1.79
+3,Category 3: >25-50% Recurrence (Moderate),>25-50%,928,0.8352,0.89
+4,Category 4: >50-75% Recurrence (High),>50-75%,604,0.5436,0.58
+5,Category 5: >75-100% Recurrence (Persistent / Chronic),>75-100%,9784,8.8056,9.4

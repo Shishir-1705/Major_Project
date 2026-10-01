@@ -1,0 +1,35 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Frontend builds
+frontend/dist/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Runtime/cache
+.tile_cache/
+scratch/
+*.log
+scratch_*.json
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

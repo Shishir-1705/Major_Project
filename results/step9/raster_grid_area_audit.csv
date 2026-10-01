@@ -1,0 +1,6 @@
+raster_name,file_path,crs,width_px,height_px,total_pixels,bounds_lon,bounds_lat,pixel_size_deg_lon,pixel_size_deg_lat,approx_pixel_width_m,approx_pixel_height_m,geodesic_pixel_area_m2,dtype,nodata
+ndvi,data\step9\ndvi_30m.tif,EPSG:4326 (WGS 84 Geographic),853,742,632926,"[76.55, 76.78]","[12.2, 12.4]",0.00026964,0.00026954,29.33,29.81,874.11,float32,-9999.0
+ndbi,data\step9\ndbi_30m.tif,EPSG:4326 (WGS 84 Geographic),853,742,632926,"[76.55, 76.78]","[12.2, 12.4]",0.00026964,0.00026954,29.33,29.81,874.11,float32,-9999.0
+built_mask,data\step9\built_mask_30m.tif,EPSG:4326 (WGS 84 Geographic),853,742,632926,"[76.55, 76.78]","[12.2, 12.4]",0.00026964,0.00026954,29.33,29.81,874.11,uint8,255.0
+probability,results\step9\hotspot_probability_30m.tif,EPSG:4326 (WGS 84 Geographic),853,742,632926,"[76.55, 76.78]","[12.2, 12.4]",0.00026964,0.00026954,29.33,29.81,874.11,float32,-9999.0
+classification,results\step9\hotspot_classification_30m.tif,EPSG:4326 (WGS 84 Geographic),853,742,632926,"[76.55, 76.78]","[12.2, 12.4]",0.00026964,0.00026954,29.33,29.81,874.11,uint8,255.0
