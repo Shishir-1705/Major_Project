@@ -4,34 +4,51 @@ import { OBSERVATION_DATES } from '../../config/constants';
 import { Calendar, Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const TimelineSlider: React.FC = () => {
-  const { selectedDate, setSelectedDate } = useAppStore();
+  const { selectedDate, setSelectedDate, backendConnected, addToast } = useAppStore();
   const [isPlaying, setIsPlaying] = React.useState(false);
 
   const currentIndex = OBSERVATION_DATES.findIndex((d) => d.date === selectedDate);
 
+  const handleSelectDate = (date: string) => {
+    setSelectedDate(date);
+    if (!backendConnected) {
+      addToast({
+        type: 'warning',
+        title: 'Offline Date Selection',
+        message: `Date updated to ${date}. Start FastAPI server for live satellite tiles & statistics.`,
+      });
+    }
+  };
+
   const handlePrev = () => {
     if (currentIndex > 0) {
-      setSelectedDate(OBSERVATION_DATES[currentIndex - 1].date);
+      handleSelectDate(OBSERVATION_DATES[currentIndex - 1].date);
     }
   };
 
   const handleNext = () => {
     if (currentIndex < OBSERVATION_DATES.length - 1) {
-      setSelectedDate(OBSERVATION_DATES[currentIndex + 1].date);
+      handleSelectDate(OBSERVATION_DATES[currentIndex + 1].date);
     }
   };
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isPlaying) {
+    if (isPlaying && backendConnected) {
       interval = setInterval(() => {
-        setSelectedDate(
-          OBSERVATION_DATES[(currentIndex + 1) % OBSERVATION_DATES.length].date
-        );
+        const nextIndex = (currentIndex + 1) % OBSERVATION_DATES.length;
+        setSelectedDate(OBSERVATION_DATES[nextIndex].date);
       }, 2000);
+    } else if (isPlaying && !backendConnected) {
+      setIsPlaying(false);
+      addToast({
+        type: 'warning',
+        title: 'Playback Paused',
+        message: 'Timeline playback paused because analysis server is offline.',
+      });
     }
     return () => clearInterval(interval);
-  }, [isPlaying, currentIndex, setSelectedDate]);
+  }, [isPlaying, currentIndex, backendConnected, setSelectedDate, addToast]);
 
   // Format date display: e.g., '2023-04-01' -> '01 Apr'
   const formatDateLabel = (dateStr: string) => {
@@ -90,7 +107,7 @@ export const TimelineSlider: React.FC = () => {
           return (
             <button
               key={item.date}
-              onClick={() => setSelectedDate(item.date)}
+              onClick={() => handleSelectDate(item.date)}
               className="group relative flex flex-col items-center py-0.5 transition-all"
               title={`${item.date} (${item.satellite})`}
             >

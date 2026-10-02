@@ -20,9 +20,14 @@ export const ModelInfoCard: React.FC = () => {
       <div className="flex items-center justify-between border-b border-[#1f2937] pb-2.5">
         <div className="flex items-center space-x-2">
           <ShieldCheck className="w-4 h-4 text-cyan-400" />
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-            LOCKED ML MODEL SPECIFICATION
-          </h3>
+          <div>
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+              LOCKED ML MODEL SPECIFICATION
+            </h3>
+            <span className="text-[9px] font-mono text-slate-500 block">
+              {modelInfo ? "Live REST API Telemetry" : "Locked Static Spec (Offline)"}
+            </span>
+          </div>
         </div>
         <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 flex items-center space-x-1">
           <Lock className="w-2.5 h-2.5 inline mr-1" />

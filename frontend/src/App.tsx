@@ -4,6 +4,7 @@ import { LayerControl } from './components/controls/LayerControl';
 import { MapWorkspace } from './components/map/MapWorkspace';
 import { AnalyticsPanel } from './components/analytics/AnalyticsPanel';
 import { MethodologyModal } from './components/modals/MethodologyModal';
+import { ToastContainer } from './components/common/ToastContainer';
 
 export const App: React.FC = () => {
   return (
@@ -25,6 +26,9 @@ export const App: React.FC = () => {
 
       {/* Methodology & Governance Modal */}
       <MethodologyModal />
+
+      {/* Global Toast Notifications Container */}
+      <ToastContainer />
     </div>
   );
 };

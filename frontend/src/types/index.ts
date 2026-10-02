@@ -130,3 +130,11 @@ export interface GiStarStatisticsResponse {
   total_built_area_km2: number;
   clusters: GiStarClusterItem[];
 }
+
+export interface ToastMessage {
+  id: string;
+  type: 'info' | 'warning' | 'error' | 'success';
+  message: string;
+  title?: string;
+  duration?: number;
+}

@@ -8,6 +8,8 @@ interface StatCardProps {
   icon: React.ElementType;
   accentColor?: string;
   isLoading?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
@@ -18,6 +20,8 @@ export const StatCard: React.FC<StatCardProps> = ({
   icon: Icon,
   accentColor = '#06b6d4',
   isLoading = false,
+  isError = false,
+  errorMessage = 'Telemetry unavailable',
 }) => {
   return (
     <div className="bg-[#111827] border border-[#1f2937] rounded-xl p-3.5 shadow-sm relative overflow-hidden group hover:border-slate-700 transition-colors">
@@ -29,6 +33,10 @@ export const StatCard: React.FC<StatCardProps> = ({
           <div className="flex items-baseline space-x-1 mt-1">
             {isLoading ? (
               <div className="h-6 w-24 bg-slate-800 animate-pulse rounded my-0.5" />
+            ) : isError ? (
+              <span className="text-xs font-mono text-amber-400/90 font-medium py-1 block">
+                Unavailable
+              </span>
             ) : (
               <>
                 <span className="text-xl font-bold text-white tracking-tight font-mono">
@@ -39,7 +47,9 @@ export const StatCard: React.FC<StatCardProps> = ({
             )}
           </div>
           {subtitle && (
-            <p className="text-[10px] text-slate-500 mt-1 line-clamp-1">{subtitle}</p>
+            <p className="text-[10px] text-slate-500 mt-1 line-clamp-1">
+              {isError ? errorMessage : subtitle}
+            </p>
           )}
         </div>
 

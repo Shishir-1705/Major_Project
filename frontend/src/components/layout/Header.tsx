@@ -1,9 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { Flame, ShieldCheck, MapPin, Info, Layers, BarChart2, Activity, GitCommit } from 'lucide-react';
 
 export const Header: React.FC = () => {
-  const { activeTab, setActiveTab, setIsMethodologyModalOpen, backendConnected } = useAppStore();
+  const {
+    activeTab,
+    setActiveTab,
+    setIsMethodologyModalOpen,
+    backendConnected,
+    fetchInitialData,
+    checkServerRecovery
+  } = useAppStore();
+
+  useEffect(() => {
+    fetchInitialData();
+  }, [fetchInitialData]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    if (!backendConnected) {
+      intervalId = setInterval(() => {
+        checkServerRecovery();
+      }, 10000);
+    }
+    return () => clearInterval(intervalId);
+  }, [backendConnected, checkServerRecovery]);
 
   const navTabs = [
     { id: 'overview', label: 'Overview', icon: Layers },

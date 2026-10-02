@@ -31,10 +31,21 @@ export const MapWorkspace: React.FC = () => {
     selectedDate,
     layerOpacity,
     backendConnected,
-    apiError
+    apiError,
+    addToast
   } = useAppStore();
 
   const currentLayerObj = LAYERS.find(l => l.id === activeLayer);
+
+  const handleTileError = () => {
+    // Non-blocking toast notification on tile loading error without crashing map
+    addToast({
+      type: 'warning',
+      title: 'Map Layer Notice',
+      message: `Map tile for ${currentLayerObj?.shortName || activeLayer} temporarily unavailable.`,
+      duration: 4000,
+    });
+  };
 
   // Resolve tile date_or_key based on layer type
   const getDateOrKey = (): string => {
@@ -74,6 +85,9 @@ export const MapWorkspace: React.FC = () => {
             opacity={layerOpacity}
             maxZoom={18}
             tileSize={256}
+            eventHandlers={{
+              tileerror: handleTileError,
+            }}
           />
         )}
 

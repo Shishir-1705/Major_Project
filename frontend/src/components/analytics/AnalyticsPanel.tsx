@@ -63,6 +63,8 @@ export const AnalyticsPanel: React.FC = () => {
             icon={Building2}
             accentColor="#a855f7"
             isLoading={isLoadingStats}
+            isError={!backendConnected && !metadata}
+            errorMessage="Metadata offline"
           />
 
           <StatCard
@@ -73,6 +75,8 @@ export const AnalyticsPanel: React.FC = () => {
             icon={Flame}
             accentColor={currentLayer?.accentColor || "#f97316"}
             isLoading={isLoadingStats}
+            isError={!backendConnected && !zonalStats}
+            errorMessage="Statistics offline"
           />
 
           <StatCard
@@ -83,6 +87,8 @@ export const AnalyticsPanel: React.FC = () => {
             icon={AlertTriangle}
             accentColor="#ef4444"
             isLoading={isLoadingStats}
+            isError={!backendConnected && !hotspotStats}
+            errorMessage="Statistics offline"
           />
 
           <StatCard
@@ -92,6 +98,8 @@ export const AnalyticsPanel: React.FC = () => {
             subtitle="NDVI+NDBI Predictors"
             icon={ShieldCheck}
             accentColor="#10b981"
+            isError={!backendConnected && !modelInfo}
+            errorMessage="Telemetry offline"
           />
         </div>
 
