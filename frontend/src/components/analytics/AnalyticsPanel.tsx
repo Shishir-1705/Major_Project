@@ -15,7 +15,8 @@ export const AnalyticsPanel: React.FC = () => {
     hotspotStats,
     persistenceStats,
     giStarStats,
-    metadata
+    metadata,
+    modelInfo
   } = useAppStore();
 
   const currentLayer = LAYERS.find((l) => l.id === activeLayer);
@@ -86,7 +87,7 @@ export const AnalyticsPanel: React.FC = () => {
 
           <StatCard
             title="Locked ML F1"
-            value="86.60"
+            value={modelInfo ? (modelInfo.locked_test_metrics.f1_score * 100).toFixed(2) : "86.60"}
             unit="%"
             subtitle="NDVI+NDBI Predictors"
             icon={ShieldCheck}
@@ -148,38 +149,44 @@ export const AnalyticsPanel: React.FC = () => {
         <ModelInfoCard />
 
         {/* Feature Importance Attribution Card */}
-        <div className="bg-[#111827] border border-slate-800 rounded-xl p-3.5 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Gini Feature Attribution</h4>
-            <span className="text-[10px] font-mono text-slate-500">Sum = 1.000</span>
-          </div>
-
-          <div className="space-y-2">
-            <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-purple-400 font-semibold flex items-center space-x-1">
-                  <Building2 className="w-3 h-3 inline mr-1" /> NDBI (Built-up)
-                </span>
-                <span className="font-mono text-white font-bold">61.03%</span>
+        {(() => {
+          const ndbiVal = modelInfo ? (modelInfo.feature_importances.NDBI * 100).toFixed(2) : "61.03";
+          const ndviVal = modelInfo ? (modelInfo.feature_importances.NDVI * 100).toFixed(2) : "38.97";
+          return (
+            <div className="bg-[#111827] border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Gini Feature Attribution</h4>
+                <span className="text-[10px] font-mono text-slate-500">Sum = 1.000</span>
               </div>
-              <div className="h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                <div className="h-full bg-purple-500 rounded-full" style={{ width: '61.03%' }} />
+
+              <div className="space-y-2">
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-purple-400 font-semibold flex items-center space-x-1">
+                      <Building2 className="w-3 h-3 inline mr-1" /> NDBI (Built-up)
+                    </span>
+                    <span className="font-mono text-white font-bold">{ndbiVal}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
+                    <div className="h-full bg-purple-500 rounded-full" style={{ width: `${ndbiVal}%` }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-emerald-400 font-semibold flex items-center space-x-1">
+                      <Trees className="w-3 h-3 inline mr-1" /> NDVI (Vegetation)
+                    </span>
+                    <span className="font-mono text-white font-bold">{ndviVal}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
+                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${ndviVal}%` }} />
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-emerald-400 font-semibold flex items-center space-x-1">
-                  <Trees className="w-3 h-3 inline mr-1" /> NDVI (Vegetation)
-                </span>
-                <span className="font-mono text-white font-bold">38.97%</span>
-              </div>
-              <div className="h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                <div className="h-full bg-emerald-500 rounded-full" style={{ width: '38.97%' }} />
-              </div>
-            </div>
-          </div>
-        </div>
+          );
+        })()}
 
         {/* Integration Status Footer */}
         <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">

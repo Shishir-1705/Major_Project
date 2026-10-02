@@ -134,6 +134,12 @@ class StatisticsService:
             categories = []
             total_area = float(df['area_km2_utm43n'].sum())
             color_map = {
+                "Category 1: 0% Recurrence (Never Hotspot)": "#1e293b",
+                "Category 2: >0-25% Recurrence (Low)": "#06b6d4",
+                "Category 3: >25-50% Recurrence (Moderate)": "#facc15",
+                "Category 4: >50-75% Recurrence (High)": "#fb923c",
+                "Category 5: >75-100% Recurrence (Persistent / Chronic)": "#ef4444",
+                # Fallback keys if short names used
                 "None (0 obs)": "#1e293b",
                 "Transient (1-2 obs)": "#facc15",
                 "Moderate (3-4 obs)": "#fb923c",

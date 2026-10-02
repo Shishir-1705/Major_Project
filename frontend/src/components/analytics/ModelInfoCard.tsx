@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useAppStore } from '../../store/useAppStore';
 import { LOCKED_MODEL_METADATA } from '../../config/constants';
 import { ShieldCheck, Cpu, Lock, Copy, Check } from 'lucide-react';
 
 export const ModelInfoCard: React.FC = () => {
-  const m = LOCKED_MODEL_METADATA;
+  const { modelInfo } = useAppStore();
+  const m = modelInfo || LOCKED_MODEL_METADATA;
   const [copied, setCopied] = useState(false);
 
   const handleCopyHash = () => {
