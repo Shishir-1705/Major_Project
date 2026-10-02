@@ -9,6 +9,15 @@ def test_1_root_health_check():
     assert response.status_code == 200
     assert response.json()["status"] == "online"
 
+def test_1b_health_endpoints():
+    response_root = client.get("/health")
+    assert response_root.status_code == 200
+    assert response_root.json() == {"status": "ok", "service": "urban-heat-hotspot-api"}
+
+    response_v1 = client.get("/api/v1/health")
+    assert response_v1.status_code == 200
+    assert response_v1.json() == {"status": "ok", "service": "urban-heat-hotspot-api"}
+
 def test_2_metadata_endpoint():
     response = client.get("/api/v1/metadata")
     assert response.status_code == 200

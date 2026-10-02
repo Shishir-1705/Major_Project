@@ -30,6 +30,7 @@
 - [x] **Step 15: Research-Grade UI/UX Polish & Geospatial Visualization**
 - [x] **Step 16: Final End-to-End System Validation & Release Readiness**
 - [x] **Step 17: Initial GitHub Version Control & Repository Synchronization**
+- [x] **Step 18: FastAPI Backend Startup & Frontend Connectivity Hardening**
 
 ---
 
@@ -78,31 +79,23 @@
 
 ### 1. Backend Setup & Startup
 ```bash
-# Navigate to project root
-cd d:/Major_Project
+# Option A: Run startup batch script (Windows)
+.\start_backend.bat
 
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Launch FastAPI Backend Server (Port 8000)
+# Option B: Manual command from project root
 python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
-Backend Swagger Interactive Docs: `http://localhost:8000/docs`
+Backend Swagger Interactive Docs: `http://127.0.0.1:8000/docs`  
+Backend Health Check: `http://127.0.0.1:8000/health`
 
 ### 2. Frontend Setup & Startup
 ```bash
-# Navigate to frontend directory
-cd d:/Major_Project/frontend
+# Option A: Run startup batch script (Windows)
+.\start_frontend.bat
 
-# Install Node dependencies
-npm install
-
-# Run Frontend Development Server (Port 5173)
+# Option B: Manual command
+cd frontend
 npm run dev
-
-# Run Production Type Check & Build
-npx tsc --noEmit
-npm run build
 ```
 Frontend Application URL: `http://localhost:5173`
 
@@ -112,6 +105,8 @@ Frontend Application URL: `http://localhost:5173`
 
 | Endpoint | Method | Response Description |
 | :--- | :--- | :--- |
+| `/health` | `GET` | Service status (`{"status": "ok", "service": "urban-heat-hotspot-api"}`). |
+| `/api/v1/health` | `GET` | Health check endpoint for frontend / API consumers. |
 | `/api/v1/metadata` | `GET` | Study area metadata, CRS, extent, pixel counts, and total built area ($132.129\text{ km}^2$). |
 | `/api/v1/dates` | `GET` | List of 8 verified Landsat acquisition dates (`2023-04-01` to `2023-05-27`). |
 | `/api/v1/layers` | `GET` | Available map layers (`lst`, `ndvi`, `ndbi`, `rf_prob`, `rf_class`, `persistence`, `gi_star`). |

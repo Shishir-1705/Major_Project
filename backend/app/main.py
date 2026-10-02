@@ -33,6 +33,13 @@ def root():
         "docs": "/docs"
     }
 
+@app.get("/health", tags=["Health"])
+def health():
+    return {
+        "status": "ok",
+        "service": "urban-heat-hotspot-api"
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("backend.app.main:app", host="127.0.0.1", port=8000, reload=True)

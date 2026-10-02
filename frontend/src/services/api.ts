@@ -11,7 +11,7 @@ import {
   LayerType
 } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1';
 
 class ApiService {
   private baseUrl: string;
@@ -39,6 +39,11 @@ class ApiService {
       console.error(`Failed to fetch from ${url}:`, error);
       throw error;
     }
+  }
+
+  // 0. Health Check
+  async checkHealth(): Promise<{ status: string; service: string }> {
+    return this.fetchJson<{ status: string; service: string }>('/health');
   }
 
   // 1. Core Metadata

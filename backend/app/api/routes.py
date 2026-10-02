@@ -13,6 +13,11 @@ from ..config import OBSERVATION_DATES
 
 router = APIRouter(prefix="/api/v1", tags=["v1"])
 
+@router.get("/health")
+def get_health():
+    """Health check endpoint for API consumers."""
+    return {"status": "ok", "service": "urban-heat-hotspot-api"}
+
 @router.get("/metadata", response_model=MetadataResponse)
 def get_metadata():
     """Returns overall project, spatial AOI, CRS, and locked model metadata."""
