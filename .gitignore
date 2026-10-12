@@ -2,9 +2,14 @@
 .env
 .env.*
 !.env.example
+backend/.env
+backend/.env.local
+backend/.env.*.local
+!backend/.env.example
 frontend/.env
 frontend/.env.local
 frontend/.env.*.local
+!frontend/.env.example
 
 # Node
 node_modules/

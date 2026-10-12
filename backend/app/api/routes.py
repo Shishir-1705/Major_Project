@@ -131,10 +131,10 @@ def get_raster_tile(layer: str, date_or_key: str, z: int, x: int, y: int):
             media_type="image/png",
             headers={"Cache-Control": "public, max-age=86400"}
         )
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Tile rendering error: {str(e)}")
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Requested raster tile not found")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Tile rendering failed")
 
 @router.get("/statistics/zonal", response_model=ZonalStatisticsResponse)
 def get_zonal_statistics(
@@ -146,8 +146,8 @@ def get_zonal_statistics(
         return StatisticsService.get_zonal_statistics(layer, date)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Requested raster dataset not found")
 
 @router.get("/statistics/hotspot", response_model=HotspotStatisticsResponse)
 def get_hotspot_statistics(date: str = Query(..., description="Observation date (YYYY-MM-DD)")):
@@ -156,21 +156,21 @@ def get_hotspot_statistics(date: str = Query(..., description="Observation date 
         raise HTTPException(status_code=400, detail=f"Invalid date '{date}'. Must be one of {OBSERVATION_DATES}")
     try:
         return StatisticsService.get_hotspot_statistics(date)
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Hotspot raster dataset not found for requested date")
 
 @router.get("/statistics/persistence", response_model=PersistenceStatisticsResponse)
 def get_persistence_statistics():
     """Returns 4-level categorical persistence areas (None, Transient, Moderate, Persistent)."""
     try:
         return StatisticsService.get_persistence_statistics()
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Persistence analysis dataset not found")
 
 @router.get("/statistics/gi-star", response_model=GiStarStatisticsResponse)
 def get_gi_star_statistics():
     """Returns Getis-Ord Gi* spatial cluster areas (99%, 95%, 90% Hotspots, Coldspots, Not Significant)."""
     try:
         return StatisticsService.get_gi_star_statistics()
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Spatial clustering analysis dataset not found")

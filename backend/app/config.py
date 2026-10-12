@@ -30,12 +30,16 @@ OBSERVATION_DATES = [
     "2023-05-27"
 ]
 
-# CORS Origins
-CORS_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000"
-]
+# CORS Origins (configurable via environment variable, comma-separated)
+_cors_env = os.getenv("CORS_ORIGINS", "").strip()
+if _cors_env:
+    CORS_ORIGINS = [origin.strip() for origin in _cors_env.split(",") if origin.strip()]
+else:
+    CORS_ORIGINS = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000"
+    ]
 
 # Ensure cache directory exists
 os.makedirs(TILE_CACHE_DIR, exist_ok=True)
