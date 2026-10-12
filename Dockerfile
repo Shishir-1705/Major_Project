@@ -66,12 +66,13 @@ COPY --from=frontend-builder /app/frontend/dist /var/www/html
 
 # Copy Nginx server configuration
 COPY deploy/nginx.conf /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Copy Supervisor process management configuration
 COPY deploy/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Initialize runtime tile cache directory
-RUN mkdir -p /app/.tile_cache && chmod 777 /app/.tile_cache
+# Initialize runtime tile cache and process directories
+RUN mkdir -p /app/.tile_cache /var/log/supervisor /var/run && chmod 777 /app/.tile_cache
 
 # Expose HTTP port
 EXPOSE 80
