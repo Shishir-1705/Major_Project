@@ -61,7 +61,7 @@ interface AppState {
 export const useAppStore = create<AppState>((set, get) => ({
   // UI Defaults
   selectedDate: OBSERVATION_DATES[0].date,
-  activeLayer: 'rf_prob',
+  activeLayer: 'lst',
   layerOpacity: 0.85,
   showAOIBoundary: true,
   activeTab: 'overview',
@@ -108,12 +108,69 @@ export const useAppStore = create<AppState>((set, get) => ({
     get().fetchLayerStats();
   },
   setActiveLayer: (layer) => {
-    set({ activeLayer: layer });
+    const currentTab = get().activeTab;
+    let targetTab = currentTab;
+
+    switch (layer) {
+      case 'lst':
+        if (targetTab !== 'overview') {
+          targetTab = 'thermal';
+        }
+        break;
+      case 'rf_prob':
+      case 'rf_class':
+        targetTab = 'ml';
+        break;
+      case 'ndvi':
+      case 'ndbi':
+        targetTab = 'environment';
+        break;
+      case 'persistence':
+        targetTab = 'persistence';
+        break;
+      case 'gi_star':
+        targetTab = 'clusters';
+        break;
+    }
+
+    set({ activeLayer: layer, activeTab: targetTab });
     get().fetchLayerStats();
   },
   setLayerOpacity: (opacity) => set({ layerOpacity: opacity }),
   setShowAOIBoundary: (show) => set({ showAOIBoundary: show }),
-  setActiveTab: (tab) => set({ activeTab: tab }),
+  setActiveTab: (tab) => {
+    if (tab === 'methodology') {
+      set({ isMethodologyModalOpen: true });
+      return;
+    }
+
+    const currentLayer = get().activeLayer;
+    let targetLayer: LayerType = currentLayer;
+
+    switch (tab) {
+      case 'overview':
+        targetLayer = 'lst';
+        break;
+      case 'thermal':
+        targetLayer = 'lst';
+        break;
+      case 'ml':
+        targetLayer = currentLayer === 'rf_class' ? 'rf_class' : 'rf_prob';
+        break;
+      case 'environment':
+        targetLayer = currentLayer === 'ndbi' ? 'ndbi' : 'ndvi';
+        break;
+      case 'persistence':
+        targetLayer = 'persistence';
+        break;
+      case 'clusters':
+        targetLayer = 'gi_star';
+        break;
+    }
+
+    set({ activeTab: tab, activeLayer: targetLayer });
+    get().fetchLayerStats();
+  },
   setHoveredCoordinates: (coords) => set({ hoveredCoordinates: coords }),
   setIsMethodologyModalOpen: (open) => set({ isMethodologyModalOpen: open }),
 

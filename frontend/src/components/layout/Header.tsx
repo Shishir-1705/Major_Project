@@ -6,6 +6,8 @@ export const Header: React.FC = () => {
   const {
     activeTab,
     setActiveTab,
+    activeLayer,
+    setActiveLayer,
     setIsMethodologyModalOpen,
     backendConnected,
     fetchInitialData,
@@ -33,7 +35,18 @@ export const Header: React.FC = () => {
     { id: 'environment', label: 'NDVI / NDBI', icon: Activity },
     { id: 'persistence', label: 'Persistence', icon: GitCommit },
     { id: 'clusters', label: 'Gi* Clusters', icon: BarChart2 },
+    { id: 'methodology', label: 'Methodology', icon: Info },
   ] as const;
+
+  const handleTabClick = (tabId: typeof navTabs[number]['id']) => {
+    if (tabId === 'ml' && activeTab === 'ml') {
+      setActiveLayer(activeLayer === 'rf_prob' ? 'rf_class' : 'rf_prob');
+    } else if (tabId === 'environment' && activeTab === 'environment') {
+      setActiveLayer(activeLayer === 'ndvi' ? 'ndbi' : 'ndvi');
+    } else {
+      setActiveTab(tabId);
+    }
+  };
 
   return (
     <header className="h-14 bg-[#111827] border-b border-[#1f2937] px-4 flex items-center justify-between z-30 shrink-0 select-none">
@@ -66,18 +79,88 @@ export const Header: React.FC = () => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                isActive
-                  ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/40 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
-              }`}
-            >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
-              <span>{tab.label}</span>
-            </button>
+            <div key={tab.id} className="relative flex items-center">
+              <button
+                onClick={() => handleTabClick(tab.id)}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                  isActive
+                    ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/40 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
+                }`}
+                title={tab.label}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
+                <span>{tab.label}</span>
+              </button>
+
+              {/* Quick Subview Toggle Pills for ML Hotspots */}
+              {tab.id === 'ml' && isActive && (
+                <div className="flex items-center ml-1 mr-1 space-x-0.5 bg-slate-950 p-0.5 rounded border border-slate-800">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveLayer('rf_prob');
+                    }}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                      activeLayer === 'rf_prob'
+                        ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Random Forest Continuous Probability"
+                  >
+                    Prob
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveLayer('rf_class');
+                    }}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                      activeLayer === 'rf_class'
+                        ? 'bg-red-500/20 text-red-300 font-bold border border-red-500/30'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Random Forest Binary Hotspot Classification"
+                  >
+                    Class
+                  </button>
+                </div>
+              )}
+
+              {/* Quick Subview Toggle Pills for NDVI / NDBI */}
+              {tab.id === 'environment' && isActive && (
+                <div className="flex items-center ml-1 mr-1 space-x-0.5 bg-slate-950 p-0.5 rounded border border-slate-800">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveLayer('ndvi');
+                    }}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                      activeLayer === 'ndvi'
+                        ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Normalized Difference Vegetation Index"
+                  >
+                    NDVI
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveLayer('ndbi');
+                    }}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                      activeLayer === 'ndbi'
+                        ? 'bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30'
+                        : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="Normalized Difference Built-up Index"
+                  >
+                    NDBI
+                  </button>
+                </div>
+              )}
+            </div>
           );
         })}
       </nav>
