@@ -92,6 +92,7 @@ export interface ZonalStatisticsResponse {
   nodata_pixels: number;
   total_pixels: number;
   area_km2: number;
+  unit?: string;
 }
 
 export interface HotspotStatisticsResponse {

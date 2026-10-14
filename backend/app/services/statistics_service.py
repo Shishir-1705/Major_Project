@@ -19,6 +19,22 @@ from ..schemas.responses import (
 PIXEL_AREA_KM2 = 0.0009
 
 class StatisticsService:
+    LAYER_UNITS = {
+        "lst": "°C",
+        "ndvi": "Index",
+        "ndbi": "Index",
+        "rf_prob": "Probability",
+        "rf_class": "Class",
+        "persistence": "Recurrence",
+        "continuous_persistence": "Recurrence",
+        "categorical_persistence": "Category",
+        "gi_star": "z-score",
+        "gi_star_statistic": "z-score",
+        "gi_star_clustering": "Cluster",
+        "built_mask": "Mask",
+        "ref_label": "Class",
+    }
+
     @staticmethod
     def _resolve_raster_path(layer: str, date: Optional[str] = None) -> Path:
         if layer in ["lst", "ndvi", "ndbi", "ref_label"]:
@@ -31,13 +47,17 @@ class StatisticsService:
                 raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
             return RESULTS_STEP10_DIR / f"{layer}_30m_{date}.tif"
 
-        elif layer == "continuous_persistence":
+        elif layer in ["persistence", "continuous_persistence"]:
+            if date == "categorical":
+                return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
             return RESULTS_STEP10_DIR / "continuous_persistence_30m.tif"
 
         elif layer == "categorical_persistence":
             return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
 
-        elif layer == "gi_star_statistic":
+        elif layer in ["gi_star", "gi_star_statistic"]:
+            if date == "clustering":
+                return RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
             return RESULTS_STEP10_DIR / "gi_star_statistic_30m.tif"
 
         elif layer == "gi_star_clustering":
@@ -59,10 +79,21 @@ class StatisticsService:
             arr = src.read(1)
             nodata_val = src.nodata
 
-            if nodata_val is not None:
-                mask = (arr != nodata_val) & (~np.isnan(arr))
+            # Robust NoData & invalid value filtering:
+            # 1. Floating-point: exclude NaN, Inf, and negative sentinel NoData (-9999.0 / < -9000.0)
+            if np.issubdtype(arr.dtype, np.floating):
+                mask = ~np.isnan(arr) & ~np.isinf(arr)
+                mask = mask & (arr != -9999.0) & (arr > -9000.0)
             else:
-                mask = ~np.isnan(arr)
+                mask = np.ones(arr.shape, dtype=bool)
+
+            # 2. Byte / uint8 rasters: exclude 255 (standard geospatial uint8 NoData sentinel)
+            if arr.dtype == np.uint8:
+                mask = mask & (arr != 255)
+
+            # 3. Source metadata nodata if specified
+            if nodata_val is not None:
+                mask = mask & (arr != nodata_val)
 
             valid_arr = arr[mask]
             total_pixels = int(arr.size)
@@ -80,6 +111,8 @@ class StatisticsService:
             else:
                 min_val, max_val, mean_val, std_val = 0.0, 0.0, 0.0, 0.0
 
+        unit = StatisticsService.LAYER_UNITS.get(layer, "")
+
         return ZonalStatisticsResponse(
             layer=layer,
             date=date,
@@ -90,7 +123,8 @@ class StatisticsService:
             valid_pixels=valid_pixels,
             nodata_pixels=nodata_pixels,
             total_pixels=total_pixels,
-            area_km2=round(area_km2, 3)
+            area_km2=round(area_km2, 3),
+            unit=unit
         )
 
     @staticmethod
@@ -102,10 +136,17 @@ class StatisticsService:
         with rasterio.open(rf_class_path) as src:
             arr = src.read(1)
             nodata_val = src.nodata
-            if nodata_val is not None:
-                valid_mask = (arr != nodata_val) & (~np.isnan(arr))
+
+            if np.issubdtype(arr.dtype, np.floating):
+                valid_mask = ~np.isnan(arr) & ~np.isinf(arr) & (arr != -9999.0) & (arr > -9000.0)
             else:
-                valid_mask = ~np.isnan(arr)
+                valid_mask = np.ones(arr.shape, dtype=bool)
+
+            if arr.dtype == np.uint8:
+                valid_mask = valid_mask & (arr != 255)
+
+            if nodata_val is not None:
+                valid_mask = valid_mask & (arr != nodata_val)
 
             hotspot_count = int(np.sum((arr == 1) & valid_mask))
             non_hotspot_count = int(np.sum((arr == 0) & valid_mask))

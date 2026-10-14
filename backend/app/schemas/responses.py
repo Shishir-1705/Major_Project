@@ -65,6 +65,7 @@ class ZonalStatisticsResponse(BaseModel):
     nodata_pixels: int
     total_pixels: int
     area_km2: float
+    unit: Optional[str] = None
 
 class HotspotStatisticsResponse(BaseModel):
     date: str

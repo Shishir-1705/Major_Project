@@ -85,10 +85,16 @@ class RasterService:
             return RasterService._create_empty_transparent_png()
 
         # Mask NoData
-        if nodata is not None:
-            valid_mask = (arr != nodata) & (~np.isnan(arr))
+        if np.issubdtype(arr.dtype, np.floating):
+            valid_mask = ~np.isnan(arr) & ~np.isinf(arr) & (arr != -9999.0) & (arr > -9000.0)
         else:
-            valid_mask = ~np.isnan(arr)
+            valid_mask = np.ones(arr.shape, dtype=bool)
+
+        if arr.dtype == np.uint8:
+            valid_mask = valid_mask & (arr != 255)
+
+        if nodata is not None:
+            valid_mask = valid_mask & (arr != nodata)
 
         if not np.any(valid_mask):
             return RasterService._create_empty_transparent_png()

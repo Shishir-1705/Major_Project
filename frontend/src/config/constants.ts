@@ -63,6 +63,7 @@ export const LAYERS: LayerMetadata[] = [
     category: 'ml',
     description: 'Binary hotspot classification (1 = Hotspot)',
     accentColor: '#ef4444', // Red/Crimson
+    unit: 'Class',
     isCategorical: true,
   },
   {
@@ -72,6 +73,7 @@ export const LAYERS: LayerMetadata[] = [
     category: 'spatial',
     description: 'Categorical hotspot stability across 8 dates',
     accentColor: '#f59e0b', // Amber
+    unit: 'Recurrence',
     isCategorical: true,
   },
   {
@@ -81,6 +83,7 @@ export const LAYERS: LayerMetadata[] = [
     category: 'spatial',
     description: 'Spatial hotspot/coldspot clustering statistics',
     accentColor: '#0891b2', // Teal
+    unit: 'z-score',
     isCategorical: true,
   },
 ];

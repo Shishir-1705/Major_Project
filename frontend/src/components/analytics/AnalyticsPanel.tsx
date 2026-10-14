@@ -69,10 +69,55 @@ export const AnalyticsPanel: React.FC = () => {
 
           <StatCard
             title="Zonal Mean"
-            value={zonalStats ? zonalStats.mean.toFixed(2) : (activeLayer === 'lst' ? "43.14" : "0.00")}
-            unit={activeLayer === 'lst' || zonalStats?.layer === 'lst' ? "°C" : (currentLayer?.unit || '')}
-            subtitle={activeLayer === 'lst' || zonalStats?.layer === 'lst' ? "Valid LST raster domain" : (zonalStats ? `Min: ${zonalStats.min} / Max: ${zonalStats.max}` : "Valid raster domain")}
-            icon={Flame}
+            value={(() => {
+              if (!zonalStats) return activeLayer === 'lst' ? "43.14" : "0.00";
+              if (activeLayer === 'rf_prob' || activeLayer === 'persistence' || activeLayer === 'ndvi' || activeLayer === 'ndbi') {
+                return zonalStats.mean.toFixed(3);
+              }
+              return zonalStats.mean.toFixed(2);
+            })()}
+            unit={(() => {
+              if (zonalStats?.unit) return zonalStats.unit;
+              switch (activeLayer) {
+                case 'lst': return '°C';
+                case 'rf_prob': return 'Prob';
+                case 'rf_class': return 'Class';
+                case 'ndvi':
+                case 'ndbi': return 'Index';
+                case 'persistence': return 'Recurrence';
+                case 'gi_star': return 'z-score';
+                default: return currentLayer?.unit || '';
+              }
+            })()}
+            subtitle={(() => {
+              if (!zonalStats) return "Valid raster domain";
+              switch (activeLayer) {
+                case 'lst':
+                  return `Min: ${zonalStats.min.toFixed(1)}°C / Max: ${zonalStats.max.toFixed(1)}°C`;
+                case 'rf_prob':
+                  return `Min: ${zonalStats.min.toFixed(3)} / Max: ${zonalStats.max.toFixed(3)} (0–1)`;
+                case 'rf_class':
+                  return `Min: ${zonalStats.min.toFixed(0)} / Max: ${zonalStats.max.toFixed(0)} (Binary)`;
+                case 'ndvi':
+                case 'ndbi':
+                  return `Min: ${zonalStats.min.toFixed(2)} / Max: ${zonalStats.max.toFixed(2)}`;
+                case 'persistence':
+                  return `Min: ${zonalStats.min.toFixed(2)} / Max: ${zonalStats.max.toFixed(2)} (0–1)`;
+                case 'gi_star':
+                  return `Min: ${zonalStats.min.toFixed(2)} / Max: ${zonalStats.max.toFixed(2)} (z-score)`;
+                default:
+                  return `Min: ${zonalStats.min} / Max: ${zonalStats.max}`;
+              }
+            })()}
+            icon={(() => {
+              switch (activeLayer) {
+                case 'lst': return Flame;
+                case 'ndvi': return Trees;
+                case 'ndbi': return Building2;
+                case 'rf_class': return AlertTriangle;
+                default: return BarChart2;
+              }
+            })()}
             accentColor={currentLayer?.accentColor || "#f97316"}
             isLoading={isLoadingStats}
             isError={!backendConnected && !zonalStats}

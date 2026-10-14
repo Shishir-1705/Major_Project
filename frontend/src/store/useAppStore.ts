@@ -197,7 +197,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       ]);
 
       set((state) => ({
-        zonalStats: zonalRes || state.zonalStats,
+        zonalStats: zonalRes || (state.zonalStats?.layer === activeLayer ? state.zonalStats : null),
         hotspotStats: hotspotRes || state.hotspotStats,
         persistenceStats: persistenceRes || state.persistenceStats,
         giStarStats: giStarRes || state.giStarStats,

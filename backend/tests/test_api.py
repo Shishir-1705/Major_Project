@@ -94,6 +94,49 @@ def test_10_zonal_statistics_endpoint():
     assert data["max"] < 65.0
     assert data["valid_pixels"] > 0
     assert data["area_km2"] > 100.0
+    assert data["unit"] == "°C"
+
+def test_10b_zonal_statistics_rf_prob_nodata_filtering():
+    # Verify that -9999 NoData pixels are strictly excluded and valid probabilities are [0, 1]
+    response = client.get("/api/v1/statistics/zonal?layer=rf_prob&date=2023-04-01")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["layer"] == "rf_prob"
+    assert data["date"] == "2023-04-01"
+    assert data["min"] >= 0.0
+    assert data["max"] <= 1.0
+    assert 0.0 <= data["mean"] <= 1.0
+    assert data["min"] != -9999.0
+    assert data["valid_pixels"] == 155625
+    assert data["unit"] == "Probability"
+
+def test_10c_zonal_statistics_all_layers():
+    # Test NDVI, NDBI, RF Class, Persistence, and Gi*
+    for layer, expected_unit in [
+        ("ndvi", "Index"),
+        ("ndbi", "Index"),
+        ("rf_class", "Class"),
+    ]:
+        res = client.get(f"/api/v1/statistics/zonal?layer={layer}&date=2023-04-01")
+        assert res.status_code == 200, f"Layer {layer} failed: {res.text}"
+        data = res.json()
+        assert data["unit"] == expected_unit
+        assert data["valid_pixels"] == 155625
+
+    # Multi-temporal / spatial layers
+    res_persist = client.get("/api/v1/statistics/zonal?layer=persistence")
+    assert res_persist.status_code == 200
+    p_data = res_persist.json()
+    assert p_data["unit"] == "Recurrence"
+    assert p_data["min"] >= 0.0
+    assert p_data["max"] <= 1.0
+    assert p_data["valid_pixels"] == 104063
+
+    res_gi = client.get("/api/v1/statistics/zonal?layer=gi_star")
+    assert res_gi.status_code == 200
+    gi_data = res_gi.json()
+    assert gi_data["unit"] == "z-score"
+    assert gi_data["valid_pixels"] == 104063
 
 def test_11_hotspot_statistics_endpoint():
     response = client.get("/api/v1/statistics/hotspot?date=2023-04-01")
