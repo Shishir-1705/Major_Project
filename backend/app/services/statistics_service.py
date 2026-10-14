@@ -215,21 +215,26 @@ class StatisticsService:
 
         with rasterio.open(raster_path) as src:
             arr = src.read(1)
-            valid_mask = arr != src.nodata if src.nodata is not None else ~np.isnan(arr)
-            c0 = int(np.sum((arr == 0) & valid_mask))
+            valid_mask = (arr != 255) & (~np.isnan(arr))
+            if src.nodata is not None:
+                valid_mask = valid_mask & (arr != src.nodata)
+
             c1 = int(np.sum((arr == 1) & valid_mask))
             c2 = int(np.sum((arr == 2) & valid_mask))
             c3 = int(np.sum((arr == 3) & valid_mask))
-            total = c0 + c1 + c2 + c3
+            c4 = int(np.sum((arr == 4) & valid_mask))
+            c5 = int(np.sum((arr == 5) & valid_mask))
+            total = c1 + c2 + c3 + c4 + c5
             tot_area = total * PIXEL_AREA_KM2
 
             return PersistenceStatisticsResponse(
                 total_built_area_km2=round(tot_area, 3),
                 categories=[
-                    PersistenceCategoryItem(category="None (0 obs)", obs_count_range="0", area_km2=round(c0*PIXEL_AREA_KM2, 3), percentage=round(c0/total*100, 2), color_hex="#1e293b"),
-                    PersistenceCategoryItem(category="Transient (1-2 obs)", obs_count_range="1-2", area_km2=round(c1*PIXEL_AREA_KM2, 3), percentage=round(c1/total*100, 2), color_hex="#facc15"),
-                    PersistenceCategoryItem(category="Moderate (3-4 obs)", obs_count_range="3-4", area_km2=round(c2*PIXEL_AREA_KM2, 3), percentage=round(c2/total*100, 2), color_hex="#fb923c"),
-                    PersistenceCategoryItem(category="Persistent (5-8 obs)", obs_count_range="5-8", area_km2=round(c3*PIXEL_AREA_KM2, 3), percentage=round(c3/total*100, 2), color_hex="#ef4444")
+                    PersistenceCategoryItem(category="Category 1: 0% Recurrence (Never Hotspot)", obs_count_range="0%", area_km2=round(c1*PIXEL_AREA_KM2, 3), percentage=round(c1/total*100, 2), color_hex="#1e293b"),
+                    PersistenceCategoryItem(category="Category 2: >0-25% Recurrence (Low)", obs_count_range=">0-25%", area_km2=round(c2*PIXEL_AREA_KM2, 3), percentage=round(c2/total*100, 2), color_hex="#06b6d4"),
+                    PersistenceCategoryItem(category="Category 3: >25-50% Recurrence (Moderate)", obs_count_range=">25-50%", area_km2=round(c3*PIXEL_AREA_KM2, 3), percentage=round(c3/total*100, 2), color_hex="#facc15"),
+                    PersistenceCategoryItem(category="Category 4: >50-75% Recurrence (High)", obs_count_range=">50-75%", area_km2=round(c4*PIXEL_AREA_KM2, 3), percentage=round(c4/total*100, 2), color_hex="#fb923c"),
+                    PersistenceCategoryItem(category="Category 5: >75-100% Recurrence (Persistent / Chronic)", obs_count_range=">75-100%", area_km2=round(c5*PIXEL_AREA_KM2, 3), percentage=round(c5/total*100, 2), color_hex="#ef4444")
                 ]
             )
 
@@ -241,7 +246,9 @@ class StatisticsService:
 
         with rasterio.open(raster_path) as src:
             arr = src.read(1)
-            valid_mask = arr != src.nodata if src.nodata is not None else ~np.isnan(arr)
+            valid_mask = (arr != 255) & (~np.isnan(arr))
+            if src.nodata is not None:
+                valid_mask = valid_mask & (arr != src.nodata)
             
             c_99 = int(np.sum((arr == 3) & valid_mask))
             c_95 = int(np.sum((arr == 2) & valid_mask))

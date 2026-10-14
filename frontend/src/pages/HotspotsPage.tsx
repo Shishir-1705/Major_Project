@@ -233,7 +233,7 @@ export const HotspotsPage: React.FC = () => {
                     title="Built Domain"
                     value={hotspotStats?.total_built_area_km2 !== undefined ? hotspotStats.total_built_area_km2.toFixed(2) : "132.13"}
                     unit="km²"
-                    subtitle="Total active analysis pixels (146,812)"
+                    subtitle="Total active analysis pixels (146,810)"
                     icon={Building2}
                     accentColor="#64748b"
                     isLoading={isLoadingStats}

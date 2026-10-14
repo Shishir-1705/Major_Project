@@ -113,7 +113,9 @@ export const PersistencePage: React.FC = () => {
             <div className="space-y-1.5">
               <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1 flex items-center justify-between">
                 <span>Spatial Recurrence Summary</span>
-                <span className="font-mono text-[10px] text-teal-700">Domain: {totalDomain} km²</span>
+                <span className="font-mono text-[10px] text-teal-700" title="Valid persistence domain of 104,063 pixels with ≥4 observations across 8 dates">
+                  Valid Domain: {totalDomain} km²
+                </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2">

@@ -108,7 +108,7 @@ export const ClustersPage: React.FC = () => {
             <div className="space-y-1.5">
               <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1 flex items-center justify-between">
                 <span>Cluster Distribution</span>
-                <span className="font-mono text-[10px] text-teal-700">p &lt; 0.10 Threshold</span>
+                <span className="font-mono text-[10px] text-teal-700">FDR p &lt; 0.05 (z ≥ 1.645)</span>
               </div>
 
               <div className="grid grid-cols-2 gap-2">

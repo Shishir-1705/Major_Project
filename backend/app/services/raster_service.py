@@ -74,8 +74,9 @@ class RasterService:
             # Window extraction
             window = from_bounds(min_x, min_y, max_x, max_y, transform=src.transform)
             
+            resampling = rasterio.enums.Resampling.nearest if (layer in ["rf_class", "persistence", "gi_star", "built_mask"]) else rasterio.enums.Resampling.bilinear
             try:
-                arr = src.read(1, window=window, out_shape=(256, 256), resampling=rasterio.enums.Resampling.bilinear)
+                arr = src.read(1, window=window, out_shape=(256, 256), resampling=resampling)
             except Exception:
                 return RasterService._create_empty_transparent_png()
 
@@ -144,19 +145,42 @@ class RasterService:
             rgba[~hotspot_mask] = [0, 0, 0, 0]
 
         elif layer == "persistence":
-            # Categorical Persistence: 0=None, 1=Transient, 2=Moderate, 3=Persistent
-            rgba[valid_mask & (arr == 3)] = [239, 68, 68, 220]    # Persistent (Red)
-            rgba[valid_mask & (arr == 2)] = [251, 146, 60, 200]   # Moderate (Orange)
-            rgba[valid_mask & (arr == 1)] = [250, 204, 21, 180]   # Transient (Yellow)
-            rgba[~valid_mask | (arr == 0)] = [0, 0, 0, 0]
+            if np.issubdtype(arr.dtype, np.floating):
+                # Continuous Persistence: 0.0 to 1.0
+                norm = np.clip(arr, 0.0, 1.0)
+                cmap = cm.get_cmap('YlOrRd')
+                colored = (cmap(norm) * 255).astype(np.uint8)
+                rgba[valid_mask] = colored[valid_mask]
+                rgba[~valid_mask] = [0, 0, 0, 0]
+            else:
+                # 5-Tier Categorical Persistence:
+                # 5 = >75-100% Recurrence (Chronic / Persistent): Red #ef4444
+                # 4 = >50-75% Recurrence (High): Orange #fb923c
+                # 3 = >25-50% Recurrence (Moderate): Yellow #facc15
+                # 2 = >0-25% Recurrence (Low): Cyan #06b6d4
+                # 1 = 0% Recurrence (Never Hotspot): Subtle Slate #1e293b
+                rgba[valid_mask & (arr == 5)] = [239, 68, 68, 220]    # Cat 5: Persistent (Red)
+                rgba[valid_mask & (arr == 4)] = [251, 146, 60, 200]   # Cat 4: High (Orange)
+                rgba[valid_mask & (arr == 3)] = [250, 204, 21, 180]   # Cat 3: Moderate (Yellow)
+                rgba[valid_mask & (arr == 2)] = [6, 182, 212, 160]    # Cat 2: Low (Cyan)
+                rgba[valid_mask & (arr == 1)] = [30, 41, 59, 100]     # Cat 1: Never Hotspot (Slate)
+                rgba[~valid_mask | (arr == 0) | (arr == 255)] = [0, 0, 0, 0]
 
         elif layer == "gi_star":
-            # Gi* Clusters: 3=99% Hotspot, 2=95% Hotspot, 1=90% Hotspot, -1=Coldspot
-            rgba[valid_mask & (arr == 3)] = [153, 0, 0, 220]      # 99% Hotspot (Dark Red)
-            rgba[valid_mask & (arr == 2)] = [215, 48, 39, 200]    # 95% Hotspot (Red)
-            rgba[valid_mask & (arr == 1)] = [244, 109, 67, 180]   # 90% Hotspot (Orange)
-            rgba[valid_mask & (arr < 0)] = [69, 117, 180, 200]    # Coldspot (Blue)
-            rgba[~valid_mask | (arr == 0)] = [0, 0, 0, 0]
+            if np.issubdtype(arr.dtype, np.floating):
+                # Continuous Gi* z-score: -2.0 to +4.0
+                norm = np.clip((arr - (-2.0)) / (4.0 - (-2.0)), 0.0, 1.0)
+                cmap = cm.get_cmap('RdYlBu_r')
+                colored = (cmap(norm) * 255).astype(np.uint8)
+                rgba[valid_mask] = colored[valid_mask]
+                rgba[~valid_mask] = [0, 0, 0, 0]
+            else:
+                # Gi* Clusters: 1 = Significant Hotspot Cluster (Orange #f46d43), 0 = Not Significant (Transparent)
+                rgba[valid_mask & (arr == 3)] = [153, 0, 0, 220]      # 99% Hotspot (Dark Red)
+                rgba[valid_mask & (arr == 2)] = [215, 48, 39, 200]    # 95% Hotspot (Red)
+                rgba[valid_mask & (arr == 1)] = [244, 109, 67, 200]   # Hotspot Cluster (Orange)
+                rgba[valid_mask & (arr < 0)] = [69, 117, 180, 200]    # Coldspot (Blue)
+                rgba[~valid_mask | (arr == 0) | (arr == 255)] = [0, 0, 0, 0]
 
         else:
             norm = np.clip(arr, 0.0, 1.0)

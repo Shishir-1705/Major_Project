@@ -105,11 +105,11 @@ export const MethodologyPage: React.FC = () => {
             </div>
             <div>
               <span className="text-slate-400 block text-[9.5px] uppercase font-sans">Built Domain</span>
-              <span className="font-bold text-teal-700">132.13 km² (146,812 px)</span>
+              <span className="font-bold text-teal-700">132.13 km² (146,810 px)</span>
             </div>
             <div>
-              <span className="text-slate-400 block text-[9.5px] uppercase font-sans">Spatial Resolution</span>
-              <span className="font-bold text-slate-800">30 m × 30 m (900 m²)</span>
+              <span className="text-slate-400 block text-[9.5px] uppercase font-sans">Persistence Domain</span>
+              <span className="font-bold text-teal-700">93.66 km² (104,063 px)</span>
             </div>
           </div>
         </section>
@@ -153,6 +153,11 @@ export const MethodologyPage: React.FC = () => {
           </p>
           <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 font-mono text-[11px] space-y-2">
             <div>
+              <span className="text-orange-800 font-bold block">USGS Landsat Collection 2 Level-2 ST Radiometric Calibration:</span>
+              <code>LST (°C) = (DN × 0.00341802 + 149.0) - 273.15</code>
+              <span className="text-slate-500 block text-[10px] mt-0.5">Where DN is Band 10 pixel digital number; calibrated directly to degrees Celsius.</span>
+            </div>
+            <div className="pt-2 border-t border-slate-200">
               <span className="text-emerald-800 font-bold block">NDVI (Normalized Difference Vegetation Index):</span>
               <code>NDVI = (NIR [Band 5] - Red [Band 4]) / (NIR [Band 5] + Red [Band 4])</code>
               <span className="text-slate-500 block text-[10px] mt-0.5">Captures chlorophyll absorption; ranges from -0.20 (water/barren) to +0.80 (dense canopy).</span>

@@ -72,7 +72,7 @@ export const OverviewPage: React.FC = () => {
     {
       to: '/clusters',
       title: 'Gi* Clusters',
-      description: 'Getis-Ord Gi* spatial autocorrelation highlighting 90%, 95%, and 99% confidence clusters.',
+      description: 'Getis-Ord Gi* spatial autocorrelation highlighting statistically significant hotspot clusters (FDR p < 0.05).',
       icon: BarChart2,
       color: '#0284c7',
       badge: 'Spatial Statistics',
