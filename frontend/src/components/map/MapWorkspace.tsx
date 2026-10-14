@@ -8,7 +8,7 @@ import { TimelineSlider } from '../controls/TimelineSlider';
 import { Crosshair, Wifi, WifiOff, Globe } from 'lucide-react';
 
 // Automatically invalidate Leaflet size when sidebars open/collapse or window resizes
-const MapResizer: React.FC<{ isSidebarOpen: boolean; isAnalyticsOpen: boolean }> = ({ isSidebarOpen, isAnalyticsOpen }) => {
+const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean }> = ({ isSidebarOpen, isAnalyticsOpen }) => {
   const map = useMap();
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -16,6 +16,14 @@ const MapResizer: React.FC<{ isSidebarOpen: boolean; isAnalyticsOpen: boolean }>
     }, 150);
     return () => clearTimeout(timer);
   }, [map, isSidebarOpen, isAnalyticsOpen]);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [map]);
 
   return null;
 };
@@ -36,7 +44,19 @@ const MapEventHandler: React.FC = () => {
   return null;
 };
 
-export const MapWorkspace: React.FC = () => {
+export interface MapWorkspaceProps {
+  showTimeline?: boolean;
+  showLegend?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
+  showTimeline = true,
+  showLegend = true,
+  className = '',
+  children
+}) => {
   const {
     showAOIBoundary,
     hoveredCoordinates,
@@ -78,7 +98,7 @@ export const MapWorkspace: React.FC = () => {
     : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
   return (
-    <main className="relative flex-1 h-full w-full bg-slate-100 overflow-hidden select-none">
+    <main className={`relative flex-1 h-full w-full bg-slate-100 overflow-hidden select-none ${className}`}>
       <MapContainer
         center={MYSURU_CENTER}
         zoom={MYSURU_DEFAULT_ZOOM}
@@ -169,15 +189,22 @@ export const MapWorkspace: React.FC = () => {
         </div>
       )}
 
+      {/* Custom Page Children Overlays */}
+      {children}
+
       {/* Floating Timeline Control at Bottom Center */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] max-w-[95vw]">
-        <TimelineSlider />
-      </div>
+      {showTimeline && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] max-w-[95vw]">
+          <TimelineSlider />
+        </div>
+      )}
 
       {/* Floating Map Legend at Bottom Right */}
-      <div className="absolute bottom-4 right-4 z-[1000] hidden md:block">
-        <MapLegend />
-      </div>
+      {showLegend && (
+        <div className="absolute bottom-4 right-4 z-[1000] hidden md:block">
+          <MapLegend />
+        </div>
+      )}
     </main>
   );
 };
