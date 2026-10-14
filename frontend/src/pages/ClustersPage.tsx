@@ -1,21 +1,213 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { MapWorkspace } from '../components/map/MapWorkspace';
-import { LayerControl } from '../components/controls/LayerControl';
-import { AnalyticsPanel } from '../components/analytics/AnalyticsPanel';
+import { MapDisplayControls } from '../components/controls/MapDisplayControls';
+import { StatCard } from '../components/common/StatCard';
+import {
+  BarChart2,
+  AlertTriangle,
+  ShieldCheck,
+  Sliders,
+  ChevronRight,
+  Calendar,
+  Percent,
+  CheckCircle2
+} from 'lucide-react';
 
 export const ClustersPage: React.FC = () => {
-  const { setActiveLayer } = useAppStore();
+  const {
+    activeLayer,
+    setActiveLayer,
+    giStarStats,
+    isLoadingStats,
+    backendConnected
+  } = useAppStore();
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  // Set active layer to gi_star when mounted
   useEffect(() => {
-    setActiveLayer('gi_star');
-  }, [setActiveLayer]);
+    if (activeLayer !== 'gi_star') {
+      setActiveLayer('gi_star');
+    }
+  }, [activeLayer, setActiveLayer]);
+
+  const hot90 = giStarStats?.clusters?.find((c) => c.confidence_level === '90%');
+  const notSig = giStarStats?.clusters?.find((c) => c.cluster_type.includes('Not Significant'));
+
+  const hot90Area = hot90?.area_km2 ?? 8.856;
+  const hot90Pct = hot90?.percentage ?? 9.46;
+  const notSigArea = notSig?.area_km2 ?? 84.801;
+  const totalDomain = giStarStats?.total_built_area_km2 ?? 93.657;
 
   return (
     <div className="flex h-full w-full overflow-hidden relative">
-      <LayerControl />
-      <MapWorkspace />
-      <AnalyticsPanel />
+      {/* Interactive Map Area (Reusing MapWorkspace with static key and no timeline) */}
+      <MapWorkspace showTimeline={false} className="flex-1">
+        {/* Toggle Sidebar Button */}
+        <div className="absolute top-14 left-3 z-[1000]">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/80 backdrop-blur-md shadow-card text-xs font-semibold text-slate-700 hover:text-teal-700 hover:bg-slate-50 transition-colors"
+            title={isSidebarOpen ? "Collapse Spatial Clustering Panel" : "Expand Spatial Clustering Panel"}
+          >
+            <Sliders className="w-3.5 h-3.5 text-teal-600" />
+            <span>{isSidebarOpen ? "Hide Analytics" : "Show Analytics"}</span>
+          </button>
+        </div>
+      </MapWorkspace>
+
+      {/* Gi* Clustering Analytical Sidebar */}
+      {isSidebarOpen && (
+        <aside className="w-80 sm:w-96 bg-white border-l border-slate-200/80 flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
+          {/* Header */}
+          <div className="p-3.5 border-b border-slate-200/80 flex items-center justify-between bg-slate-50/70">
+            <div className="flex items-center space-x-2">
+              <div className="p-1.5 rounded-lg bg-orange-100 text-orange-600">
+                <BarChart2 className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Getis-Ord Gi* Clusters</h2>
+                <p className="text-[10px] text-slate-500 font-medium">Spatial Autocorrelation & Hotspot Clustering</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
+              title="Collapse panel"
+              aria-label="Collapse panel"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Scrollable Body */}
+          <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
+            {/* Active Context Banner */}
+            <div className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80 space-y-2 shadow-2xs">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium flex items-center space-x-1">
+                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Analysis Domain:</span>
+                </span>
+                <span className="font-mono font-bold text-slate-900">{totalDomain} km²</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Spatial Statistic:</span>
+                <span className="text-teal-700 font-semibold">Standardized Gi* z-scores</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Static Tile Key:</span>
+                <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
+                  clustering
+                </span>
+              </div>
+            </div>
+
+            {/* Core Clustering Metrics */}
+            <div className="space-y-1.5">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1 flex items-center justify-between">
+                <span>Cluster Distribution</span>
+                <span className="font-mono text-[10px] text-teal-700">p &lt; 0.10 Threshold</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <StatCard
+                  title="Hotspot Cluster"
+                  value={hot90Area.toFixed(2)}
+                  unit="km²"
+                  subtitle="90% confidence (z ≥ 1.645)"
+                  icon={AlertTriangle}
+                  accentColor="#f46d43"
+                  isLoading={isLoadingStats}
+                  isError={!backendConnected && !giStarStats}
+                />
+
+                <StatCard
+                  title="Cluster Share"
+                  value={`${hot90Pct.toFixed(1)}%`}
+                  unit="coverage"
+                  subtitle="Statistically significant core"
+                  icon={Percent}
+                  accentColor="#ea580c"
+                  isLoading={isLoadingStats}
+                  isError={!backendConnected && !giStarStats}
+                />
+
+                <StatCard
+                  title="Not Significant"
+                  value={notSigArea.toFixed(2)}
+                  unit="km²"
+                  subtitle="Random spatial distribution"
+                  icon={ShieldCheck}
+                  accentColor="#64748b"
+                  isLoading={isLoadingStats}
+                  isError={!backendConnected && !giStarStats}
+                />
+
+                <StatCard
+                  title="z-score Cut-off"
+                  value="z ≥ 1.645"
+                  unit="critical"
+                  subtitle="p-value < 0.10 critical limit"
+                  icon={BarChart2}
+                  accentColor="#0d9488"
+                  isLoading={false}
+                />
+              </div>
+            </div>
+
+            {/* Cluster Significance Breakdown Table */}
+            <div className="space-y-1.5">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">
+                Statistical Significance Breakdown
+              </div>
+              <div className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-2.5 space-y-2">
+                {(giStarStats?.clusters || [
+                  { cluster_type: "Hotspot 90% Confidence", confidence_level: "90%", area_km2: 8.856, percentage: 9.46, color_hex: "#f46d43" },
+                  { cluster_type: "Not Significant", confidence_level: "N/A", area_km2: 84.801, percentage: 90.54, color_hex: "#1e293b" },
+                  { cluster_type: "Hotspot 95% Confidence", confidence_level: "95%", area_km2: 0.0, percentage: 0.0, color_hex: "#d73027" },
+                  { cluster_type: "Hotspot 99% Confidence", confidence_level: "99%", area_km2: 0.0, percentage: 0.0, color_hex: "#990000" },
+                  { cluster_type: "Coldspot Cluster", confidence_level: "90-99%", area_km2: 0.0, percentage: 0.0, color_hex: "#4575b4" }
+                ]).map((c, idx) => (
+                  <div key={idx} className="flex items-center justify-between text-xs p-1.5 bg-white rounded-lg border border-slate-200/70 shadow-2xs">
+                    <div className="flex items-center space-x-2 min-w-0 pr-2">
+                      <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
+                      <span className="truncate text-slate-700 font-medium text-[11px]">{c.cluster_type}</span>
+                    </div>
+                    <div className="text-right shrink-0 font-mono text-[11px]">
+                      <span className="font-bold text-slate-900">{c.area_km2.toFixed(2)} km²</span>
+                      <span className="text-slate-400 ml-1">({c.percentage.toFixed(1)}%)</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Reusable Opacity & AOI Controls */}
+            <div className="space-y-1.5">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">
+                Map View Options
+              </div>
+              <MapDisplayControls />
+            </div>
+
+            {/* Spatial Corroboration Card */}
+            <div className="p-3.5 rounded-xl border border-teal-200 bg-teal-50/70 text-teal-900 space-y-1.5 text-xs">
+              <div className="flex items-center space-x-1.5 font-bold text-teal-800">
+                <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
+                <span>Spatial Autocorrelation Corroboration</span>
+              </div>
+              <p className="text-[11px] leading-relaxed text-teal-900/90">
+                The Getis-Ord $G_i^*$ statistic evaluates whether high thermal values cluster in space more than expected by random chance.
+              </p>
+              <p className="text-[11px] leading-relaxed text-teal-900/90">
+                The identified <strong>8.86 km² (9.46%)</strong> statistically significant hot spot cluster ($p &lt; 0.10$) precisely mirrors the <strong>8.81 km² (9.40%)</strong> Category 5 chronic persistence zone in central Mysuru, providing rigorous statistical proof of localized thermal intensification.
+              </p>
+            </div>
+          </div>
+        </aside>
+      )}
     </div>
   );
 };
