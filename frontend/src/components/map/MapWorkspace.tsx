@@ -74,21 +74,21 @@ export const MapWorkspace: React.FC = () => {
 
   const cartoApiKey = import.meta.env.VITE_CARTO_API_KEY;
   const cartoBasemapUrl = cartoApiKey
-    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${cartoApiKey}&api_key=${cartoApiKey}`
-    : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+    ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}&api_key=${cartoApiKey}`
+    : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
   return (
-    <main className="relative flex-1 h-full w-full bg-slate-900 overflow-hidden select-none">
+    <main className="relative flex-1 h-full w-full bg-slate-100 overflow-hidden select-none">
       <MapContainer
         center={MYSURU_CENTER}
         zoom={MYSURU_DEFAULT_ZOOM}
         className="h-full w-full"
         zoomControl={true}
       >
-        {/* CARTO Dark Matter Base Map with Authenticated Tile URL */}
+        {/* CARTO Voyager Road-Oriented Geographic Base Map with Authenticated Tile URL */}
         <TileLayer
           url={cartoBasemapUrl}
-          attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap'
+          attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           maxZoom={18}
         />
 
