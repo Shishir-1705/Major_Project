@@ -3,7 +3,7 @@ import { useAppStore } from '../../store/useAppStore';
 import { LAYERS, OBSERVATION_DATES } from '../../config/constants';
 import { ModelInfoCard } from './ModelInfoCard';
 import { StatCard } from '../common/StatCard';
-import { Flame, Trees, Building2, ShieldCheck, BarChart2, Info, AlertTriangle } from 'lucide-react';
+import { Flame, Trees, Building2, ShieldCheck, BarChart2, Info, AlertTriangle, ChevronRight } from 'lucide-react';
 
 export const AnalyticsPanel: React.FC = () => {
   const {
@@ -16,40 +16,55 @@ export const AnalyticsPanel: React.FC = () => {
     persistenceStats,
     giStarStats,
     metadata,
-    modelInfo
+    modelInfo,
+    isAnalyticsOpen,
+    toggleAnalytics
   } = useAppStore();
 
   const currentLayer = LAYERS.find((l) => l.id === activeLayer);
   const currentDateObj = OBSERVATION_DATES.find((d) => d.date === selectedDate);
 
+  if (!isAnalyticsOpen) {
+    return null;
+  }
+
   return (
-    <div className="w-84 bg-[#111827] border-l border-[#1f2937] flex flex-col h-full shrink-0 select-none">
+    <aside className="w-80 sm:w-88 bg-white border-l border-slate-200/80 flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
       {/* Panel Header */}
-      <div className="p-3.5 border-b border-[#1f2937] flex items-center justify-between">
+      <div className="p-3.5 border-b border-slate-200/80 flex items-center justify-between bg-slate-50/60">
         <div className="flex items-center space-x-2">
-          <BarChart2 className="w-4 h-4 text-cyan-400" />
-          <h2 className="text-xs font-bold text-white uppercase tracking-wider">Spatial Analytics & Model</h2>
+          <BarChart2 className="w-4 h-4 text-teal-600" />
+          <h2 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Spatial Analytics & Model</h2>
         </div>
-        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
-          Mysuru AOI
-        </span>
+        <div className="flex items-center space-x-1.5">
+          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-slate-200/70 text-slate-700">
+            Mysuru AOI
+          </span>
+          <button
+            onClick={toggleAnalytics}
+            className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
+            title="Collapse analytics"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Analytics Content Scrollable Body */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
         {/* Active Context Banner */}
-        <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+        <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 space-y-1.5 shadow-2xs">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400">Selected Date:</span>
-            <span className="font-mono font-bold text-white">{selectedDate}</span>
+            <span className="text-slate-500 font-medium">Observation Date:</span>
+            <span className="font-mono font-bold text-slate-900">{selectedDate}</span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400">Satellite Sensor:</span>
-            <span className="text-cyan-400 font-medium">{currentDateObj?.satellite || 'Landsat OLI/TIRS'}</span>
+            <span className="text-slate-500 font-medium">Satellite Sensor:</span>
+            <span className="text-teal-700 font-semibold">{currentDateObj?.satellite || 'Landsat OLI/TIRS'}</span>
           </div>
-          <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-900">
-            <span className="text-slate-400">Active View:</span>
-            <span className="text-white font-semibold truncate max-w-[140px]">{currentLayer?.shortName}</span>
+          <div className="flex items-center justify-between text-xs pt-1.5 border-t border-slate-200/80">
+            <span className="text-slate-500 font-medium">Active Layer:</span>
+            <span className="text-slate-900 font-bold truncate max-w-[150px]">{currentLayer?.shortName}</span>
           </div>
         </div>
 
@@ -61,7 +76,7 @@ export const AnalyticsPanel: React.FC = () => {
             unit="km²"
             subtitle="Built-up analysis domain (Step 9)"
             icon={Building2}
-            accentColor="#a855f7"
+            accentColor="#8b5cf6"
             isLoading={isLoadingStats}
             isError={!backendConnected && !metadata}
             errorMessage="Metadata offline"
@@ -142,7 +157,7 @@ export const AnalyticsPanel: React.FC = () => {
             unit="%"
             subtitle="NDVI+NDBI Predictors"
             icon={ShieldCheck}
-            accentColor="#10b981"
+            accentColor="#0d9488"
             isError={!backendConnected && !modelInfo}
             errorMessage="Telemetry offline"
           />
@@ -150,22 +165,22 @@ export const AnalyticsPanel: React.FC = () => {
 
         {/* Dynamic Categorical Persistence Stats (if active layer is persistence) */}
         {activeLayer === 'persistence' && persistenceStats && (
-          <div className="bg-[#111827] border border-amber-500/30 rounded-xl p-3.5 space-y-2.5">
+          <div className="bg-slate-50/70 border border-amber-300/60 rounded-xl p-3.5 space-y-2.5 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Hotspot Persistence Breakdown</h4>
-                <span className="text-[10px] font-mono text-slate-400 block">Domain: Multi-temporal persistence domain ({persistenceStats.total_built_area_km2} km²)</span>
+                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Hotspot Persistence Breakdown</h4>
+                <span className="text-[10px] font-mono text-slate-500 block">Domain: Multi-temporal persistence ({persistenceStats.total_built_area_km2} km²)</span>
               </div>
             </div>
             <div className="space-y-1.5 text-xs">
               {persistenceStats.categories.map((cat) => (
-                <div key={cat.category} className="bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1">
+                <div key={cat.category} className="bg-white p-2 rounded-lg border border-slate-200/80 space-y-1 shadow-2xs">
                   <div className="flex justify-between font-medium">
-                    <span className="text-slate-300 flex items-center space-x-1.5">
+                    <span className="text-slate-700 flex items-center space-x-1.5">
                       <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ backgroundColor: cat.color_hex }} />
-                      <span className="truncate max-w-[160px]">{cat.category}</span>
+                      <span className="truncate max-w-[150px]">{cat.category}</span>
                     </span>
-                    <span className="font-mono text-white font-bold">{cat.area_km2} km² ({cat.percentage}%)</span>
+                    <span className="font-mono text-slate-900 font-bold">{cat.area_km2} km² ({cat.percentage}%)</span>
                   </div>
                 </div>
               ))}
@@ -175,22 +190,22 @@ export const AnalyticsPanel: React.FC = () => {
 
         {/* Dynamic Gi* Cluster Stats (if active layer is gi_star) */}
         {activeLayer === 'gi_star' && giStarStats && (
-          <div className="bg-[#111827] border border-cyan-500/30 rounded-xl p-3.5 space-y-2.5">
+          <div className="bg-slate-50/70 border border-teal-300/60 rounded-xl p-3.5 space-y-2.5 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Getis-Ord Gi* Clusters</h4>
-                <span className="text-[10px] font-mono text-slate-400 block">Domain: Gi* spatial analysis domain ({giStarStats.total_built_area_km2} km²)</span>
+                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Getis-Ord Gi* Clusters</h4>
+                <span className="text-[10px] font-mono text-slate-500 block">Domain: Gi* spatial analysis ({giStarStats.total_built_area_km2} km²)</span>
               </div>
             </div>
             <div className="space-y-1.5 text-xs">
               {giStarStats.clusters.map((cls) => (
-                <div key={cls.cluster_type} className="bg-slate-950 p-2 rounded-lg border border-slate-800 space-y-1">
+                <div key={cls.cluster_type} className="bg-white p-2 rounded-lg border border-slate-200/80 space-y-1 shadow-2xs">
                   <div className="flex justify-between font-medium">
-                    <span className="text-slate-300 flex items-center space-x-1.5">
+                    <span className="text-slate-700 flex items-center space-x-1.5">
                       <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ backgroundColor: cls.color_hex }} />
                       <span>{cls.cluster_type}</span>
                     </span>
-                    <span className="font-mono text-white font-bold">{cls.area_km2} km² ({cls.percentage}%)</span>
+                    <span className="font-mono text-slate-900 font-bold">{cls.area_km2} km² ({cls.percentage}%)</span>
                   </div>
                 </div>
               ))}
@@ -206,34 +221,34 @@ export const AnalyticsPanel: React.FC = () => {
           const ndbiVal = modelInfo ? (modelInfo.feature_importances.NDBI * 100).toFixed(2) : "61.03";
           const ndviVal = modelInfo ? (modelInfo.feature_importances.NDVI * 100).toFixed(2) : "38.97";
           return (
-            <div className="bg-[#111827] border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+            <div className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-3.5 space-y-2.5 shadow-xs">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Gini Feature Attribution</h4>
-                <span className="text-[10px] font-mono text-slate-500">Sum = 1.000</span>
+                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Gini Feature Attribution</h4>
+                <span className="text-[10px] font-mono text-slate-500 font-medium">Sum = 1.000</span>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <div>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-purple-400 font-semibold flex items-center space-x-1">
-                      <Building2 className="w-3 h-3 inline mr-1" /> NDBI (Built-up)
+                    <span className="text-purple-700 font-semibold flex items-center space-x-1">
+                      <Building2 className="w-3.5 h-3.5 inline mr-1 text-purple-600" /> NDBI (Built-up)
                     </span>
-                    <span className="font-mono text-white font-bold">{ndbiVal}%</span>
+                    <span className="font-mono text-slate-900 font-bold">{ndbiVal}%</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                    <div className="h-full bg-purple-500 rounded-full" style={{ width: `${ndbiVal}%` }} />
+                  <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div className="h-full bg-purple-600 rounded-full transition-all" style={{ width: `${ndbiVal}%` }} />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-emerald-400 font-semibold flex items-center space-x-1">
-                      <Trees className="w-3 h-3 inline mr-1" /> NDVI (Vegetation)
+                    <span className="text-emerald-700 font-semibold flex items-center space-x-1">
+                      <Trees className="w-3.5 h-3.5 inline mr-1 text-emerald-600" /> NDVI (Vegetation)
                     </span>
-                    <span className="font-mono text-white font-bold">{ndviVal}%</span>
+                    <span className="font-mono text-slate-900 font-bold">{ndviVal}%</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-950 overflow-hidden border border-slate-800">
-                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${ndviVal}%` }} />
+                  <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${ndviVal}%` }} />
                   </div>
                 </div>
               </div>
@@ -242,18 +257,18 @@ export const AnalyticsPanel: React.FC = () => {
         })()}
 
         {/* Integration Status Footer */}
-        <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
-          <div className="flex items-center space-x-1 text-cyan-400 font-semibold">
-            <Info className="w-3.5 h-3.5 shrink-0" />
+        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-600 space-y-1">
+          <div className="flex items-center space-x-1 text-teal-700 font-semibold">
+            <Info className="w-3.5 h-3.5 shrink-0 text-teal-600" />
             <span>Research Platform Status</span>
           </div>
-          <p className="leading-tight text-slate-400">
+          <p className="leading-tight text-slate-500">
             {backendConnected
               ? "Live connection active with FastAPI backend. Consuming real satellite rasters & research statistics."
               : "API backend offline. Start uvicorn backend.app.main:app to stream research data."}
           </p>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };

@@ -14,43 +14,47 @@ export const ToastContainer: React.FC = () => {
         const isWarning = toast.type === 'warning';
         const isSuccess = toast.type === 'success';
 
-        let bgClass = 'bg-slate-900/95 border-slate-700 text-slate-200';
+        let bgClass = 'bg-white/95 border-slate-200 text-slate-800 shadow-card';
         let Icon = Info;
-        let iconColor = 'text-cyan-400';
+        let iconColor = 'text-teal-600';
+        let titleColor = 'text-slate-900';
 
         if (isError) {
-          bgClass = 'bg-red-950/95 border-red-500/50 text-red-200';
+          bgClass = 'bg-white/95 border-red-200 text-red-900 shadow-card';
           Icon = AlertCircle;
-          iconColor = 'text-red-400';
+          iconColor = 'text-red-600';
+          titleColor = 'text-red-900';
         } else if (isWarning) {
-          bgClass = 'bg-amber-950/95 border-amber-500/50 text-amber-200';
+          bgClass = 'bg-white/95 border-amber-200 text-amber-900 shadow-card';
           Icon = AlertTriangle;
-          iconColor = 'text-amber-400';
+          iconColor = 'text-amber-600';
+          titleColor = 'text-amber-900';
         } else if (isSuccess) {
-          bgClass = 'bg-emerald-950/95 border-emerald-500/50 text-emerald-200';
+          bgClass = 'bg-white/95 border-emerald-200 text-emerald-900 shadow-card';
           Icon = CheckCircle;
-          iconColor = 'text-emerald-400';
+          iconColor = 'text-emerald-600';
+          titleColor = 'text-emerald-900';
         }
 
         return (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-start space-x-3 p-3 rounded-xl border backdrop-blur-md shadow-xl transition-all animate-in fade-in slide-in-from-top-2 ${bgClass}`}
+            className={`pointer-events-auto flex items-start space-x-3 p-3.5 rounded-xl border backdrop-blur-md transition-all animate-in fade-in slide-in-from-top-2 ${bgClass}`}
           >
             <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${iconColor}`} />
 
             <div className="flex-1 text-xs space-y-0.5">
               {toast.title && (
-                <div className="font-bold uppercase tracking-wider text-[11px] text-white">
+                <div className={`font-bold uppercase tracking-wider text-[11px] ${titleColor}`}>
                   {toast.title}
                 </div>
               )}
-              <p className="leading-tight text-slate-300">{toast.message}</p>
+              <p className="leading-tight text-slate-600">{toast.message}</p>
             </div>
 
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-white p-0.5 rounded transition-colors shrink-0"
+              className="text-slate-400 hover:text-slate-700 p-0.5 rounded transition-colors shrink-0"
               title="Dismiss notification"
             >
               <X className="w-3.5 h-3.5" />

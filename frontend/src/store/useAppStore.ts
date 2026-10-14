@@ -22,6 +22,8 @@ interface AppState {
   activeTab: 'overview' | 'thermal' | 'ml' | 'environment' | 'persistence' | 'clusters' | 'methodology';
   hoveredCoordinates: { lat: number; lng: number } | null;
   isMethodologyModalOpen: boolean;
+  isSidebarOpen: boolean;
+  isAnalyticsOpen: boolean;
 
   // Toast Notification System
   toasts: ToastMessage[];
@@ -49,6 +51,10 @@ interface AppState {
   setActiveTab: (tab: AppState['activeTab']) => void;
   setHoveredCoordinates: (coords: { lat: number; lng: number } | null) => void;
   setIsMethodologyModalOpen: (open: boolean) => void;
+  setIsSidebarOpen: (open: boolean) => void;
+  setIsAnalyticsOpen: (open: boolean) => void;
+  toggleSidebar: () => void;
+  toggleAnalytics: () => void;
   addToast: (toast: Omit<ToastMessage, 'id'>) => void;
   removeToast: (id: string) => void;
 
@@ -67,6 +73,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   activeTab: 'overview',
   hoveredCoordinates: null,
   isMethodologyModalOpen: false,
+  isSidebarOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
+  isAnalyticsOpen: typeof window !== 'undefined' ? window.innerWidth >= 1280 : true,
 
   // Toast Queue
   toasts: [],
@@ -173,6 +181,10 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
   setHoveredCoordinates: (coords) => set({ hoveredCoordinates: coords }),
   setIsMethodologyModalOpen: (open) => set({ isMethodologyModalOpen: open }),
+  setIsSidebarOpen: (open) => set({ isSidebarOpen: open }),
+  setIsAnalyticsOpen: (open) => set({ isAnalyticsOpen: open }),
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  toggleAnalytics: () => set((state) => ({ isAnalyticsOpen: !state.isAnalyticsOpen })),
 
   // Fetch initial project metadata, dates, and locked model specs
   fetchInitialData: async () => {

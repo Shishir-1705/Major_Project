@@ -18,31 +18,31 @@ export const StatCard: React.FC<StatCardProps> = ({
   unit,
   subtitle,
   icon: Icon,
-  accentColor = '#06b6d4',
+  accentColor = '#0d9488',
   isLoading = false,
   isError = false,
   errorMessage = 'Telemetry unavailable',
 }) => {
   return (
-    <div className="bg-[#111827] border border-[#1f2937] rounded-xl p-3.5 shadow-sm relative overflow-hidden group hover:border-slate-700 transition-colors">
+    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-xs relative overflow-hidden group hover:border-slate-300 transition-all">
       <div className="flex items-start justify-between">
-        <div>
-          <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider block">
+        <div className="min-w-0 flex-1">
+          <span className="text-[10.5px] font-semibold text-slate-500 uppercase tracking-wider block truncate">
             {title}
           </span>
           <div className="flex items-baseline space-x-1 mt-1">
             {isLoading ? (
-              <div className="h-6 w-24 bg-slate-800 animate-pulse rounded my-0.5" />
+              <div className="h-6 w-20 bg-slate-100 animate-pulse rounded my-0.5" />
             ) : isError ? (
-              <span className="text-xs font-mono text-amber-400/90 font-medium py-1 block">
+              <span className="text-xs font-mono text-amber-600 font-medium py-1 block">
                 Unavailable
               </span>
             ) : (
               <>
-                <span className="text-xl font-bold text-white tracking-tight font-mono">
+                <span className="text-xl font-bold text-slate-900 tracking-tight font-mono">
                   {value}
                 </span>
-                {unit && <span className="text-xs text-slate-400 font-sans">{unit}</span>}
+                {unit && <span className="text-xs text-slate-500 font-sans font-medium">{unit}</span>}
               </>
             )}
           </div>
@@ -54,9 +54,9 @@ export const StatCard: React.FC<StatCardProps> = ({
         </div>
 
         <div
-          className="p-2 rounded-lg"
+          className="p-2 rounded-lg shrink-0 ml-2 transition-colors"
           style={{
-            backgroundColor: `${accentColor}18`,
+            backgroundColor: `${accentColor}15`,
             color: accentColor,
           }}
         >

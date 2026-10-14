@@ -8,7 +8,7 @@ import { ToastContainer } from './components/common/ToastContainer';
 
 export const App: React.FC = () => {
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#0b0f19] text-slate-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-screen w-screen bg-[#f8fafc] text-slate-800 overflow-hidden font-sans">
       {/* Top Application Header */}
       <Header />
 

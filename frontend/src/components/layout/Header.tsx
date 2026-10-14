@@ -1,6 +1,19 @@
 import React, { useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
-import { Flame, ShieldCheck, MapPin, Info, Layers, BarChart2, Activity, GitCommit } from 'lucide-react';
+import {
+  Flame,
+  ShieldCheck,
+  MapPin,
+  Info,
+  Layers,
+  BarChart2,
+  Activity,
+  GitCommit,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen
+} from 'lucide-react';
 
 export const Header: React.FC = () => {
   const {
@@ -11,7 +24,11 @@ export const Header: React.FC = () => {
     setIsMethodologyModalOpen,
     backendConnected,
     fetchInitialData,
-    checkServerRecovery
+    checkServerRecovery,
+    isSidebarOpen,
+    toggleSidebar,
+    isAnalyticsOpen,
+    toggleAnalytics
   } = useAppStore();
 
   useEffect(() => {
@@ -49,32 +66,49 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="h-14 bg-[#111827] border-b border-[#1f2937] px-4 flex items-center justify-between z-30 shrink-0 select-none">
-      {/* Brand & Project Identity */}
-      <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.2)]">
-          <Flame className="w-5 h-5 text-cyan-400" />
-        </div>
-        <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="text-sm font-bold tracking-tight text-white">
-              THERMAL INTELLIGENCE
-            </h1>
-            <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-cyan-950/90 text-cyan-300 border border-cyan-500/30">
-              MODEL LOCKED
-            </span>
+    <header className="h-14 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-3 md:px-4 flex items-center justify-between z-30 shrink-0 select-none shadow-xs">
+      {/* Brand & Left Controls */}
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* Sidebar Toggle for Map Focus */}
+        <button
+          onClick={toggleSidebar}
+          className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200/80 transition-colors"
+          title={isSidebarOpen ? "Collapse Layers Sidebar" : "Expand Layers Sidebar"}
+          aria-label={isSidebarOpen ? "Collapse Layers Sidebar" : "Expand Layers Sidebar"}
+        >
+          {isSidebarOpen ? (
+            <PanelLeftClose className="w-4 h-4 text-slate-600" />
+          ) : (
+            <PanelLeftOpen className="w-4 h-4 text-teal-600" />
+          )}
+        </button>
+
+        {/* Brand Logo & Title */}
+        <div className="flex items-center space-x-2.5">
+          <div className="w-8 h-8 rounded-lg bg-teal-50 border border-teal-200/80 flex items-center justify-center text-teal-600 shadow-xs">
+            <Flame className="w-4.5 h-4.5 text-teal-600" />
           </div>
-          <p className="text-[11px] text-slate-400 flex items-center space-x-1.5">
-            <MapPin className="w-3 h-3 text-cyan-400 inline" />
-            <span className="text-slate-200 font-medium">Mysuru, Karnataka, India</span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-400 font-mono text-[10px]">EPSG:32643 UTM 43N</span>
-          </p>
+          <div>
+            <div className="flex items-center space-x-2">
+              <h1 className="text-xs sm:text-sm font-bold tracking-tight text-slate-900">
+                THERMAL INTELLIGENCE
+              </h1>
+              <span className="hidden xs:inline-block text-[10px] font-mono font-semibold uppercase px-1.5 py-0.5 rounded-md bg-teal-50 text-teal-700 border border-teal-200/80">
+                MODEL LOCKED
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 hidden sm:flex items-center space-x-1.5">
+              <MapPin className="w-3 h-3 text-teal-600 inline" />
+              <span className="text-slate-700 font-medium">Mysuru, Karnataka, India</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-500 font-mono text-[10px]">EPSG:32643 UTM 43N</span>
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <nav className="hidden lg:flex items-center space-x-1 bg-[#0b0f19] p-1 rounded-lg border border-[#1f2937]">
+      {/* Navigation Tabs (Desktop & Wide Tablet) */}
+      <nav className="hidden xl:flex items-center space-x-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80">
         {navTabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -82,20 +116,20 @@ export const Header: React.FC = () => {
             <div key={tab.id} className="relative flex items-center">
               <button
                 onClick={() => handleTabClick(tab.id)}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   isActive
-                    ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/40 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
+                    ? 'bg-white text-teal-700 shadow-xs border border-slate-200/80 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 border border-transparent'
                 }`}
                 title={tab.label}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-teal-600' : 'text-slate-500'}`} />
                 <span>{tab.label}</span>
               </button>
 
               {/* Quick Subview Toggle Pills for ML Hotspots */}
               {tab.id === 'ml' && isActive && (
-                <div className="flex items-center ml-1 mr-1 space-x-0.5 bg-slate-950 p-0.5 rounded border border-slate-800">
+                <div className="flex items-center ml-1 mr-1 space-x-0.5 bg-slate-200/70 p-0.5 rounded-md border border-slate-300/60">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -103,8 +137,8 @@ export const Header: React.FC = () => {
                     }}
                     className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
                       activeLayer === 'rf_prob'
-                        ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-teal-600 text-white font-bold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                     title="Random Forest Continuous Probability"
                   >
@@ -117,8 +151,8 @@ export const Header: React.FC = () => {
                     }}
                     className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
                       activeLayer === 'rf_class'
-                        ? 'bg-red-500/20 text-red-300 font-bold border border-red-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-red-600 text-white font-bold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                     title="Random Forest Binary Hotspot Classification"
                   >
@@ -129,7 +163,7 @@ export const Header: React.FC = () => {
 
               {/* Quick Subview Toggle Pills for NDVI / NDBI */}
               {tab.id === 'environment' && isActive && (
-                <div className="flex items-center ml-1 mr-1 space-x-0.5 bg-slate-950 p-0.5 rounded border border-slate-800">
+                <div className="flex items-center ml-1 mr-1 space-x-0.5 bg-slate-200/70 p-0.5 rounded-md border border-slate-300/60">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -137,8 +171,8 @@ export const Header: React.FC = () => {
                     }}
                     className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
                       activeLayer === 'ndvi'
-                        ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-emerald-600 text-white font-bold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                     title="Normalized Difference Vegetation Index"
                   >
@@ -151,8 +185,8 @@ export const Header: React.FC = () => {
                     }}
                     className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
                       activeLayer === 'ndbi'
-                        ? 'bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-purple-600 text-white font-bold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                     title="Normalized Difference Built-up Index"
                   >
@@ -165,31 +199,47 @@ export const Header: React.FC = () => {
         })}
       </nav>
 
-      {/* Server Status & Methodology Action */}
-      <div className="flex items-center space-x-3">
+      {/* Right Actions & Telemetry */}
+      <div className="flex items-center space-x-2 sm:space-x-2.5">
         {/* Real Backend Status Indicator */}
-        <div className="flex items-center space-x-2 text-xs bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-md">
+        <div className="flex items-center space-x-1.5 text-xs bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg">
           {backendConnected ? (
             <>
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-slate-400 font-medium hidden sm:inline">ANALYSIS SERVER</span>
-              <span className="font-mono font-bold text-emerald-400 text-[11px]">ONLINE</span>
+              <span className="text-slate-500 font-medium hidden md:inline">SERVER</span>
+              <span className="font-mono font-bold text-emerald-700 text-[11px]">ONLINE</span>
             </>
           ) : (
             <>
               <span className="w-2 h-2 rounded-full bg-amber-500" />
-              <span className="text-slate-400 font-medium hidden sm:inline">ANALYSIS SERVER</span>
-              <span className="font-mono font-bold text-amber-400 text-[11px]">OFFLINE</span>
+              <span className="text-slate-500 font-medium hidden md:inline">SERVER</span>
+              <span className="font-mono font-bold text-amber-700 text-[11px]">OFFLINE</span>
             </>
           )}
         </div>
 
+        {/* Methodology Action */}
         <button
           onClick={() => setIsMethodologyModalOpen(true)}
-          className="flex items-center space-x-1.5 text-xs font-medium px-3 py-1.5 rounded-md bg-slate-900 text-slate-200 hover:text-white hover:bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors shadow-sm"
+          className="flex items-center space-x-1 text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200/80 border border-slate-200 transition-colors shadow-xs"
+          title="View Research Methodology & Pipeline Governance"
         >
-          <Info className="w-3.5 h-3.5 text-cyan-400" />
+          <Info className="w-3.5 h-3.5 text-teal-600" />
           <span className="hidden sm:inline">Methodology</span>
+        </button>
+
+        {/* Analytics Drawer Toggle Button */}
+        <button
+          onClick={toggleAnalytics}
+          className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200/80 transition-colors"
+          title={isAnalyticsOpen ? "Collapse Analytics Panel" : "Expand Analytics Panel"}
+          aria-label={isAnalyticsOpen ? "Collapse Analytics Panel" : "Expand Analytics Panel"}
+        >
+          {isAnalyticsOpen ? (
+            <PanelRightClose className="w-4 h-4 text-slate-600" />
+          ) : (
+            <PanelRightOpen className="w-4 h-4 text-teal-600" />
+          )}
         </button>
       </div>
     </header>
