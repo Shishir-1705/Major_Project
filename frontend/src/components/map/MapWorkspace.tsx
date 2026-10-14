@@ -59,7 +59,7 @@ export const MapWorkspace: React.FC = () => {
 
   const cartoApiKey = import.meta.env.VITE_CARTO_API_KEY;
   const cartoBasemapUrl = cartoApiKey
-    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${cartoApiKey}`
+    ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${cartoApiKey}&api_key=${cartoApiKey}`
     : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
   return (
