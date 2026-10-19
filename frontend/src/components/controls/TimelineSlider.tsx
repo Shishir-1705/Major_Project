@@ -60,11 +60,11 @@ export const TimelineSlider: React.FC = () => {
   };
 
   return (
-    <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md rounded-2xl p-2 sm:p-2.5 shadow-floating flex items-center space-x-2 sm:space-x-3 select-none">
+    <div className="bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl p-2 sm:p-2.5 shadow-floating flex items-center space-x-2 sm:space-x-3 select-none">
       {/* Play / Pause Toggle */}
       <button
         onClick={() => setIsPlaying(!isPlaying)}
-        className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 border border-teal-200 flex items-center justify-center hover:bg-teal-100 transition-colors shadow-2xs"
+        className="w-8 h-8 rounded-xl bg-[#111C2E] text-[#19D3C5] border border-[#26354A] flex items-center justify-center hover:bg-[#162238] transition-colors shadow-2xs"
         title={isPlaying ? 'Pause Timeline Playback' : 'Start Timeline Playback'}
       >
         {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
@@ -75,17 +75,17 @@ export const TimelineSlider: React.FC = () => {
         <button
           onClick={handlePrev}
           disabled={currentIndex === 0}
-          className="p-1 rounded-lg text-slate-500 hover:text-slate-900 disabled:opacity-30 disabled:hover:text-slate-400 transition-colors"
+          className="p-1 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:hover:text-[#8291A8] transition-colors"
           title="Previous Observation"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
 
         {/* Current Date Badge */}
-        <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 font-mono text-xs font-bold text-slate-900 shadow-2xs">
-          <Calendar className="w-3.5 h-3.5 text-slate-500" />
+        <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-[#0D1525] border border-[#26354A] font-mono text-xs font-bold text-[#F5F7FB] shadow-2xs">
+          <Calendar className="w-3.5 h-3.5 text-[#8291A8]" />
           <span>{selectedDate}</span>
-          <span className="text-[10px] font-sans font-medium text-teal-800 px-1.5 py-0.2 rounded bg-teal-50 border border-teal-200/80 hidden sm:inline">
+          <span className="text-[10px] font-sans font-medium text-[#19D3C5] px-1.5 py-0.2 rounded bg-[#111C2E] border border-[#26354A] hidden sm:inline">
             {OBSERVATION_DATES[currentIndex]?.satellite}
           </span>
         </div>
@@ -93,7 +93,7 @@ export const TimelineSlider: React.FC = () => {
         <button
           onClick={handleNext}
           disabled={currentIndex === OBSERVATION_DATES.length - 1}
-          className="p-1 rounded-lg text-slate-500 hover:text-slate-900 disabled:opacity-30 disabled:hover:text-slate-400 transition-colors"
+          className="p-1 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:hover:text-[#8291A8] transition-colors"
           title="Next Observation"
         >
           <ChevronRight className="w-4 h-4" />
@@ -101,7 +101,7 @@ export const TimelineSlider: React.FC = () => {
       </div>
 
       {/* Discrete 8 Timeline Nodes */}
-      <div className="flex items-center space-x-2 pl-2 border-l border-slate-200 overflow-x-auto">
+      <div className="flex items-center space-x-2 pl-2 border-l border-[#26354A] overflow-x-auto">
         {OBSERVATION_DATES.map((item) => {
           const isSelected = item.date === selectedDate;
           return (
@@ -114,11 +114,11 @@ export const TimelineSlider: React.FC = () => {
               <div
                 className={`w-3 h-3 rounded-full border transition-all ${
                   isSelected
-                    ? 'bg-teal-600 border-teal-200 scale-125 shadow-xs ring-2 ring-teal-500/20'
-                    : 'bg-slate-300 border-slate-200 group-hover:bg-slate-400'
+                    ? 'bg-[#19D3C5] border-[#19D3C5] scale-125 shadow-xs ring-2 ring-[#19D3C5]/30'
+                    : 'bg-[#162238] border-[#26354A] group-hover:bg-[#374b66]'
                 }`}
               />
-              <span className={`text-[9.5px] font-mono mt-1 ${isSelected ? 'text-teal-700 font-bold' : 'text-slate-500 group-hover:text-slate-800'}`}>
+              <span className={`text-[9.5px] font-mono mt-1 ${isSelected ? 'text-[#19D3C5] font-bold' : 'text-[#8291A8] group-hover:text-[#A8B5C9]'}`}>
                 {formatDateLabel(item.date)}
               </span>
             </button>

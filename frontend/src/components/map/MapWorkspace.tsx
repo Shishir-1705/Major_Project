@@ -98,7 +98,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
   return (
-    <main className={`relative flex-1 h-full w-full bg-slate-100 overflow-hidden select-none ${className}`}>
+    <main className={`relative flex-1 h-full w-full bg-[#080D18] overflow-hidden select-none ${className}`}>
       <MapContainer
         center={MYSURU_CENTER}
         zoom={MYSURU_DEFAULT_ZOOM}
@@ -131,11 +131,11 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
           <Polygon
             positions={MYSURU_AOI_BOUNDS}
             pathOptions={{
-              color: '#0d9488',
+              color: '#19D3C5',
               weight: 2,
               dashArray: '5, 8',
-              fillColor: '#0d9488',
-              fillOpacity: 0.04,
+              fillColor: '#19D3C5',
+              fillOpacity: 0.05,
             }}
           />
         )}
@@ -146,34 +146,34 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
 
       {/* Top-Left Hover Coordinates & Map Telemetry Badge */}
       <div className="absolute top-3 left-3 z-[1000] pointer-events-none hidden sm:flex flex-col space-y-1.5">
-        <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs">
-          <Crosshair className="w-3.5 h-3.5 text-teal-600" />
-          <span className="text-slate-500 font-medium">Cursor:</span>
+        <div className="bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs">
+          <Crosshair className="w-3.5 h-3.5 text-[#19D3C5]" />
+          <span className="text-[#8291A8] font-medium">Cursor:</span>
           {hoveredCoordinates ? (
-            <span className="font-mono text-slate-900 font-bold">
+            <span className="font-mono text-[#F5F7FB] font-bold">
               {hoveredCoordinates.lat.toFixed(5)}°N, {hoveredCoordinates.lng.toFixed(5)}°E
             </span>
           ) : (
-            <span className="text-slate-400 italic">Hover map for coordinates</span>
+            <span className="text-[#8291A8] italic">Hover map for coordinates</span>
           )}
         </div>
 
-        <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md px-3 py-1 rounded-xl shadow-card flex items-center space-x-2 text-[11px] font-mono text-slate-600">
-          <Globe className="w-3 h-3 text-slate-400" />
-          <span>CRS: <strong className="text-slate-800 font-bold">EPSG:32643 (UTM 43N)</strong></span>
+        <div className="bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md px-3 py-1 rounded-xl shadow-card flex items-center space-x-2 text-[11px] font-mono text-[#A8B5C9]">
+          <Globe className="w-3 h-3 text-[#8291A8]" />
+          <span>CRS: <strong className="text-[#F5F7FB] font-bold">EPSG:32643 (UTM 43N)</strong></span>
         </div>
       </div>
 
       {/* Top-Right Active Telemetry & Backend Status Banner */}
       <div className="absolute top-3 right-3 z-[1000] pointer-events-none flex flex-col items-end space-y-1.5">
         {backendConnected ? (
-          <div className="bg-white/95 border border-teal-200 text-teal-800 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">
-            <Wifi className="w-3.5 h-3.5 text-teal-600" />
-            <span>Live Stream: <strong className="text-slate-900 uppercase font-bold">{currentLayerObj?.shortName || activeLayer}</strong> ({dateOrKey})</span>
+          <div className="bg-[#080D18]/90 border border-[#26354A] text-[#19D3C5] backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">
+            <Wifi className="w-3.5 h-3.5 text-[#19D3C5]" />
+            <span className="text-[#A8B5C9]">Live Stream: <strong className="text-[#F5F7FB] uppercase font-bold">{currentLayerObj?.shortName || activeLayer}</strong> ({dateOrKey})</span>
           </div>
         ) : (
-          <div className="bg-white/95 border border-amber-300 text-amber-800 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">
-            <WifiOff className="w-3.5 h-3.5 text-amber-600" />
+          <div className="bg-[#080D18]/90 border border-amber-500/50 text-amber-300 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">
+            <WifiOff className="w-3.5 h-3.5 text-amber-400" />
             <span>Backend Offline: Start FastAPI (`uvicorn backend.app.main:app`)</span>
           </div>
         )}
@@ -182,9 +182,9 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
       {/* API Error Toast Banner if connection fails */}
       {apiError && !backendConnected && (
         <div className="absolute top-14 right-3 z-[1000] max-w-sm pointer-events-auto">
-          <div className="bg-white/95 border border-red-300 text-red-900 backdrop-blur-md p-3 rounded-xl shadow-card text-xs space-y-1">
-            <div className="font-bold text-red-700">Backend Server Unavailable</div>
-            <p className="text-[11px] leading-tight text-red-600">{apiError}</p>
+          <div className="bg-[#080D18]/95 border border-red-500/50 text-red-200 backdrop-blur-md p-3 rounded-xl shadow-card text-xs space-y-1">
+            <div className="font-bold text-red-400">Backend Server Unavailable</div>
+            <p className="text-[11px] leading-tight text-red-300">{apiError}</p>
           </div>
         </div>
       )}

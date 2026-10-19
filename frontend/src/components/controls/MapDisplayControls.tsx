@@ -11,15 +11,15 @@ export const MapDisplayControls: React.FC<{ className?: string }> = ({ className
   } = useAppStore();
 
   return (
-    <div className={`p-3 rounded-xl border border-slate-200/80 bg-slate-50/70 space-y-3 ${className}`}>
+    <div className={`p-3 rounded-xl border border-[#26354A] bg-[#0D1525] space-y-3 ${className}`}>
       {/* Opacity Slider */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-slate-600 font-medium flex items-center space-x-1.5">
-            <Eye className="w-3.5 h-3.5 text-slate-500" />
+          <span className="text-[#A8B5C9] font-medium flex items-center space-x-1.5">
+            <Eye className="w-3.5 h-3.5 text-[#8291A8]" />
             <span>Layer Opacity</span>
           </span>
-          <span className="font-mono text-teal-700 text-[11px] font-bold">
+          <span className="font-mono text-[#19D3C5] text-[11px] font-bold">
             {Math.round(layerOpacity * 100)}%
           </span>
         </div>
@@ -30,21 +30,21 @@ export const MapDisplayControls: React.FC<{ className?: string }> = ({ className
           step="0.05"
           value={layerOpacity}
           onChange={(e) => setLayerOpacity(parseFloat(e.target.value))}
-          className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
+          className="w-full h-1.5 bg-[#162238] rounded-lg appearance-none cursor-pointer accent-[#19D3C5]"
           aria-label="Adjust map layer opacity"
         />
       </div>
 
       {/* AOI Boundary Switch */}
-      <div className="flex items-center justify-between pt-2 border-t border-slate-200/80">
-        <span className="text-xs text-slate-700 font-medium flex items-center space-x-1.5">
-          <MapPin className="w-3.5 h-3.5 text-teal-600" />
+      <div className="flex items-center justify-between pt-2 border-t border-[#26354A]">
+        <span className="text-xs text-[#F5F7FB] font-medium flex items-center space-x-1.5">
+          <MapPin className="w-3.5 h-3.5 text-[#19D3C5]" />
           <span>Mysuru AOI Boundary</span>
         </span>
         <button
           onClick={() => setShowAOIBoundary(!showAOIBoundary)}
           className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus:outline-hidden ${
-            showAOIBoundary ? 'bg-teal-600' : 'bg-slate-300'
+            showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
           }`}
           title={showAOIBoundary ? "Hide AOI boundary" : "Show AOI boundary"}
           aria-label={showAOIBoundary ? "Hide AOI boundary" : "Show AOI boundary"}

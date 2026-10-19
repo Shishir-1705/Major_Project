@@ -48,10 +48,10 @@ export const ClustersPage: React.FC = () => {
         <div className="absolute top-14 left-3 z-[1000]">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/95 border border-slate-200/80 backdrop-blur-md shadow-card text-xs font-semibold text-slate-700 hover:text-teal-700 hover:bg-slate-50 transition-colors"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors"
             title={isSidebarOpen ? "Collapse Spatial Clustering Panel" : "Expand Spatial Clustering Panel"}
           >
-            <Sliders className="w-3.5 h-3.5 text-teal-600" />
+            <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
             <span>{isSidebarOpen ? "Hide Analytics" : "Show Analytics"}</span>
           </button>
         </div>
@@ -59,21 +59,21 @@ export const ClustersPage: React.FC = () => {
 
       {/* Gi* Clustering Analytical Sidebar */}
       {isSidebarOpen && (
-        <aside className="w-80 sm:w-96 bg-white border-l border-slate-200/80 flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
+        <aside className="w-80 sm:w-96 bg-[#0D1525] border-l border-[#26354A] flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
           {/* Header */}
-          <div className="p-3.5 border-b border-slate-200/80 flex items-center justify-between bg-slate-50/70">
+          <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
             <div className="flex items-center space-x-2">
-              <div className="p-1.5 rounded-lg bg-orange-100 text-orange-600">
+              <div className="p-1.5 rounded-lg bg-[#162238] text-orange-400 border border-[#26354A]">
                 <BarChart2 className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Getis-Ord Gi* Clusters</h2>
-                <p className="text-[10px] text-slate-500 font-medium">Spatial Autocorrelation & Hotspot Clustering</p>
+                <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Getis-Ord Gi* Clusters</h2>
+                <p className="text-[10px] text-[#8291A8] font-medium">Spatial Autocorrelation & Hotspot Clustering</p>
               </div>
             </div>
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
+              className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors"
               title="Collapse panel"
               aria-label="Collapse panel"
             >
@@ -84,21 +84,21 @@ export const ClustersPage: React.FC = () => {
           {/* Scrollable Body */}
           <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
             {/* Active Context Banner */}
-            <div className="bg-slate-50/90 p-3 rounded-xl border border-slate-200/80 space-y-2 shadow-2xs">
+            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-500 font-medium flex items-center space-x-1">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-[#8291A8] font-medium flex items-center space-x-1">
+                  <Calendar className="w-3.5 h-3.5 text-[#8291A8]" />
                   <span>Analysis Domain:</span>
                 </span>
-                <span className="font-mono font-bold text-slate-900">{totalDomain} km²</span>
+                <span className="font-mono font-bold text-[#F5F7FB]">{totalDomain} km²</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-500 font-medium">Spatial Statistic:</span>
-                <span className="text-teal-700 font-semibold">Standardized Gi* z-scores</span>
+                <span className="text-[#8291A8] font-medium">Spatial Statistic:</span>
+                <span className="text-[#19D3C5] font-semibold">Standardized Gi* z-scores</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-500 font-medium">Static Tile Key:</span>
-                <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
+                <span className="text-[#8291A8] font-medium">Static Tile Key:</span>
+                <span className="font-mono text-xs font-bold text-[#19D3C5] bg-[#162238] px-2 py-0.5 rounded-md border border-[#26354A]">
                   clustering
                 </span>
               </div>
@@ -106,9 +106,9 @@ export const ClustersPage: React.FC = () => {
 
             {/* Core Clustering Metrics */}
             <div className="space-y-1.5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1 flex items-center justify-between">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1 flex items-center justify-between">
                 <span>Cluster Distribution</span>
-                <span className="font-mono text-[10px] text-teal-700">FDR p &lt; 0.05 (z ≥ 1.645)</span>
+                <span className="font-mono text-[10px] text-[#19D3C5]">FDR p &lt; 0.05 (z ≥ 1.645)</span>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
@@ -140,7 +140,7 @@ export const ClustersPage: React.FC = () => {
                   unit="km²"
                   subtitle="Random spatial distribution"
                   icon={ShieldCheck}
-                  accentColor="#64748b"
+                  accentColor="#8291A8"
                   isLoading={isLoadingStats}
                   isError={!backendConnected && !giStarStats}
                 />
@@ -151,7 +151,7 @@ export const ClustersPage: React.FC = () => {
                   unit="critical"
                   subtitle="p-value < 0.10 critical limit"
                   icon={BarChart2}
-                  accentColor="#0d9488"
+                  accentColor="#19D3C5"
                   isLoading={false}
                 />
               </div>
@@ -159,10 +159,10 @@ export const ClustersPage: React.FC = () => {
 
             {/* Cluster Significance Breakdown Table */}
             <div className="space-y-1.5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
                 Statistical Significance Breakdown
               </div>
-              <div className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-2.5 space-y-2">
+              <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-2.5 space-y-2">
                 {(giStarStats?.clusters || [
                   { cluster_type: "Hotspot 90% Confidence", confidence_level: "90%", area_km2: 8.856, percentage: 9.46, color_hex: "#f46d43" },
                   { cluster_type: "Not Significant", confidence_level: "N/A", area_km2: 84.801, percentage: 90.54, color_hex: "#1e293b" },
@@ -170,14 +170,14 @@ export const ClustersPage: React.FC = () => {
                   { cluster_type: "Hotspot 99% Confidence", confidence_level: "99%", area_km2: 0.0, percentage: 0.0, color_hex: "#990000" },
                   { cluster_type: "Coldspot Cluster", confidence_level: "90-99%", area_km2: 0.0, percentage: 0.0, color_hex: "#4575b4" }
                 ]).map((c, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs p-1.5 bg-white rounded-lg border border-slate-200/70 shadow-2xs">
+                  <div key={idx} className="flex items-center justify-between text-xs p-1.5 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs">
                     <div className="flex items-center space-x-2 min-w-0 pr-2">
                       <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
-                      <span className="truncate text-slate-700 font-medium text-[11px]">{c.cluster_type}</span>
+                      <span className="truncate text-[#A8B5C9] font-medium text-[11px]">{c.cluster_type}</span>
                     </div>
                     <div className="text-right shrink-0 font-mono text-[11px]">
-                      <span className="font-bold text-slate-900">{c.area_km2.toFixed(2)} km²</span>
-                      <span className="text-slate-400 ml-1">({c.percentage.toFixed(1)}%)</span>
+                      <span className="font-bold text-[#F5F7FB]">{c.area_km2.toFixed(2)} km²</span>
+                      <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
                     </div>
                   </div>
                 ))}
@@ -186,22 +186,22 @@ export const ClustersPage: React.FC = () => {
 
             {/* Reusable Opacity & AOI Controls */}
             <div className="space-y-1.5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
                 Map View Options
               </div>
               <MapDisplayControls />
             </div>
 
             {/* Spatial Corroboration Card */}
-            <div className="p-3.5 rounded-xl border border-teal-200 bg-teal-50/70 text-teal-900 space-y-1.5 text-xs">
-              <div className="flex items-center space-x-1.5 font-bold text-teal-800">
-                <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
+            <div className="p-3.5 rounded-xl border border-[#26354A] bg-[#111C2E] text-[#A8B5C9] space-y-1.5 text-xs">
+              <div className="flex items-center space-x-1.5 font-bold text-[#19D3C5]">
+                <CheckCircle2 className="w-4 h-4 text-[#19D3C5] shrink-0" />
                 <span>Spatial Autocorrelation Corroboration</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-teal-900/90">
+              <p className="text-[11px] leading-relaxed text-[#8291A8]">
                 The Getis-Ord $G_i^*$ statistic evaluates whether high thermal values cluster in space more than expected by random chance.
               </p>
-              <p className="text-[11px] leading-relaxed text-teal-900/90">
+              <p className="text-[11px] leading-relaxed text-[#8291A8]">
                 The identified <strong>8.86 km² (9.46%)</strong> statistically significant hot spot cluster ($p &lt; 0.10$) precisely mirrors the <strong>8.81 km² (9.40%)</strong> Category 5 chronic persistence zone in central Mysuru, providing rigorous statistical proof of localized thermal intensification.
               </p>
             </div>

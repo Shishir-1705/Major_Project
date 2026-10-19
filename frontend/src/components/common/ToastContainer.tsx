@@ -14,26 +14,26 @@ export const ToastContainer: React.FC = () => {
         const isWarning = toast.type === 'warning';
         const isSuccess = toast.type === 'success';
 
-        let bgClass = 'bg-white/95 border-slate-200 text-slate-800 shadow-card';
+        let bgClass = 'bg-[#0D1525]/95 border-[#26354A] text-[#F5F7FB] shadow-card';
         let Icon = Info;
-        let iconColor = 'text-teal-600';
-        let titleColor = 'text-slate-900';
+        let iconColor = 'text-[#19D3C5]';
+        let titleColor = 'text-[#F5F7FB]';
 
         if (isError) {
-          bgClass = 'bg-white/95 border-red-200 text-red-900 shadow-card';
+          bgClass = 'bg-[#0D1525]/95 border-red-500/50 text-red-100 shadow-card';
           Icon = AlertCircle;
-          iconColor = 'text-red-600';
-          titleColor = 'text-red-900';
+          iconColor = 'text-red-400';
+          titleColor = 'text-red-300';
         } else if (isWarning) {
-          bgClass = 'bg-white/95 border-amber-200 text-amber-900 shadow-card';
+          bgClass = 'bg-[#0D1525]/95 border-amber-500/50 text-amber-100 shadow-card';
           Icon = AlertTriangle;
-          iconColor = 'text-amber-600';
-          titleColor = 'text-amber-900';
+          iconColor = 'text-amber-400';
+          titleColor = 'text-amber-300';
         } else if (isSuccess) {
-          bgClass = 'bg-white/95 border-emerald-200 text-emerald-900 shadow-card';
+          bgClass = 'bg-[#0D1525]/95 border-emerald-500/50 text-emerald-100 shadow-card';
           Icon = CheckCircle;
-          iconColor = 'text-emerald-600';
-          titleColor = 'text-emerald-900';
+          iconColor = 'text-emerald-400';
+          titleColor = 'text-emerald-300';
         }
 
         return (
@@ -49,12 +49,12 @@ export const ToastContainer: React.FC = () => {
                   {toast.title}
                 </div>
               )}
-              <p className="leading-tight text-slate-600">{toast.message}</p>
+              <p className="leading-tight text-[#A8B5C9]">{toast.message}</p>
             </div>
 
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-slate-700 p-0.5 rounded transition-colors shrink-0"
+              className="text-[#8291A8] hover:text-[#F5F7FB] p-0.5 rounded transition-colors shrink-0"
               title="Dismiss notification"
             >
               <X className="w-3.5 h-3.5" />

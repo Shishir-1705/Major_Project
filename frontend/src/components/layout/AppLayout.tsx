@@ -5,7 +5,7 @@ import { ToastContainer } from '../common/ToastContainer';
 
 export const AppLayout: React.FC = () => {
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#f8fafc] text-slate-800 overflow-hidden font-sans">
+    <div className="flex flex-col h-screen w-screen bg-[#080D18] text-[#F5F7FB] overflow-hidden font-sans">
       {/* Top Application Header & Route Navigation */}
       <Header />
 

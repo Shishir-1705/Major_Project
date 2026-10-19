@@ -24,30 +24,30 @@ export const StatCard: React.FC<StatCardProps> = ({
   errorMessage = 'Telemetry unavailable',
 }) => {
   return (
-    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-xs relative overflow-hidden group hover:border-slate-300 transition-all">
+    <div className="bg-[#0D1525] border border-[#26354A] rounded-xl p-3.5 shadow-xs relative overflow-hidden group hover:border-[#19D3C5]/40 transition-all">
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
-          <span className="text-[10.5px] font-semibold text-slate-500 uppercase tracking-wider block truncate">
+          <span className="text-[10.5px] font-semibold text-[#8291A8] uppercase tracking-wider block truncate">
             {title}
           </span>
           <div className="flex items-baseline space-x-1 mt-1">
             {isLoading ? (
-              <div className="h-6 w-20 bg-slate-100 animate-pulse rounded my-0.5" />
+              <div className="h-6 w-20 bg-[#162238] animate-pulse rounded my-0.5" />
             ) : isError ? (
-              <span className="text-xs font-mono text-amber-600 font-medium py-1 block">
+              <span className="text-xs font-mono text-amber-400 font-medium py-1 block">
                 Unavailable
               </span>
             ) : (
               <>
-                <span className="text-xl font-bold text-slate-900 tracking-tight font-mono">
+                <span className="text-xl font-bold text-[#F5F7FB] tracking-tight font-mono">
                   {value}
                 </span>
-                {unit && <span className="text-xs text-slate-500 font-sans font-medium">{unit}</span>}
+                {unit && <span className="text-xs text-[#8291A8] font-sans font-medium">{unit}</span>}
               </>
             )}
           </div>
           {subtitle && (
-            <p className="text-[10px] text-slate-500 mt-1 line-clamp-1">
+            <p className="text-[10px] text-[#8291A8] mt-1 line-clamp-1">
               {isError ? errorMessage : subtitle}
             </p>
           )}
@@ -56,7 +56,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         <div
           className="p-2 rounded-lg shrink-0 ml-2 transition-colors"
           style={{
-            backgroundColor: `${accentColor}15`,
+            backgroundColor: `${accentColor}20`,
             color: accentColor,
           }}
         >

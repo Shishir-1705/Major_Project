@@ -35,7 +35,7 @@ export const OverviewMap: React.FC = () => {
     : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
   return (
-    <div className="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden border border-slate-200/80 shadow-xs bg-slate-100 select-none">
+    <div className="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden border border-[#26354A] shadow-xs bg-[#080D18] select-none">
       <MapContainer
         center={MYSURU_CENTER}
         zoom={11}
@@ -55,10 +55,10 @@ export const OverviewMap: React.FC = () => {
         <Polygon
           positions={MYSURU_AOI_BOUNDS}
           pathOptions={{
-            color: '#0d9488',
+            color: '#19D3C5',
             weight: 2.5,
             dashArray: '6, 8',
-            fillColor: '#0d9488',
+            fillColor: '#19D3C5',
             fillOpacity: 0.05,
           }}
         />
@@ -68,28 +68,28 @@ export const OverviewMap: React.FC = () => {
 
       {/* Floating Coordinate & CRS Badges */}
       <div className="absolute top-3 left-3 z-[1000] pointer-events-none flex flex-col space-y-1.5">
-        <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-xs flex items-center space-x-1.5 text-xs text-slate-700">
-          <Crosshair className="w-3.5 h-3.5 text-teal-600" />
-          <span className="text-slate-500 font-medium">Cursor:</span>
+        <div className="bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md px-2.5 py-1 rounded-xl shadow-xs flex items-center space-x-1.5 text-xs text-[#A8B5C9]">
+          <Crosshair className="w-3.5 h-3.5 text-[#19D3C5]" />
+          <span className="text-[#8291A8] font-medium">Cursor:</span>
           {coords ? (
-            <span className="font-mono text-slate-900 font-bold">
+            <span className="font-mono text-[#F5F7FB] font-bold">
               {coords.lat.toFixed(4)}°N, {coords.lng.toFixed(4)}°E
             </span>
           ) : (
-            <span className="text-slate-400 italic text-[11px]">Hover map</span>
+            <span className="text-[#8291A8] italic text-[11px]">Hover map</span>
           )}
         </div>
 
-        <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md px-2.5 py-0.5 rounded-xl shadow-xs flex items-center space-x-1 text-[10.5px] font-mono text-slate-600">
-          <Globe className="w-3 h-3 text-slate-400" />
-          <span>CRS: <strong className="text-slate-800">EPSG:32643</strong></span>
+        <div className="bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md px-2.5 py-0.5 rounded-xl shadow-xs flex items-center space-x-1 text-[10.5px] font-mono text-[#A8B5C9]">
+          <Globe className="w-3 h-3 text-[#8291A8]" />
+          <span>CRS: <strong className="text-[#F5F7FB]">EPSG:32643</strong></span>
         </div>
       </div>
 
       {/* Study Area Identifier Pill */}
       <div className="absolute bottom-3 left-3 z-[1000] pointer-events-none">
-        <div className="bg-white/95 border border-teal-200 text-teal-800 backdrop-blur-md px-3 py-1 rounded-xl shadow-xs text-xs font-medium">
-          Mysuru AOI: <strong className="text-slate-900 font-bold">132.13 km²</strong> Built Extent
+        <div className="bg-[#080D18]/90 border border-[#26354A] text-[#19D3C5] backdrop-blur-md px-3 py-1 rounded-xl shadow-xs text-xs font-medium">
+          Mysuru AOI: <strong className="text-[#F5F7FB] font-bold">132.13 km²</strong> Built Extent
         </div>
       </div>
     </div>
