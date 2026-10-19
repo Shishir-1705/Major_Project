@@ -13,7 +13,8 @@ import {
   Cpu,
   Menu,
   X,
-  Home
+  Home,
+  Compass
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -45,7 +46,17 @@ export const Header: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const navLinks = [
+  const isLandingPage = location.pathname === '/';
+
+  // Landing page has clean, compact navigation
+  const landingNavLinks = [
+    { to: '/', label: 'Home', icon: Home },
+    { to: '/lst', label: 'Explore Map', icon: Compass },
+    { to: '/methodology', label: 'Methodology', icon: Info },
+  ] as const;
+
+  // Dedicated analytical routes preserve access when inside analytical workspace
+  const analyticalNavLinks = [
     { to: '/', label: 'Home', icon: Home },
     { to: '/overview', label: 'Overview', icon: Layers },
     { to: '/lst', label: 'LST Explorer', icon: Flame },
@@ -56,6 +67,8 @@ export const Header: React.FC = () => {
     { to: '/model', label: 'Model Spec', icon: Cpu },
     { to: '/methodology', label: 'Methodology', icon: Info },
   ] as const;
+
+  const currentNavLinks = isLandingPage ? landingNavLinks : analyticalNavLinks;
 
   return (
     <>
@@ -85,9 +98,15 @@ export const Header: React.FC = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation Links (Visible on xl+ screens) */}
-        <nav className="hidden xl:flex items-center space-x-0.5 2xl:space-x-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80">
-          {navLinks.map((tab) => {
+        {/* Desktop Navigation Links */}
+        <nav
+          className={
+            isLandingPage
+              ? 'hidden sm:flex items-center space-x-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80'
+              : 'hidden xl:flex items-center space-x-0.5 2xl:space-x-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80'
+          }
+        >
+          {currentNavLinks.map((tab) => {
             const Icon = tab.icon;
             return (
               <NavLink
@@ -95,7 +114,7 @@ export const Header: React.FC = () => {
                 to={tab.to}
                 end={tab.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center space-x-1.5 px-2.5 2xl:px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  `flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isActive
                       ? 'bg-white text-teal-700 shadow-xs border border-slate-200/80 font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 border border-transparent'
@@ -133,10 +152,12 @@ export const Header: React.FC = () => {
             )}
           </div>
 
-          {/* Mobile Menu Hamburger (Visible below xl) */}
+          {/* Mobile Menu Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80 transition-colors"
+            className={`${
+              isLandingPage ? 'sm:hidden' : 'xl:hidden'
+            } p-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80 transition-colors`}
             title={mobileMenuOpen ? 'Close Menu' : 'Open Navigation Menu'}
             aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Navigation Menu'}
           >
@@ -147,12 +168,12 @@ export const Header: React.FC = () => {
 
       {/* Mobile / Tablet Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden fixed inset-x-0 top-14 z-50 bg-white/98 backdrop-blur-md border-b border-slate-200 shadow-xl p-4 transition-all animate-in slide-in-from-top-2">
+        <div className="fixed inset-x-0 top-14 z-50 bg-white/98 backdrop-blur-md border-b border-slate-200 shadow-xl p-4 transition-all animate-in slide-in-from-top-2">
           <div className="text-[10.5px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
-            Geospatial Analysis Views
+            {isLandingPage ? 'Navigation' : 'Geospatial Analysis Views'}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {navLinks.map((tab) => {
+          <div className={isLandingPage ? 'grid grid-cols-1 sm:grid-cols-3 gap-2' : 'grid grid-cols-2 sm:grid-cols-3 gap-2'}>
+            {currentNavLinks.map((tab) => {
               const Icon = tab.icon;
               const isActive = location.pathname === tab.to;
               return (
