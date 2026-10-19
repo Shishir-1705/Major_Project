@@ -85,6 +85,14 @@ export const OverviewPage: React.FC = () => {
       color: '#8b5cf6',
       badge: 'SHA-256 Verified',
     },
+    {
+      to: '/methodology',
+      title: 'Methodology & Protocol',
+      description: 'Comprehensive 4-stage scientific framework, spatial block sampling, and data lineage.',
+      icon: Layers,
+      color: '#0f766e',
+      badge: 'Academic Protocol',
+    },
   ];
 
   const workflowSteps = [
@@ -118,7 +126,7 @@ export const OverviewPage: React.FC = () => {
           <div className="space-y-2 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200/80">
-                Major Research Project
+                Analytical Command Center
               </span>
               <span className="text-[11px] font-mono font-semibold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                 Mysuru, Karnataka, India
@@ -129,11 +137,11 @@ export const OverviewPage: React.FC = () => {
             </div>
 
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900">
-              Urban Heat Hotspot Detection & Intelligence
+              Analytical Overview & Telemetry Hub
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Machine learning-based spatial identification of urban surface temperature hotspots using Landsat 8 and 9 multi-temporal imagery, optical spectral indices (NDVI and NDBI), and locked spatial evaluation.
+              Operational dashboard integrating multi-temporal Landsat 8/9 Level-2 observations, real-time zonal statistics, and predictive thermal hotspot classifications across the Mysuru urban footprint.
             </p>
           </div>
 

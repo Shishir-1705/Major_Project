@@ -12,7 +12,8 @@ import {
   GitCommit,
   Cpu,
   Menu,
-  X
+  X,
+  Home
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -45,7 +46,8 @@ export const Header: React.FC = () => {
   }, [location.pathname]);
 
   const navLinks = [
-    { to: '/', label: 'Overview', icon: Layers },
+    { to: '/', label: 'Home', icon: Home },
+    { to: '/overview', label: 'Overview', icon: Layers },
     { to: '/lst', label: 'LST Explorer', icon: Flame },
     { to: '/hotspots', label: 'ML Hotspots', icon: ShieldCheck },
     { to: '/indices', label: 'NDVI / NDBI', icon: Activity },
@@ -84,7 +86,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Desktop Navigation Links (Visible on xl+ screens) */}
-        <nav className="hidden xl:flex items-center space-x-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80">
+        <nav className="hidden xl:flex items-center space-x-0.5 2xl:space-x-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80">
           {navLinks.map((tab) => {
             const Icon = tab.icon;
             return (
@@ -93,7 +95,7 @@ export const Header: React.FC = () => {
                 to={tab.to}
                 end={tab.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  `flex items-center space-x-1.5 px-2.5 2xl:px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isActive
                       ? 'bg-white text-teal-700 shadow-xs border border-slate-200/80 font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/60 border border-transparent'
@@ -149,7 +151,7 @@ export const Header: React.FC = () => {
           <div className="text-[10.5px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
             Geospatial Analysis Views
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {navLinks.map((tab) => {
               const Icon = tab.icon;
               const isActive = location.pathname === tab.to;

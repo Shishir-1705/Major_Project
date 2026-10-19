@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
+import { LandingPage } from './pages/LandingPage';
 import { OverviewPage } from './pages/OverviewPage';
 import { LstPage } from './pages/LstPage';
 import { HotspotsPage } from './pages/HotspotsPage';
@@ -15,7 +16,8 @@ export const App: React.FC = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route path="/" element={<OverviewPage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/overview" element={<OverviewPage />} />
         <Route path="/lst" element={<LstPage />} />
         <Route path="/hotspots" element={<HotspotsPage />} />
         <Route path="/indices" element={<IndicesPage />} />
