@@ -7,10 +7,12 @@ import { MapLegend } from './MapLegend';
 import { TimelineSlider } from '../controls/TimelineSlider';
 import { Crosshair, Wifi, WifiOff, Globe } from 'lucide-react';
 
-// Automatically invalidate Leaflet size when sidebars open/collapse or window resizes
+// Automatically invalidate Leaflet size when sidebars open/collapse, container resizes, or window resizes
 const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean }> = ({ isSidebarOpen, isAnalyticsOpen }) => {
   const map = useMap();
+
   React.useEffect(() => {
+    map.invalidateSize();
     const timer = setTimeout(() => {
       map.invalidateSize();
     }, 150);
@@ -18,11 +20,27 @@ const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean 
   }, [map, isSidebarOpen, isAnalyticsOpen]);
 
   React.useEffect(() => {
-    const handleResize = () => {
-      map.invalidateSize();
+    const container = map.getContainer();
+    if (!container || typeof ResizeObserver === 'undefined') {
+      const handleResize = () => map.invalidateSize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+
+    let rafId: number | null = null;
+    const observer = new ResizeObserver(() => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        map.invalidateSize();
+      });
+    });
+
+    observer.observe(container);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      observer.disconnect();
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, [map]);
 
   return null;
