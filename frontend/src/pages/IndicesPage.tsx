@@ -12,6 +12,7 @@ import {
   Activity,
   Sliders,
   ChevronLeft,
+  ChevronRight,
   X,
   Info,
   AlertCircle,
@@ -23,6 +24,7 @@ export const IndicesPage: React.FC = () => {
     activeLayer,
     setActiveLayer,
     selectedDate,
+    setSelectedDate,
     zonalStats,
     isLoadingStats,
     backendConnected
@@ -44,7 +46,20 @@ export const IndicesPage: React.FC = () => {
   }, [activeLayer, setActiveLayer]);
 
   const isNdvi = activeLayer === 'ndvi';
-  const currentDateObj = OBSERVATION_DATES.find((d) => d.date === selectedDate);
+  const currentIndex = OBSERVATION_DATES.findIndex((d) => d.date === selectedDate);
+  const currentDateObj = OBSERVATION_DATES[currentIndex] || OBSERVATION_DATES[0];
+
+  const handlePrevDate = () => {
+    if (currentIndex > 0) {
+      setSelectedDate(OBSERVATION_DATES[currentIndex - 1].date);
+    }
+  };
+
+  const handleNextDate = () => {
+    if (currentIndex < OBSERVATION_DATES.length - 1) {
+      setSelectedDate(OBSERVATION_DATES[currentIndex + 1].date);
+    }
+  };
 
   return (
     <div className="flex h-full w-full overflow-hidden relative">
@@ -167,24 +182,59 @@ export const IndicesPage: React.FC = () => {
             )}
           </div>
 
-            {/* Active Context Banner */}
-            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
+            {/* Active Context Banner with Observation Stepper */}
+            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2.5 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-[#8291A8] font-medium flex items-center space-x-1">
-                  <Calendar className="w-3.5 h-3.5 text-[#8291A8]" />
-                  <span>Observation:</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB] flex items-center space-x-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-[#19D3C5]" />
+                  <span>Observation Date</span>
                 </span>
-                <span className="font-mono font-bold text-[#F5F7FB]">{selectedDate}</span>
+                <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-[#162238] border border-[#26354A]">
+                  {currentDateObj?.satellite || 'Landsat'}
+                </span>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[#8291A8] font-medium">Index Domain:</span>
-                <span className="font-mono font-bold text-[#19D3C5] text-[11px]">
+
+              {/* Stepper + Dropdown */}
+              <div className="flex items-center space-x-1.5">
+                <button
+                  onClick={handlePrevDate}
+                  disabled={currentIndex <= 0}
+                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  title="Previous observation"
+                  aria-label="Previous observation"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+
+                <select
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="flex-1 bg-[#0D1525] border border-[#26354A] rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
+                  aria-label="Select observation date"
+                >
+                  {OBSERVATION_DATES.map((d) => (
+                    <option key={d.date} value={d.date}>
+                      {d.date} • {d.satellite}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={handleNextDate}
+                  disabled={currentIndex >= OBSERVATION_DATES.length - 1}
+                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  title="Next observation"
+                  aria-label="Next observation"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="pt-2 border-t border-[#26354A]/60 flex items-center justify-between text-[10.5px]">
+                <span className="text-[#8291A8]">Index Domain:</span>
+                <span className="font-mono font-bold text-[#19D3C5]">
                   {isNdvi ? 'NDVI Range [-0.20, +0.80]' : 'NDBI Range [-0.40, +0.60]'}
                 </span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[#8291A8] font-medium">Platform:</span>
-                <span className="text-[#A8B5C9] font-medium">{currentDateObj?.satellite || 'Landsat OLI/TIRS'}</span>
               </div>
             </div>
 

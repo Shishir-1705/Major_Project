@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { MapWorkspace } from '../components/map/MapWorkspace';
 import { OBSERVATION_DATES } from '../config/constants';
+import { StatCard } from '../components/common/StatCard';
 import {
   Flame,
   Calendar,
@@ -12,6 +13,8 @@ import {
   ChevronRight,
   Sliders,
   AlertCircle,
+  AlertTriangle,
+  ShieldCheck,
   X,
   Satellite
 } from 'lucide-react';
@@ -332,39 +335,46 @@ export const LstPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="bg-[#111C2E] p-2.5 rounded-xl border border-[#26354A] space-y-0.5">
-                <span className="text-[10px] text-[#8291A8] block">Mean LST</span>
-                <span className="font-mono text-sm font-bold text-[#F5F7FB] block">
-                  {isLoadingStats ? '...' : zonalStats?.mean !== undefined ? `${zonalStats.mean.toFixed(1)} °C` : '43.1 °C'}
-                </span>
-                <span className="text-[9.5px] text-[#8291A8]">Spatial mean</span>
-              </div>
-
-              <div className="bg-[#111C2E] p-2.5 rounded-xl border border-[#26354A] space-y-0.5">
-                <span className="text-[10px] text-[#8291A8] block">Peak LST</span>
-                <span className="font-mono text-sm font-bold text-red-400 block">
-                  {isLoadingStats ? '...' : zonalStats?.max !== undefined ? `${zonalStats.max.toFixed(1)} °C` : '55.4 °C'}
-                </span>
-                <span className="text-[9.5px] text-[#8291A8]">Radiometric max</span>
-              </div>
-
-              <div className="bg-[#111C2E] p-2.5 rounded-xl border border-[#26354A] space-y-0.5">
-                <span className="text-[10px] text-[#8291A8] block">Min LST</span>
-                <span className="font-mono text-sm font-bold text-sky-400 block">
-                  {isLoadingStats ? '...' : zonalStats?.min !== undefined ? `${zonalStats.min.toFixed(1)} °C` : '33.8 °C'}
-                </span>
-                <span className="text-[9.5px] text-[#8291A8]">Coolest pixel</span>
-              </div>
-
-              <div className="bg-[#111C2E] p-2.5 rounded-xl border border-[#26354A] space-y-0.5">
-                <span className="text-[10px] text-[#8291A8] block">Hotspot Area</span>
-                <span className="font-mono text-sm font-bold text-amber-400 block">
-                  {isLoadingStats ? '...' : hotspotStats?.hotspot_area_km2 !== undefined ? `${hotspotStats.hotspot_area_km2.toFixed(1)} km²` : '34.5 km²'}
-                </span>
-                <span className="text-[9.5px] text-[#8291A8]">
-                  {hotspotStats?.hotspot_percentage !== undefined ? `${hotspotStats.hotspot_percentage.toFixed(1)}% built` : '24.7% built'}
-                </span>
-              </div>
+              <StatCard
+                title="Mean LST"
+                value={zonalStats?.mean !== undefined ? zonalStats.mean.toFixed(1) : '43.1'}
+                unit="°C"
+                subtitle="Spatial mean"
+                icon={Flame}
+                accentColor="#f97316"
+                isLoading={isLoadingStats}
+                isError={!backendConnected && !zonalStats}
+              />
+              <StatCard
+                title="Peak LST"
+                value={zonalStats?.max !== undefined ? zonalStats.max.toFixed(1) : '55.4'}
+                unit="°C"
+                subtitle="Radiometric max"
+                icon={AlertTriangle}
+                accentColor="#ef4444"
+                isLoading={isLoadingStats}
+                isError={!backendConnected && !zonalStats}
+              />
+              <StatCard
+                title="Min LST"
+                value={zonalStats?.min !== undefined ? zonalStats.min.toFixed(1) : '33.8'}
+                unit="°C"
+                subtitle="Coolest pixel"
+                icon={ShieldCheck}
+                accentColor="#38bdf8"
+                isLoading={isLoadingStats}
+                isError={!backendConnected && !zonalStats}
+              />
+              <StatCard
+                title="Hotspot Area"
+                value={hotspotStats?.hotspot_area_km2 !== undefined ? hotspotStats.hotspot_area_km2.toFixed(1) : '34.5'}
+                unit="km²"
+                subtitle={hotspotStats?.hotspot_percentage !== undefined ? `${hotspotStats.hotspot_percentage.toFixed(1)}% built` : '24.7% built'}
+                icon={Flame}
+                accentColor="#eab308"
+                isLoading={isLoadingStats}
+                isError={!backendConnected && !hotspotStats}
+              />
             </div>
 
             {/* Scientific Notice */}

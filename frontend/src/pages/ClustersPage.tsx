@@ -191,13 +191,13 @@ export const ClustersPage: React.FC = () => {
                   { cluster_type: "Hotspot 99% Confidence", confidence_level: "99%", area_km2: 0.0, percentage: 0.0, color_hex: "#990000" },
                   { cluster_type: "Coldspot Cluster", confidence_level: "90-99%", area_km2: 0.0, percentage: 0.0, color_hex: "#4575b4" }
                 ]).map((c, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs p-1.5 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs">
-                    <div className="flex items-center space-x-2 min-w-0 pr-2">
-                      <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
-                      <span className="truncate text-[#A8B5C9] font-medium text-[11px]">{c.cluster_type}</span>
+                  <div key={idx} className="flex items-center justify-between text-xs p-2 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs gap-2">
+                    <div className="flex items-center space-x-2 min-w-0 flex-1">
+                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
+                      <span className="text-[#F5F7FB] font-medium text-[11px] leading-tight break-words">{c.cluster_type}</span>
                     </div>
                     <div className="text-right shrink-0 font-mono text-[11px]">
-                      <span className="font-bold text-[#F5F7FB]">{c.area_km2.toFixed(2)} km²</span>
+                      <span className="font-bold text-[#19D3C5]">{c.area_km2.toFixed(2)} km²</span>
                       <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
                     </div>
                   </div>

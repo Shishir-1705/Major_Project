@@ -13,6 +13,7 @@ import {
   Percent,
   Sliders,
   ChevronLeft,
+  ChevronRight,
   X,
   CheckCircle2,
   Activity
@@ -23,6 +24,7 @@ export const HotspotsPage: React.FC = () => {
     activeLayer,
     setActiveLayer,
     selectedDate,
+    setSelectedDate,
     zonalStats,
     hotspotStats,
     modelInfo,
@@ -46,7 +48,20 @@ export const HotspotsPage: React.FC = () => {
   }, [activeLayer, setActiveLayer]);
 
   const isProbMode = activeLayer === 'rf_prob';
-  const currentDateObj = OBSERVATION_DATES.find((d) => d.date === selectedDate);
+  const currentIndex = OBSERVATION_DATES.findIndex((d) => d.date === selectedDate);
+  const currentDateObj = OBSERVATION_DATES[currentIndex] || OBSERVATION_DATES[0];
+
+  const handlePrevDate = () => {
+    if (currentIndex > 0) {
+      setSelectedDate(OBSERVATION_DATES[currentIndex - 1].date);
+    }
+  };
+
+  const handleNextDate = () => {
+    if (currentIndex < OBSERVATION_DATES.length - 1) {
+      setSelectedDate(OBSERVATION_DATES[currentIndex + 1].date);
+    }
+  };
 
   return (
     <div className="flex h-full w-full overflow-hidden relative">
@@ -177,24 +192,59 @@ export const HotspotsPage: React.FC = () => {
             )}
           </div>
 
-            {/* Active Context Banner */}
-            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
+            {/* Active Context Banner with Observation Stepper */}
+            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2.5 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-[#8291A8] font-medium flex items-center space-x-1">
-                  <Calendar className="w-3.5 h-3.5 text-[#8291A8]" />
-                  <span>Observation:</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB] flex items-center space-x-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-[#19D3C5]" />
+                  <span>Observation Date</span>
                 </span>
-                <span className="font-mono font-bold text-[#F5F7FB]">{selectedDate}</span>
+                <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-[#162238] border border-[#26354A]">
+                  {currentDateObj?.satellite || 'Landsat'}
+                </span>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[#8291A8] font-medium">Active Layer:</span>
-                <span className="font-mono font-bold text-[#19D3C5] text-[11px]">
+
+              {/* Stepper + Dropdown */}
+              <div className="flex items-center space-x-1.5">
+                <button
+                  onClick={handlePrevDate}
+                  disabled={currentIndex <= 0}
+                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  title="Previous observation"
+                  aria-label="Previous observation"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+
+                <select
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="flex-1 bg-[#0D1525] border border-[#26354A] rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
+                  aria-label="Select observation date"
+                >
+                  {OBSERVATION_DATES.map((d) => (
+                    <option key={d.date} value={d.date}>
+                      {d.date} • {d.satellite}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={handleNextDate}
+                  disabled={currentIndex >= OBSERVATION_DATES.length - 1}
+                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  title="Next observation"
+                  aria-label="Next observation"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="pt-2 border-t border-[#26354A]/60 flex items-center justify-between text-[10.5px]">
+                <span className="text-[#8291A8]">Active Mode:</span>
+                <span className="font-mono font-bold text-[#19D3C5]">
                   {isProbMode ? 'rf_prob (Continuous [0, 1])' : 'rf_class (Binary {0, 1})'}
                 </span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[#8291A8] font-medium">Sensor:</span>
-                <span className="text-[#A8B5C9] font-medium">{currentDateObj?.satellite || 'Landsat OLI/TIRS'}</span>
               </div>
             </div>
 
@@ -310,25 +360,25 @@ export const HotspotsPage: React.FC = () => {
                 Locked Model Telemetry
               </div>
               <div className="p-3 rounded-xl border border-[#26354A] bg-[#111C2E] space-y-2 text-xs">
-                <div className="flex items-center justify-between font-mono text-[11px]">
-                  <span className="text-[#8291A8]">Algorithm:</span>
-                  <span className="font-bold text-[#F5F7FB]">{modelInfo?.algorithm || 'RandomForestClassifier'}</span>
+                <div className="flex items-start justify-between font-mono text-[11px] gap-2">
+                  <span className="text-[#8291A8] shrink-0">Algorithm:</span>
+                  <span className="font-bold text-[#F5F7FB] text-right break-words">{modelInfo?.algorithm || 'RandomForestClassifier'}</span>
                 </div>
-                <div className="flex items-center justify-between font-mono text-[11px]">
-                  <span className="text-[#8291A8]">Independent Test F1:</span>
+                <div className="flex items-center justify-between font-mono text-[11px] gap-2">
+                  <span className="text-[#8291A8] shrink-0">Independent Test F1:</span>
                   <span className="font-bold text-[#19D3C5]">
                     {modelInfo?.locked_test_metrics?.f1_score ? `${(modelInfo.locked_test_metrics.f1_score * 100).toFixed(2)}%` : "86.60%"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between font-mono text-[11px]">
-                  <span className="text-[#8291A8]">Precision / Recall:</span>
-                  <span className="text-[#F5F7FB]">
+                <div className="flex items-center justify-between font-mono text-[11px] gap-2">
+                  <span className="text-[#8291A8] shrink-0">Precision / Recall:</span>
+                  <span className="text-[#F5F7FB] text-right font-medium">
                     {modelInfo?.locked_test_metrics?.precision ? `${(modelInfo.locked_test_metrics.precision * 100).toFixed(1)}%` : "88.9%"} / {modelInfo?.locked_test_metrics?.recall ? `${(modelInfo.locked_test_metrics.recall * 100).toFixed(1)}%` : "84.4%"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between font-mono text-[11px] pt-1 border-t border-[#26354A]">
-                  <span className="text-[#8291A8]">Feature Importance:</span>
-                  <span className="font-bold text-[#F5F7FB]">NDBI 56.9% / NDVI 43.1%</span>
+                <div className="flex items-center justify-between font-mono text-[11px] pt-1.5 border-t border-[#26354A] gap-2">
+                  <span className="text-[#8291A8] shrink-0">Feature Importance:</span>
+                  <span className="font-bold text-[#F5F7FB] text-right">NDBI 56.9% / NDVI 43.1%</span>
                 </div>
               </div>
             </div>

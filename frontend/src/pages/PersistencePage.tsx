@@ -198,18 +198,30 @@ export const PersistencePage: React.FC = () => {
                   { category: "Category 3: >25-50% Recurrence (Moderate)", area_km2: 0.835, percentage: 0.89, color_hex: "#facc15" },
                   { category: "Category 2: >0-25% Recurrence (Low)", area_km2: 1.678, percentage: 1.79, color_hex: "#06b6d4" },
                   { category: "Category 1: 0% Recurrence (Never Hotspot)", area_km2: 81.795, percentage: 87.33, color_hex: "#1e293b" }
-                ]).map((cat, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs p-1.5 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs">
-                    <div className="flex items-center space-x-2 min-w-0 pr-2">
-                      <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: cat.color_hex }} />
-                      <span className="truncate text-[#A8B5C9] font-medium text-[11px]">{cat.category}</span>
+                ]).map((cat, idx) => {
+                  const parts = cat.category.split('(');
+                  const tierName = parts[0].trim();
+                  const desc = parts.length > 1 ? `(${parts.slice(1).join('(')}` : null;
+                  return (
+                    <div key={idx} className="p-2 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs space-y-1">
+                      <div className="flex items-start justify-between text-xs gap-1.5">
+                        <div className="flex items-center space-x-2 min-w-0 flex-1">
+                          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cat.color_hex }} />
+                          <span className="text-[#F5F7FB] font-semibold text-[11px] leading-tight break-words">{tierName}</span>
+                        </div>
+                        <div className="text-right shrink-0 font-mono text-[11px]">
+                          <span className="font-bold text-[#19D3C5]">{cat.area_km2.toFixed(2)} km²</span>
+                          <span className="text-[#8291A8] ml-1">({cat.percentage.toFixed(1)}%)</span>
+                        </div>
+                      </div>
+                      {desc && (
+                        <div className="text-[10px] text-[#8291A8] pl-4.5 leading-tight break-words">
+                          {desc}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right shrink-0 font-mono text-[11px]">
-                      <span className="font-bold text-[#F5F7FB]">{cat.area_km2.toFixed(2)} km²</span>
-                      <span className="text-[#8291A8] ml-1">({cat.percentage.toFixed(1)}%)</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
