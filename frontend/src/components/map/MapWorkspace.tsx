@@ -65,6 +65,7 @@ const MapEventHandler: React.FC = () => {
 export interface MapWorkspaceProps {
   showTimeline?: boolean;
   showLegend?: boolean;
+  isSidebarOpen?: boolean;
   className?: string;
   children?: React.ReactNode;
 }
@@ -72,6 +73,7 @@ export interface MapWorkspaceProps {
 export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
   showTimeline = true,
   showLegend = true,
+  isSidebarOpen: isSidebarOpenProp,
   className = '',
   children
 }) => {
@@ -84,10 +86,11 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     backendConnected,
     apiError,
     addToast,
-    isSidebarOpen,
+    isSidebarOpen: storeIsSidebarOpen,
     isAnalyticsOpen
   } = useAppStore();
 
+  const effectiveSidebarOpen = isSidebarOpenProp !== undefined ? isSidebarOpenProp : storeIsSidebarOpen;
   const currentLayerObj = LAYERS.find(l => l.id === activeLayer);
 
   const handleTileError = () => {
@@ -114,6 +117,60 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
   const cartoBasemapUrl = cartoApiKey
     ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}&api_key=${cartoApiKey}`
     : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+
+  // Format scientifically accurate telemetry title
+  const getTelemetryBadge = () => {
+    switch (activeLayer) {
+      case 'persistence':
+        return (
+          <span className="text-[#A8B5C9]">
+            Spatial Product: <strong className="text-[#F5F7FB] uppercase font-bold">Heat Persistence</strong> (Multi-Temporal)
+          </span>
+        );
+      case 'gi_star':
+        return (
+          <span className="text-[#A8B5C9]">
+            Spatial Product: <strong className="text-[#F5F7FB] uppercase font-bold">Gi* Clusters</strong> (Spatial Statistics)
+          </span>
+        );
+      case 'rf_prob':
+        return (
+          <span className="text-[#A8B5C9]">
+            ML Prediction: <strong className="text-[#F5F7FB] uppercase font-bold">Hotspot Probability</strong> ({selectedDate})
+          </span>
+        );
+      case 'rf_class':
+        return (
+          <span className="text-[#A8B5C9]">
+            ML Prediction: <strong className="text-[#F5F7FB] uppercase font-bold">Hotspot Classification</strong> ({selectedDate})
+          </span>
+        );
+      case 'ndvi':
+        return (
+          <span className="text-[#A8B5C9]">
+            Spectral Index: <strong className="text-[#F5F7FB] uppercase font-bold">NDVI (Vegetation)</strong> ({selectedDate})
+          </span>
+        );
+      case 'ndbi':
+        return (
+          <span className="text-[#A8B5C9]">
+            Spectral Index: <strong className="text-[#F5F7FB] uppercase font-bold">NDBI (Built-up)</strong> ({selectedDate})
+          </span>
+        );
+      case 'lst':
+        return (
+          <span className="text-[#A8B5C9]">
+            Observation: <strong className="text-[#F5F7FB] uppercase font-bold">LST ST_B10</strong> ({selectedDate})
+          </span>
+        );
+      default:
+        return (
+          <span className="text-[#A8B5C9]">
+            Layer: <strong className="text-[#F5F7FB] uppercase font-bold">{currentLayerObj?.shortName || activeLayer}</strong> ({dateOrKey})
+          </span>
+        );
+    }
+  };
 
   return (
     <main className={`relative flex-1 h-full w-full bg-[#080D18] overflow-hidden select-none ${className}`}>
@@ -159,11 +216,16 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
         )}
 
         <MapEventHandler />
-        <MapResizer isSidebarOpen={isSidebarOpen} isAnalyticsOpen={isAnalyticsOpen} />
+        <MapResizer isSidebarOpen={effectiveSidebarOpen} isAnalyticsOpen={isAnalyticsOpen} />
       </MapContainer>
 
       {/* Top-Left Hover Coordinates & Map Telemetry Badge */}
-      <div className="absolute top-3 left-3 z-[1000] pointer-events-none hidden sm:flex flex-col space-y-1.5">
+      {/* Offsets cleanly below toggle button when sidebar is collapsed (top-14), or top-3 when sidebar is open */}
+      <div
+        className={`absolute left-3 z-[1000] pointer-events-none hidden sm:flex flex-col space-y-1.5 transition-all duration-200 ${
+          effectiveSidebarOpen ? 'top-3' : 'top-14'
+        }`}
+      >
         <div className="bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs">
           <Crosshair className="w-3.5 h-3.5 text-[#19D3C5]" />
           <span className="text-[#8291A8] font-medium">Cursor:</span>
@@ -183,11 +245,11 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
       </div>
 
       {/* Top-Right Active Telemetry & Backend Status Banner */}
-      <div className="absolute top-3 right-3 z-[1000] pointer-events-none flex flex-col items-end space-y-1.5">
+      <div className="absolute top-3 right-3 z-[1000] pointer-events-none hidden sm:flex flex-col items-end space-y-1.5">
         {backendConnected ? (
           <div className="bg-[#080D18]/90 border border-[#26354A] text-[#19D3C5] backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">
             <Wifi className="w-3.5 h-3.5 text-[#19D3C5]" />
-            <span className="text-[#A8B5C9]">Live Stream: <strong className="text-[#F5F7FB] uppercase font-bold">{currentLayerObj?.shortName || activeLayer}</strong> ({dateOrKey})</span>
+            {getTelemetryBadge()}
           </div>
         ) : (
           <div className="bg-[#080D18]/90 border border-amber-500/50 text-amber-300 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">

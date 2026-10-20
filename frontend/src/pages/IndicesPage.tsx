@@ -11,7 +11,8 @@ import {
   Layers,
   Activity,
   Sliders,
-  ChevronRight,
+  ChevronLeft,
+  X,
   Info,
   AlertCircle,
   Binary
@@ -27,7 +28,13 @@ export const IndicesPage: React.FC = () => {
     backendConnected
   } = useAppStore();
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Desktop defaults to open (>=768px), mobile defaults to closed (<768px)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 768;
+    }
+    return true;
+  });
 
   // Default to ndvi if activeLayer is not an environmental index
   useEffect(() => {
@@ -41,78 +48,124 @@ export const IndicesPage: React.FC = () => {
 
   return (
     <div className="flex h-full w-full overflow-hidden relative">
-      {/* Interactive Map Area (Reusing MapWorkspace) */}
-      <MapWorkspace className="flex-1">
-        {/* Toggle Sidebar Button for Mobile & Compact Screens */}
-        <div className="absolute top-14 left-3 z-[1000]">
+      {/* Mobile Drawer Backdrop */}
+      {isSidebarOpen && (
+        <div
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 bg-[#080D18]/70 backdrop-blur-xs z-[1150] md:hidden cursor-pointer"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Floating Toggle Controls (Top-Left over Map) */}
+      {!isSidebarOpen && (
+        <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors"
-            title={isSidebarOpen ? "Collapse Environmental Indices Panel" : "Expand Environmental Indices Panel"}
+            onClick={() => setIsSidebarOpen(true)}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors cursor-pointer"
+            title="Open Environmental Indices Controls"
+            aria-label="Open Environmental Indices Controls"
           >
             <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
-            <span>{isSidebarOpen ? "Hide Analytics" : "Show Analytics"}</span>
+            <span>Index Controls</span>
           </button>
         </div>
-      </MapWorkspace>
+      )}
 
-      {/* Environmental Indices Analytical Sidebar */}
-      {isSidebarOpen && (
-        <aside className="w-80 sm:w-96 bg-[#0D1525] border-l border-[#26354A] flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
-          {/* Header */}
-          <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
-            <div className="flex items-center space-x-2">
-              <div className={`p-1.5 rounded-lg bg-[#162238] border border-[#26354A] ${isNdvi ? 'text-emerald-400' : 'text-amber-400'}`}>
-                {isNdvi ? <Trees className="w-4 h-4" /> : <Building2 className="w-4 h-4" />}
-              </div>
-              <div>
-                <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Environmental Indices</h2>
-                <p className="text-[10px] text-[#8291A8] font-medium">Landsat-8/9 OLI Spectral Predictors</p>
-              </div>
+      {/* COMPACT ENVIRONMENTAL INDICES SIDEBAR (Left-Docked approx 310-320px) */}
+      <aside
+        className={`bg-[#0D1525] border-r border-[#26354A] flex flex-col h-full shrink-0 select-none transition-transform duration-200
+          absolute md:relative inset-y-0 left-0 w-[310px] max-w-[85vw] lg:w-[320px] z-[1200] md:z-20 shadow-2xl md:shadow-none
+          ${isSidebarOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full md:hidden md:w-0 pointer-events-none'}
+        `}
+      >
+        {/* Header */}
+        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
+          <div className="flex items-center space-x-2">
+            <div className={`p-1.5 rounded-lg bg-[#162238] border border-[#26354A] ${isNdvi ? 'text-emerald-400' : 'text-amber-400'}`}>
+              {isNdvi ? <Trees className="w-4 h-4" /> : <Building2 className="w-4 h-4" />}
             </div>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors"
-              title="Collapse panel"
-              aria-label="Collapse panel"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            <div>
+              <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Environmental Indices</h2>
+              <p className="text-[10px] text-[#8291A8] font-medium">Landsat-8/9 OLI Spectral Predictors</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            title="Collapse panel"
+            aria-label="Collapse panel"
+          >
+            <ChevronLeft className="w-4 h-4 hidden md:block" />
+            <X className="w-4 h-4 md:hidden" />
+          </button>
+        </div>
+
+        {/* Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
+          {/* Index Switcher Tabs */}
+          <div className="space-y-1.5">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
+              Select Spectral Index
+            </div>
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#111C2E] rounded-xl border border-[#26354A]">
+              <button
+                onClick={() => setActiveLayer('ndvi')}
+                className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  isNdvi
+                    ? 'bg-[#162238] text-[#F5F7FB] shadow-xs border border-[#26354A]'
+                    : 'text-[#8291A8] hover:text-[#F5F7FB]'
+                }`}
+              >
+                <Trees className="w-3.5 h-3.5 text-emerald-400" />
+                <span>NDVI (Vegetation)</span>
+              </button>
+
+              <button
+                onClick={() => setActiveLayer('ndbi')}
+                className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  !isNdvi
+                    ? 'bg-[#162238] text-[#F5F7FB] shadow-xs border border-[#26354A]'
+                    : 'text-[#8291A8] hover:text-[#F5F7FB]'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                <span>NDBI (Built-up)</span>
+              </button>
+            </div>
           </div>
 
-          {/* Scrollable Body */}
-          <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
-            {/* Index Switcher Tabs */}
-            <div className="space-y-1.5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
-                Select Spectral Index
-              </div>
-              <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#111C2E] rounded-xl border border-[#26354A]">
-                <button
-                  onClick={() => setActiveLayer('ndvi')}
-                  className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold transition-all ${
-                    isNdvi
-                      ? 'bg-[#162238] text-[#F5F7FB] shadow-xs border border-[#26354A]'
-                      : 'text-[#8291A8] hover:text-[#F5F7FB]'
-                  }`}
-                >
-                  <Trees className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>NDVI (Vegetation)</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveLayer('ndbi')}
-                  className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold transition-all ${
-                    !isNdvi
-                      ? 'bg-[#162238] text-[#F5F7FB] shadow-xs border border-[#26354A]'
-                      : 'text-[#8291A8] hover:text-[#F5F7FB]'
-                  }`}
-                >
-                  <Building2 className="w-3.5 h-3.5 text-amber-400" />
-                  <span>NDBI (Built-up)</span>
-                </button>
-              </div>
+          {/* Integrated Legend Card */}
+          <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB]">
+                {isNdvi ? 'NDVI Vegetation Legend' : 'NDBI Built-Up Legend'}
+              </span>
+              <span className="text-[10px] font-mono text-[#8291A8]">
+                {isNdvi ? '[-0.2, +0.8]' : '[-0.4, +0.6]'}
+              </span>
             </div>
+
+            {isNdvi ? (
+              <div className="space-y-1.5 pt-1">
+                <div className="h-3 rounded-md w-full bg-gradient-to-r from-amber-900 via-emerald-600 to-emerald-400 border border-[#26354A]" />
+                <div className="flex justify-between text-[10px] font-mono text-[#A8B5C9]">
+                  <span>-0.2 (Non-Veg)</span>
+                  <span className="text-emerald-400">+0.3</span>
+                  <span>+0.8 (Canopy)</span>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-1.5 pt-1">
+                <div className="h-3 rounded-md w-full bg-gradient-to-r from-slate-900 via-amber-700 to-amber-500 border border-[#26354A]" />
+                <div className="flex justify-between text-[10px] font-mono text-[#A8B5C9]">
+                  <span>-0.4 (Pervious)</span>
+                  <span className="text-amber-400">0.0</span>
+                  <span>+0.6 (Built)</span>
+                </div>
+              </div>
+            )}
+          </div>
 
             {/* Active Context Banner */}
             <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
@@ -266,7 +319,9 @@ export const IndicesPage: React.FC = () => {
             </div>
           </div>
         </aside>
-      )}
+
+      {/* Map Workspace (Takes all remaining width) */}
+      <MapWorkspace showLegend={false} showTimeline={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
     </div>
   );
 };

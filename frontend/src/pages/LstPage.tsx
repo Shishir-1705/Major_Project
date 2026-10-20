@@ -99,33 +99,19 @@ export const LstPage: React.FC = () => {
       )}
 
       {/* Floating Toggle Controls (Top-Left over Map) */}
-      <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
-        {/* Desktop Collapse Toggle (shown only when sidebar is collapsed) */}
-        {!isSidebarOpen && (
+      {!isSidebarOpen && (
+        <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors cursor-pointer"
-            title="Open LST Sidebar"
-            aria-label="Open LST Sidebar"
-          >
-            <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
-            <span>LST Controls & Legend</span>
-          </button>
-        )}
-
-        {/* Mobile Toggle Button (shown only when mobile drawer is closed) */}
-        {!isSidebarOpen && (
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="md:hidden flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] transition-colors cursor-pointer"
-            title="Open LST controls"
-            aria-label="Open LST controls"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors cursor-pointer"
+            title="Open LST Controls"
+            aria-label="Open LST Controls"
           >
             <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
             <span>LST Controls</span>
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* COMPACT LST SIDEBAR (approx 310-320px) */}
       <aside
@@ -396,7 +382,7 @@ export const LstPage: React.FC = () => {
       </aside>
 
       {/* MAP-FIRST WORKSPACE (Occupies all remaining horizontal space & full viewport height) */}
-      <MapWorkspace showLegend={false} showTimeline={true} className="flex-1 h-full" />
+      <MapWorkspace showLegend={false} showTimeline={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
     </div>
   );
 };

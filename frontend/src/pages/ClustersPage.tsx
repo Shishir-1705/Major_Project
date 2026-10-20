@@ -8,7 +8,8 @@ import {
   AlertTriangle,
   ShieldCheck,
   Sliders,
-  ChevronRight,
+  ChevronLeft,
+  X,
   Calendar,
   Percent,
   CheckCircle2
@@ -23,7 +24,13 @@ export const ClustersPage: React.FC = () => {
     backendConnected
   } = useAppStore();
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Desktop defaults to open (>=768px), mobile defaults to closed (<768px)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 768;
+    }
+    return true;
+  });
 
   // Set active layer to gi_star when mounted
   useEffect(() => {
@@ -42,47 +49,61 @@ export const ClustersPage: React.FC = () => {
 
   return (
     <div className="flex h-full w-full overflow-hidden relative">
-      {/* Interactive Map Area (Reusing MapWorkspace with static key and no timeline) */}
-      <MapWorkspace showTimeline={false} className="flex-1">
-        {/* Toggle Sidebar Button */}
-        <div className="absolute top-14 left-3 z-[1000]">
+      {/* Mobile Drawer Backdrop */}
+      {isSidebarOpen && (
+        <div
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 bg-[#080D18]/70 backdrop-blur-xs z-[1150] md:hidden cursor-pointer"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Floating Toggle Controls (Top-Left over Map) */}
+      {!isSidebarOpen && (
+        <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors"
-            title={isSidebarOpen ? "Collapse Spatial Clustering Panel" : "Expand Spatial Clustering Panel"}
+            onClick={() => setIsSidebarOpen(true)}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors cursor-pointer"
+            title="Open Spatial Clustering Controls"
+            aria-label="Open Spatial Clustering Controls"
           >
             <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
-            <span>{isSidebarOpen ? "Hide Analytics" : "Show Analytics"}</span>
+            <span>Cluster Controls</span>
           </button>
         </div>
-      </MapWorkspace>
+      )}
 
-      {/* Gi* Clustering Analytical Sidebar */}
-      {isSidebarOpen && (
-        <aside className="w-80 sm:w-96 bg-[#0D1525] border-l border-[#26354A] flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
-          {/* Header */}
-          <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
-            <div className="flex items-center space-x-2">
-              <div className="p-1.5 rounded-lg bg-[#162238] text-orange-400 border border-[#26354A]">
-                <BarChart2 className="w-4 h-4" />
-              </div>
-              <div>
-                <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Getis-Ord Gi* Clusters</h2>
-                <p className="text-[10px] text-[#8291A8] font-medium">Spatial Autocorrelation & Hotspot Clustering</p>
-              </div>
+      {/* COMPACT GI* CLUSTERS SIDEBAR (Left-Docked approx 310-320px) */}
+      <aside
+        className={`bg-[#0D1525] border-r border-[#26354A] flex flex-col h-full shrink-0 select-none transition-transform duration-200
+          absolute md:relative inset-y-0 left-0 w-[310px] max-w-[85vw] lg:w-[320px] z-[1200] md:z-20 shadow-2xl md:shadow-none
+          ${isSidebarOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full md:hidden md:w-0 pointer-events-none'}
+        `}
+      >
+        {/* Header */}
+        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
+          <div className="flex items-center space-x-2">
+            <div className="p-1.5 rounded-lg bg-[#162238] text-orange-400 border border-[#26354A]">
+              <BarChart2 className="w-4 h-4" />
             </div>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors"
-              title="Collapse panel"
-              aria-label="Collapse panel"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            <div>
+              <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Getis-Ord Gi* Clusters</h2>
+              <p className="text-[10px] text-[#8291A8] font-medium">Spatial Autocorrelation & Hotspot Clustering</p>
+            </div>
           </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            title="Collapse panel"
+            aria-label="Collapse panel"
+          >
+            <ChevronLeft className="w-4 h-4 hidden md:block" />
+            <X className="w-4 h-4 md:hidden" />
+          </button>
+        </div>
 
-          {/* Scrollable Body */}
-          <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
+        {/* Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
             {/* Active Context Banner */}
             <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
@@ -207,7 +228,9 @@ export const ClustersPage: React.FC = () => {
             </div>
           </div>
         </aside>
-      )}
+
+      {/* Map Workspace (Takes all remaining width) */}
+      <MapWorkspace showTimeline={false} showLegend={false} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
     </div>
   );
 };
