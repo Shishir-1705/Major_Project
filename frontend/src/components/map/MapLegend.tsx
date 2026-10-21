@@ -5,14 +5,21 @@ import { ChevronDown, ChevronUp, Layers, Info } from 'lucide-react';
 
 export const MapLegend: React.FC = () => {
   const { activeLayer } = useAppStore();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   const currentLayer = LAYERS.find((l) => l.id === activeLayer);
 
   if (!currentLayer) return null;
 
   return (
-    <div className="bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl p-3 shadow-floating w-68 select-none pointer-events-auto transition-all duration-200">
+    <div className={`bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl shadow-floating select-none pointer-events-auto transition-all duration-200 ${
+      isCollapsed ? 'w-auto px-3 py-1.5' : 'w-64 sm:w-68 p-3'
+    }`}>
       {/* Legend Header & Collapse Toggle */}
       <div
         onClick={() => setIsCollapsed(!isCollapsed)}

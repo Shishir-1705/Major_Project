@@ -97,7 +97,7 @@ export const HotspotsPage: React.FC = () => {
         `}
       >
         {/* Header */}
-        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
+        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E] shrink-0">
           <div className="flex items-center space-x-2">
             <div className="p-1.5 rounded-lg bg-[#162238] text-[#19D3C5] border border-[#26354A]">
               <Cpu className="w-4 h-4" />
@@ -119,7 +119,7 @@ export const HotspotsPage: React.FC = () => {
         </div>
 
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-4 min-h-0">
           {/* Layer Mode Switcher Pills */}
           <div className="space-y-1.5">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">

@@ -9,24 +9,39 @@ import { SelectedLocationPanel } from './SelectedLocationPanel';
 import { TimelineSlider } from '../controls/TimelineSlider';
 import { Crosshair, Globe } from 'lucide-react';
 
-// Automatically invalidate Leaflet size when sidebars open/collapse, container resizes, or window resizes
+// Automatically invalidate Leaflet size when sidebars open/collapse, container resizes, or window/orientation changes
 const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean }> = ({ isSidebarOpen, isAnalyticsOpen }) => {
   const map = useMap();
 
   React.useEffect(() => {
     map.invalidateSize();
-    const timer = setTimeout(() => {
+    const t1 = setTimeout(() => {
       map.invalidateSize();
     }, 150);
-    return () => clearTimeout(timer);
+    const t2 = setTimeout(() => {
+      map.invalidateSize();
+    }, 250);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [map, isSidebarOpen, isAnalyticsOpen]);
 
   React.useEffect(() => {
+    const handleOrientation = () => {
+      map.invalidateSize();
+      setTimeout(() => map.invalidateSize(), 200);
+    };
+    window.addEventListener('orientationchange', handleOrientation);
+
     const container = map.getContainer();
     if (!container || typeof ResizeObserver === 'undefined') {
       const handleResize = () => map.invalidateSize();
       window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('orientationchange', handleOrientation);
+      };
     }
 
     let rafId: number | null = null;
@@ -42,6 +57,7 @@ const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       observer.disconnect();
+      window.removeEventListener('orientationchange', handleOrientation);
     };
   }, [map]);
 
@@ -242,16 +258,22 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
       {/* Custom Page Children Overlays */}
       {children}
 
-      {/* Floating Timeline Control at Bottom Center */}
+      {/* Floating Timeline Control at Bottom Center (Lifted to ensure Leaflet attribution remains visible) */}
       {showTimeline && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[1000] max-w-[95vw]">
+        <div className="absolute bottom-7 sm:bottom-8 left-1/2 -translate-x-1/2 z-[1000] max-w-[calc(100vw-24px)] pointer-events-auto">
           <TimelineSlider />
         </div>
       )}
 
-      {/* Floating Map Legend at Bottom Right */}
+      {/* Floating Map Legend at Bottom Right (Stacked above Timeline on mobile to prevent overlap) */}
       {showLegend && (
-        <div className="absolute bottom-4 right-4 z-[1000]">
+        <div
+          className={`absolute z-[1000] transition-all duration-150 ${
+            showTimeline
+              ? 'bottom-22 sm:bottom-8 right-3 sm:right-4'
+              : 'bottom-7 sm:bottom-8 right-3 sm:right-4'
+          }`}
+        >
           <MapLegend />
         </div>
       )}

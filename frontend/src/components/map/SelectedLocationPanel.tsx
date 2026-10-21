@@ -30,7 +30,7 @@ export const SelectedLocationPanel: React.FC = () => {
   const dmsString = `${toDMS(lat, true)}, ${toDMS(lng, false)}`;
 
   return (
-    <div className="absolute bottom-4 left-4 z-[1050] w-80 max-w-[calc(100vw-32px)] bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl p-3.5 shadow-floating text-xs select-none pointer-events-auto animate-in fade-in slide-in-from-bottom-2 duration-150">
+    <div className="absolute bottom-7 sm:bottom-8 left-3 sm:left-4 z-[1050] w-80 max-w-[calc(100vw-24px)] bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl p-3.5 shadow-floating text-xs select-none pointer-events-auto animate-in fade-in slide-in-from-bottom-2 duration-150">
       {/* Header with Title & Dismiss Button */}
       <div className="flex items-center justify-between border-b border-[#26354A]/60 pb-2 mb-2.5">
         <div className="flex items-center space-x-2">

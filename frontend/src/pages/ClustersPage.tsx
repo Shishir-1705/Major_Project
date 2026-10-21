@@ -81,7 +81,7 @@ export const ClustersPage: React.FC = () => {
         `}
       >
         {/* Header */}
-        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
+        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E] shrink-0">
           <div className="flex items-center space-x-2">
             <div className="p-1.5 rounded-lg bg-[#162238] text-orange-400 border border-[#26354A]">
               <BarChart2 className="w-4 h-4" />
@@ -103,7 +103,7 @@ export const ClustersPage: React.FC = () => {
         </div>
 
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-4 min-h-0">
             {/* Active Context Banner */}
             <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
