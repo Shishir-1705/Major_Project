@@ -18,7 +18,7 @@ export const MapLegend: React.FC = () => {
 
   return (
     <div className={`bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl shadow-floating select-none pointer-events-auto transition-all duration-200 ${
-      isCollapsed ? 'w-auto px-3 py-1.5' : 'w-64 sm:w-68 p-3'
+      isCollapsed ? 'w-auto px-3 py-1.5' : 'w-72 sm:w-80 p-3.5'
     }`}>
       {/* Legend Header & Collapse Toggle */}
       <div
@@ -30,7 +30,7 @@ export const MapLegend: React.FC = () => {
       >
         <div className="flex items-center space-x-1.5 min-w-0">
           <Layers className="w-3.5 h-3.5 text-[#19D3C5] shrink-0" />
-          <h4 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider truncate">
+          <h4 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">
             {currentLayer.shortName} Legend
           </h4>
         </div>
@@ -59,11 +59,11 @@ export const MapLegend: React.FC = () => {
                 Radiometric Skin Temperature (Landsat ST_B10)
               </div>
               <div className="h-3 rounded-md w-full bg-gradient-to-r from-yellow-200 via-orange-500 to-red-700 border border-[#26354A]" />
-              <div className="flex justify-between text-[9.5px] font-mono text-[#A8B5C9]">
-                <span>30.0 °C</span>
+              <div className="flex justify-between text-[9px] sm:text-[9.5px] font-mono text-[#A8B5C9] pt-1">
+                <span>30.0°C</span>
                 <span>42.7 (P20)</span>
                 <span>47.1 (P80)</span>
-                <span>55.0 °C</span>
+                <span>55.0°C</span>
               </div>
               <div className="p-1.5 rounded-lg bg-[#111C2E] border border-[#26354A] text-[9.5px] text-amber-300/90 leading-tight flex items-start space-x-1">
                 <Info className="w-3 h-3 text-amber-400 shrink-0 mt-0.5" />
@@ -195,32 +195,26 @@ export const MapLegend: React.FC = () => {
 
           {/* GETIS-ORD GI* CLUSTERS LEGEND */}
           {currentLayer.id === 'gi_star' && (
-            <div className="space-y-1 text-[11px]">
+            <div className="space-y-1.5 text-[11px]">
               <div className="text-[10px] text-[#8291A8] leading-tight">
-                Getis-Ord Gi* Spatial Autocorrelation
+                Getis-Ord Gi* Spatial Clustering (FDR p &lt; 0.05)
               </div>
-              <div className="flex items-center space-x-2 pt-0.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#990000]" />
-                <span className="text-[#F5F7FB] text-[10.5px]">Hotspot 99% Conf. (z &gt; +2.58)</span>
+              <div className="flex items-center justify-between p-1.5 bg-[#0D1525] rounded-lg border border-[#26354A]">
+                <div className="flex items-center space-x-2">
+                  <span className="w-3 h-3 rounded bg-[#f46d43] border border-[#ea580c] shadow-xs" />
+                  <span className="text-[#F5F7FB] font-medium text-[11px]">Significant Hotspot</span>
+                </div>
+                <span className="text-[10px] font-mono text-[#19D3C5]">pFDR &lt; 0.05</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#d73027]" />
-                <span className="text-[#A8B5C9] text-[10.5px]">Hotspot 95% Conf. (z &gt; +1.96)</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#f46d43]" />
-                <span className="text-[#A8B5C9] text-[10.5px]">Hotspot 90% Conf. (z &gt; +1.65)</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#4575b4]" />
-                <span className="text-[#8291A8] text-[10.5px]">Coldspot Cluster (90–99%)</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#1e293b] border border-[#26354A]" />
-                <span className="text-[#8291A8] text-[10.5px]">Not Significant (p ≥ 0.10)</span>
+              <div className="flex items-center justify-between p-1.5 bg-[#0D1525] rounded-lg border border-[#26354A]">
+                <div className="flex items-center space-x-2">
+                  <span className="w-3 h-3 rounded bg-[#1e293b] border border-[#26354A]" />
+                  <span className="text-[#A8B5C9] text-[11px]">Not Significant</span>
+                </div>
+                <span className="text-[10px] font-mono text-[#8291A8]">pFDR ≥ 0.05</span>
               </div>
               <div className="p-1.5 rounded-lg bg-[#111C2E] border border-[#26354A] text-[9px] text-[#8291A8] leading-tight">
-                Spatial clustering of thermal values; does not declare an official meteorological heatwave.
+                Multiple-testing adjusted across 104,063 spatial tests using Benjamini-Hochberg FDR (α = 0.05).
               </div>
             </div>
           )}

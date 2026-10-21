@@ -67,18 +67,18 @@ export const LayerControl: React.FC = () => {
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
-              <span className={`text-xs font-semibold truncate ${isActive ? 'text-[#F5F7FB] font-bold' : 'text-[#A8B5C9]'}`}>
+            <div className="flex items-center justify-between gap-1.5">
+              <span className={`text-xs font-semibold leading-tight break-words flex-1 ${isActive ? 'text-[#F5F7FB] font-bold' : 'text-[#A8B5C9]'}`}>
                 {layer.shortName}
               </span>
               {layer.category === 'ml' && (
-                <span className="text-[9px] font-bold font-mono uppercase px-1.5 py-0.2 rounded-md bg-[#162238] text-[#19D3C5] border border-[#26354A]">
+                <span className="text-[9px] font-bold font-mono uppercase px-1.5 py-0.2 rounded-md bg-[#162238] text-[#19D3C5] border border-[#26354A] shrink-0">
                   ML
                 </span>
               )}
             </div>
 
-            <p className="text-[11px] text-[#8291A8] leading-tight mt-0.5 line-clamp-1">
+            <p className="text-[11px] text-[#8291A8] leading-tight mt-0.5 break-words">
               {layer.description}
             </p>
           </div>

@@ -29,7 +29,7 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-3 shadow-xs relative overflow-hidden group hover:border-[#19D3C5]/40 transition-all flex flex-col justify-between min-h-[96px]">
       {/* Top Row: Full Title (no truncation) + Compact Accent Icon */}
       <div className="flex items-start justify-between gap-1.5 mb-1">
-        <span className="text-[10.5px] font-semibold text-[#8291A8] uppercase tracking-wider block leading-snug break-words flex-1">
+        <span className="text-[10px] sm:text-[10.5px] font-semibold text-[#8291A8] uppercase tracking-wide block leading-tight break-words flex-1 min-w-0">
           {title}
         </span>
         <div
@@ -45,7 +45,7 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
 
       {/* Middle Row: Prominent Primary Value & Unit */}
-      <div className="flex items-baseline space-x-1.5 flex-wrap my-0.5">
+      <div className="flex items-baseline space-x-1.5 flex-wrap my-0.5 min-w-0">
         {isLoading ? (
           <div className="h-6 w-20 bg-[#162238] animate-pulse rounded my-0.5" />
         ) : isError ? (
@@ -54,11 +54,11 @@ export const StatCard: React.FC<StatCardProps> = ({
           </span>
         ) : (
           <>
-            <span className="text-lg font-bold text-[#F5F7FB] tracking-tight font-mono leading-none">
+            <span className="text-lg font-bold text-[#F5F7FB] tracking-tight font-mono leading-none break-all">
               {value}
             </span>
             {displayUnit && (
-              <span className="text-[11px] text-[#A8B5C9] font-sans font-medium">
+              <span className="text-[11px] text-[#A8B5C9] font-sans font-medium shrink-0">
                 {displayUnit}
               </span>
             )}

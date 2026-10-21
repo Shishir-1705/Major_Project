@@ -233,7 +233,7 @@ export const MethodologyPage: React.FC = () => {
               <strong>Multi-Temporal Persistence:</strong> Evaluates hotspot recurrence frequency over 8 dates, identifying <strong>8.81 km² (9.40%)</strong> of chronic structural thermal hotspots (&gt;75–100% recurrence).
             </li>
             <li>
-              <strong>Getis-Ord Gi* Spatial Autocorrelation:</strong> Identifies statistically significant local spatial clustering of high temperatures ($z \ge 1.645, p &lt; 0.10$), corroborating an <strong>8.86 km² (9.46%)</strong> hot spot cluster centered on the urban commercial core.
+              <strong>Getis-Ord Gi* Spatial Autocorrelation:</strong> Identifies statistically significant local spatial clustering of high temperatures using Benjamini-Hochberg False Discovery Rate correction (pFDR &lt; 0.05, Gi* &gt; 0), corroborating an <strong>8.86 km² (9.46%)</strong> hot spot cluster centered on the urban commercial core.
             </li>
           </ul>
         </section>

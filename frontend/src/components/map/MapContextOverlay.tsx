@@ -204,13 +204,13 @@ export const MapContextOverlay: React.FC = () => {
           <div className="grid grid-cols-2 gap-1.5 text-[10px] pt-1">
             <div className="bg-[#111C2E] p-1.5 rounded-lg border border-[#26354A]">
               <span className="text-[#8291A8] block">Analytical Scope</span>
-              <span className="text-[#F5F7FB] font-medium block truncate" title={details.scope}>
+              <span className="text-[#F5F7FB] font-medium block leading-tight break-words text-[10.5px]" title={details.scope}>
                 {details.scope}
               </span>
             </div>
             <div className="bg-[#111C2E] p-1.5 rounded-lg border border-[#26354A]">
               <span className="text-[#8291A8] block">Study Domain</span>
-              <span className="text-[#19D3C5] font-medium block truncate">
+              <span className="text-[#19D3C5] font-medium block leading-tight break-words text-[10.5px]">
                 Mysuru AOI (132.1 km²)
               </span>
             </div>

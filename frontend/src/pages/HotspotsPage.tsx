@@ -366,7 +366,9 @@ export const HotspotsPage: React.FC = () => {
               <div className="p-3 rounded-xl border border-[#26354A] bg-[#111C2E] space-y-2 text-xs">
                 <div className="flex items-start justify-between font-mono text-[11px] gap-2">
                   <span className="text-[#8291A8] shrink-0">Algorithm:</span>
-                  <span className="font-bold text-[#F5F7FB] text-right break-words">{modelInfo?.algorithm || 'RandomForestClassifier'}</span>
+                  <span className="font-bold text-[#F5F7FB] text-right text-[10.5px] break-words" title={modelInfo?.algorithm || 'RandomForestClassifier (100 Trees)'}>
+                    Random Forest (100 Trees)
+                  </span>
                 </div>
                 <div className="flex items-center justify-between font-mono text-[11px] gap-2">
                   <span className="text-[#8291A8] shrink-0">Independent Test F1:</span>

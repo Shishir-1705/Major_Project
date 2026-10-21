@@ -91,7 +91,7 @@ export const ClustersPage: React.FC = () => {
                 Getis-Ord Gi* Clusters
               </h1>
               <p className="text-[10px] text-[#8291A8] font-medium leading-tight">
-                Spatial Autocorrelation & Hotspot Clustering
+                Benjamini-Hochberg FDR-Adjusted Local Statistics
               </p>
             </div>
           </div>
@@ -133,7 +133,7 @@ export const ClustersPage: React.FC = () => {
             <div className="space-y-1.5">
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1 flex items-center justify-between">
                 <span>Cluster Distribution</span>
-                <span className="font-mono text-[10px] text-[#19D3C5]">FDR p &lt; 0.05 (z ≥ 1.645)</span>
+                <span className="font-mono text-[10px] text-[#19D3C5]">Benjamini-Hochberg FDR (pFDR &lt; 0.05)</span>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
@@ -141,7 +141,7 @@ export const ClustersPage: React.FC = () => {
                   title="Hotspot Cluster"
                   value={hot90Area.toFixed(2)}
                   unit="km²"
-                  subtitle="90% confidence (z ≥ 1.645)"
+                  subtitle="Significant cluster (pFDR < 0.05)"
                   icon={AlertTriangle}
                   accentColor="#f46d43"
                   isLoading={isLoadingStats}
@@ -171,9 +171,9 @@ export const ClustersPage: React.FC = () => {
                 />
 
                 <StatCard
-                  title="z-score Cut-off"
-                  value="≥ +1.645"
-                  subtitle="90% Confidence limit (p < 0.10)"
+                  title="Significance Threshold"
+                  value="pFDR < 0.05"
+                  subtitle="FDR-corrected α = 0.05"
                   icon={BarChart2}
                   accentColor="#19D3C5"
                   isLoading={false}
@@ -188,23 +188,29 @@ export const ClustersPage: React.FC = () => {
               </div>
               <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-2.5 space-y-2">
                 {(giStarStats?.clusters || [
-                  { cluster_type: "Hotspot 90% Confidence", confidence_level: "90%", area_km2: 8.856, percentage: 9.46, color_hex: "#f46d43" },
-                  { cluster_type: "Not Significant", confidence_level: "N/A", area_km2: 84.801, percentage: 90.54, color_hex: "#1e293b" },
-                  { cluster_type: "Hotspot 95% Confidence", confidence_level: "95%", area_km2: 0.0, percentage: 0.0, color_hex: "#d73027" },
-                  { cluster_type: "Hotspot 99% Confidence", confidence_level: "99%", area_km2: 0.0, percentage: 0.0, color_hex: "#990000" },
-                  { cluster_type: "Coldspot Cluster", confidence_level: "90-99%", area_km2: 0.0, percentage: 0.0, color_hex: "#4575b4" }
-                ]).map((c, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs p-2 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs gap-2">
-                    <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
-                      <span className="text-[#F5F7FB] font-medium text-[11px] leading-tight break-words">{c.cluster_type}</span>
-                    </div>
-                    <div className="text-right shrink-0 font-mono text-[11px]">
-                      <span className="font-bold text-[#19D3C5]">{c.area_km2.toFixed(2)} km²</span>
-                      <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
-                    </div>
-                  </div>
-                ))}
+                  { cluster_type: "Hotspot Cluster (pFDR < 0.05)", confidence_level: "pFDR < 0.05", area_km2: 8.856, percentage: 9.46, color_hex: "#f46d43" },
+                  { cluster_type: "Not Significant (pFDR ≥ 0.05)", confidence_level: "pFDR ≥ 0.05", area_km2: 84.801, percentage: 90.54, color_hex: "#1e293b" }
+                ])
+                  .filter((c) => c.area_km2 > 0 || c.cluster_type.includes('Not Significant') || c.cluster_type.includes('Hotspot'))
+                  .map((c, idx) => {
+                    const label = c.cluster_type.includes('90%') || c.cluster_type === 'Hotspot Cluster'
+                      ? 'Hotspot Cluster (pFDR < 0.05)'
+                      : c.cluster_type.includes('Not Significant')
+                      ? 'Not Significant (pFDR ≥ 0.05)'
+                      : c.cluster_type;
+                    return (
+                      <div key={idx} className="flex items-center justify-between text-xs p-2 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs gap-2">
+                        <div className="flex items-center space-x-2 min-w-0 flex-1">
+                          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
+                          <span className="text-[#F5F7FB] font-medium text-[11px] leading-tight break-words">{label}</span>
+                        </div>
+                        <div className="text-right shrink-0 font-mono text-[11px]">
+                          <span className="font-bold text-[#19D3C5]">{c.area_km2.toFixed(2)} km²</span>
+                          <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
 
@@ -226,7 +232,7 @@ export const ClustersPage: React.FC = () => {
                 The Getis-Ord $G_i^*$ statistic evaluates whether high thermal values cluster in space more than expected by random chance.
               </p>
               <p className="text-[11px] leading-relaxed text-[#8291A8]">
-                The identified <strong>8.86 km² (9.46%)</strong> statistically significant hot spot cluster ($p &lt; 0.10$) precisely mirrors the <strong>8.81 km² (9.40%)</strong> Category 5 chronic persistence zone in central Mysuru, providing rigorous statistical proof of localized thermal intensification.
+                The identified <strong>8.86 km² (9.46%)</strong> statistically significant hot spot cluster (Benjamini-Hochberg FDR pFDR &lt; 0.05) precisely mirrors the <strong>8.81 km² (9.40%)</strong> Category 5 chronic persistence zone in central Mysuru, providing rigorous statistical proof of localized thermal intensification.
               </p>
             </div>
           </div>
