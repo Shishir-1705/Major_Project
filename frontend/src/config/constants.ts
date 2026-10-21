@@ -18,7 +18,7 @@ export const OBSERVATION_DATES: ObservationDate[] = [
 export const LAYERS: LayerMetadata[] = [
   {
     id: 'lst',
-    name: 'Land Surface Temp (LST)',
+    name: 'Land Surface Temperature (LST)',
     shortName: 'LST Map',
     category: 'satellite',
     description: 'Landsat 8/9 ST_B10 surface temperature (°C)',
@@ -28,22 +28,22 @@ export const LAYERS: LayerMetadata[] = [
   },
   {
     id: 'ndvi',
-    name: 'Normalized Diff Vegetation (NDVI)',
+    name: 'Normalized Difference Vegetation Index (NDVI)',
     shortName: 'NDVI Vegetation',
     category: 'satellite',
     description: 'Vegetation canopy density (-0.2 to +0.8)',
     accentColor: '#10b981', // Emerald Green
-    unit: 'Index',
+    unit: '',
     isCategorical: false,
   },
   {
     id: 'ndbi',
-    name: 'Normalized Diff Built-up (NDBI)',
+    name: 'Normalized Difference Built-up Index (NDBI)',
     shortName: 'NDBI Built-up',
     category: 'satellite',
     description: 'Built-up surface & pavement index (-0.4 to +0.6)',
     accentColor: '#a855f7', // Purple
-    unit: 'Index',
+    unit: '',
     isCategorical: false,
   },
   {

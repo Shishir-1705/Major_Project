@@ -92,15 +92,19 @@ export const PersistencePage: React.FC = () => {
               <GitCommit className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Heat Persistence Explorer</h2>
-              <p className="text-[10px] text-[#8291A8] font-medium">Multi-Temporal Hotspot Recurrence (8 Dates)</p>
+              <h1 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider leading-snug">
+                Heat Persistence Explorer
+              </h1>
+              <p className="text-[10px] text-[#8291A8] font-medium leading-tight">
+                Multi-Temporal Hotspot Recurrence (8 Dates)
+              </p>
             </div>
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
-            title="Collapse panel"
-            aria-label="Collapse panel"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            title="Collapse sidebar"
+            aria-label="Collapse sidebar"
           >
             <ChevronLeft className="w-4 h-4 hidden md:block" />
             <X className="w-4 h-4 md:hidden" />
@@ -153,8 +157,8 @@ export const PersistencePage: React.FC = () => {
 
                 <StatCard
                   title="Chronic Share"
-                  value={`${chronicPct.toFixed(1)}%`}
-                  unit="coverage"
+                  value={chronicPct.toFixed(1)}
+                  unit="%"
                   subtitle="Persistent heat anomaly footprint"
                   icon={Percent}
                   accentColor="#ea580c"

@@ -65,7 +65,7 @@ export const MapContextOverlay: React.FC = () => {
         };
       case 'ndvi':
         return {
-          title: 'Normalized Difference Vegetation (NDVI)',
+          title: 'Normalized Difference Vegetation Index (NDVI)',
           subtitle: 'Vegetation Canopy Density Index',
           icon: Trees,
           accentColor: '#10b981',
@@ -78,7 +78,7 @@ export const MapContextOverlay: React.FC = () => {
         };
       case 'ndbi':
         return {
-          title: 'Normalized Difference Built-up (NDBI)',
+          title: 'Normalized Difference Built-up Index (NDBI)',
           subtitle: 'Built-up Surface & Pavement Index',
           icon: Building2,
           accentColor: '#a855f7',

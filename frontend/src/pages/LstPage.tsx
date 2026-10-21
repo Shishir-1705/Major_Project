@@ -126,16 +126,16 @@ export const LstPage: React.FC = () => {
         {/* Sidebar Header & Collapse Action */}
         <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E] shrink-0">
           <div className="flex items-center space-x-2">
-            <div className="p-1.5 rounded-lg bg-[#162238] text-[#19D3C5] border border-[#26354A]">
-              <Flame className="w-4 h-4 text-orange-400" />
+            <div className="p-1.5 rounded-lg bg-[#162238] text-orange-400 border border-[#26354A]">
+              <Flame className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#19D3C5]">
-                Thermal Workspace
-              </span>
-              <h1 className="text-xs font-bold text-[#F5F7FB] leading-none">
+              <h1 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider leading-snug">
                 LST Explorer
               </h1>
+              <p className="text-[10px] text-[#8291A8] font-medium leading-tight">
+                Landsat-8/9 Thermal Infrared (ST_B10)
+              </p>
             </div>
           </div>
 
@@ -155,10 +155,10 @@ export const LstPage: React.FC = () => {
           {/* SECTION A: PAGE INTRODUCTION */}
           <section className="space-y-1">
             <h2 className="text-sm font-bold text-[#F5F7FB]">
-              Land Surface Temperature
+              Thermal Radiometric Analysis
             </h2>
             <p className="text-[#8291A8] text-[11px] leading-relaxed">
-              Explore Landsat-derived surface temperature across Mysuru.
+              Explore calibrated radiometric surface temperature (ST_B10) across Mysuru.
             </p>
           </section>
 

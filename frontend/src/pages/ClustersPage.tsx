@@ -87,15 +87,19 @@ export const ClustersPage: React.FC = () => {
               <BarChart2 className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Getis-Ord Gi* Clusters</h2>
-              <p className="text-[10px] text-[#8291A8] font-medium">Spatial Autocorrelation & Hotspot Clustering</p>
+              <h1 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider leading-snug">
+                Getis-Ord Gi* Clusters
+              </h1>
+              <p className="text-[10px] text-[#8291A8] font-medium leading-tight">
+                Spatial Autocorrelation & Hotspot Clustering
+              </p>
             </div>
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
-            title="Collapse panel"
-            aria-label="Collapse panel"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            title="Collapse sidebar"
+            aria-label="Collapse sidebar"
           >
             <ChevronLeft className="w-4 h-4 hidden md:block" />
             <X className="w-4 h-4 md:hidden" />
@@ -146,8 +150,8 @@ export const ClustersPage: React.FC = () => {
 
                 <StatCard
                   title="Cluster Share"
-                  value={`${hot90Pct.toFixed(1)}%`}
-                  unit="coverage"
+                  value={hot90Pct.toFixed(1)}
+                  unit="%"
                   subtitle="Statistically significant core"
                   icon={Percent}
                   accentColor="#ea580c"
@@ -168,9 +172,8 @@ export const ClustersPage: React.FC = () => {
 
                 <StatCard
                   title="z-score Cut-off"
-                  value="z ≥ 1.645"
-                  unit="critical"
-                  subtitle="p-value < 0.10 critical limit"
+                  value="≥ +1.645"
+                  subtitle="90% Confidence limit (p < 0.10)"
                   icon={BarChart2}
                   accentColor="#19D3C5"
                   isLoading={false}

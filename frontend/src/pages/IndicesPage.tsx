@@ -101,15 +101,19 @@ export const IndicesPage: React.FC = () => {
               {isNdvi ? <Trees className="w-4 h-4" /> : <Building2 className="w-4 h-4" />}
             </div>
             <div>
-              <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Environmental Indices</h2>
-              <p className="text-[10px] text-[#8291A8] font-medium">Landsat-8/9 OLI Spectral Predictors</p>
+              <h1 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider leading-snug">
+                Environmental Indices
+              </h1>
+              <p className="text-[10px] text-[#8291A8] font-medium leading-tight">
+                Landsat-8/9 OLI Spectral Predictors
+              </p>
             </div>
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
-            title="Collapse panel"
-            aria-label="Collapse panel"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            title="Collapse sidebar"
+            aria-label="Collapse sidebar"
           >
             <ChevronLeft className="w-4 h-4 hidden md:block" />
             <X className="w-4 h-4 md:hidden" />
@@ -248,7 +252,6 @@ export const IndicesPage: React.FC = () => {
                 <StatCard
                   title={isNdvi ? "Mean NDVI" : "Mean NDBI"}
                   value={zonalStats?.mean !== undefined ? zonalStats.mean.toFixed(3) : (isNdvi ? "0.268" : "0.042")}
-                  unit="Index"
                   subtitle={isNdvi ? "Average vegetation canopy" : "Average impervious density"}
                   icon={isNdvi ? Trees : Building2}
                   accentColor={isNdvi ? "#10b981" : "#d97706"}
@@ -259,7 +262,6 @@ export const IndicesPage: React.FC = () => {
                 <StatCard
                   title="Peak Index"
                   value={zonalStats?.max !== undefined ? zonalStats.max.toFixed(3) : (isNdvi ? "0.742" : "0.485")}
-                  unit="Index"
                   subtitle={isNdvi ? "Maximum dense vegetation" : "Highest built density"}
                   icon={Activity}
                   accentColor={isNdvi ? "#059669" : "#b45309"}
@@ -270,7 +272,6 @@ export const IndicesPage: React.FC = () => {
                 <StatCard
                   title="Minimum Index"
                   value={zonalStats?.min !== undefined ? zonalStats.min.toFixed(3) : (isNdvi ? "-0.150" : "-0.320")}
-                  unit="Index"
                   subtitle={isNdvi ? "Barren or paved surface" : "Pervious/vegetated surface"}
                   icon={Layers}
                   accentColor="#8291A8"
@@ -281,7 +282,6 @@ export const IndicesPage: React.FC = () => {
                 <StatCard
                   title="Std Dev"
                   value={zonalStats?.std !== undefined ? `±${zonalStats.std.toFixed(3)}` : (isNdvi ? "±0.095" : "±0.088")}
-                  unit="Index"
                   subtitle="Spatial index variability"
                   icon={Binary}
                   accentColor="#8291A8"

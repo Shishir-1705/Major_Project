@@ -98,6 +98,13 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   // Toast Actions
   addToast: (toast) => {
+    // Avoid spamming duplicate toast notifications
+    const currentToasts = get().toasts;
+    const isDuplicate = currentToasts.some(
+      (t) => t.title === toast.title && t.message === toast.message
+    );
+    if (isDuplicate) return;
+
     const id = Math.random().toString(36).substring(2, 9);
     const newToast: ToastMessage = { id, duration: 5000, ...toast };
     set((state) => ({ toasts: [...state.toasts, newToast] }));

@@ -7,7 +7,7 @@ import { MapLegend } from './MapLegend';
 import { MapContextOverlay } from './MapContextOverlay';
 import { SelectedLocationPanel } from './SelectedLocationPanel';
 import { TimelineSlider } from '../controls/TimelineSlider';
-import { Crosshair, Globe } from 'lucide-react';
+import { Crosshair, Globe, AlertCircle, RefreshCw } from 'lucide-react';
 
 // Automatically invalidate Leaflet size when sidebars open/collapse, container resizes, or window/orientation changes
 const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean }> = ({ isSidebarOpen, isAnalyticsOpen }) => {
@@ -108,6 +108,8 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     backendConnected,
     apiError,
     addToast,
+    fetchInitialData,
+    isLoadingMetadata,
     isSidebarOpen: storeIsSidebarOpen,
     isAnalyticsOpen
   } = useAppStore();
@@ -119,8 +121,8 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     // Non-blocking toast notification on tile loading error without crashing map
     addToast({
       type: 'warning',
-      title: 'Map Layer Notice',
-      message: `Map tile for ${currentLayerObj?.shortName || activeLayer} temporarily unavailable.`,
+      title: 'Satellite Layer Notice',
+      message: `Satellite raster for ${currentLayerObj?.shortName || activeLayer} is temporarily unavailable.`,
       duration: 4000,
     });
   };
@@ -245,12 +247,27 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
       {/* Selected Location Information Panel (Bottom-Left) */}
       <SelectedLocationPanel />
 
-      {/* API Error Toast Banner if connection fails */}
+      {/* API Error Banner with Retry Action if connection fails */}
       {apiError && !backendConnected && (
         <div className="absolute top-14 right-3 z-[1000] max-w-sm pointer-events-auto">
-          <div className="bg-[#080D18]/95 border border-red-500/50 text-red-200 backdrop-blur-md p-3 rounded-xl shadow-card text-xs space-y-1">
-            <div className="font-bold text-red-400">Backend Server Unavailable</div>
-            <p className="text-[11px] leading-tight text-red-300">{apiError}</p>
+          <div className="bg-[#080D18]/95 border border-[#26354A] text-[#F5F7FB] backdrop-blur-md p-3.5 rounded-xl shadow-card text-xs space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-bold text-amber-400 flex items-center space-x-1.5">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span>Backend Analysis Server Offline</span>
+              </span>
+              <button
+                onClick={() => fetchInitialData()}
+                disabled={isLoadingMetadata}
+                className="flex items-center space-x-1 text-[10.5px] font-semibold text-[#19D3C5] hover:text-[#39E4D5] bg-[#162238] px-2.5 py-1 rounded-lg border border-[#26354A] hover:border-[#19D3C5]/40 transition-colors disabled:opacity-50 cursor-pointer shadow-2xs"
+                title="Retry backend connection"
+                aria-label="Retry backend connection"
+              >
+                <RefreshCw className={`w-3 h-3 ${isLoadingMetadata ? 'animate-spin' : ''}`} />
+                <span>{isLoadingMetadata ? 'Connecting...' : 'Retry'}</span>
+              </button>
+            </div>
+            <p className="text-[11px] leading-tight text-[#8291A8]">{apiError}</p>
           </div>
         </div>
       )}

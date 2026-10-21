@@ -39,7 +39,7 @@ export const ModelInfoCard: React.FC = () => {
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div className="bg-[#111C2E] p-2 rounded-lg border border-[#26354A] shadow-xs">
           <span className="text-[10px] text-[#8291A8] uppercase block font-medium">Algorithm</span>
-          <span className="font-semibold text-[#F5F7FB] truncate block mt-0.5">{m.algorithm}</span>
+          <span className="font-semibold text-[#F5F7FB] break-words block mt-0.5">{m.algorithm}</span>
         </div>
 
         <div className="bg-[#111C2E] p-2 rounded-lg border border-[#26354A] shadow-xs">

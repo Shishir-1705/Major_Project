@@ -63,8 +63,8 @@ export const AnalyticsPanel: React.FC = () => {
             <span className="text-[#19D3C5] font-semibold">{currentDateObj?.satellite || 'Landsat OLI/TIRS'}</span>
           </div>
           <div className="flex items-center justify-between text-xs pt-1.5 border-t border-[#26354A]">
-            <span className="text-[#8291A8] font-medium">Active Layer:</span>
-            <span className="text-[#F5F7FB] font-bold truncate max-w-[150px]">{currentLayer?.shortName}</span>
+            <span className="text-[#8291A8] font-medium shrink-0">Active Layer:</span>
+            <span className="text-[#F5F7FB] font-bold break-words text-right">{currentLayer?.shortName}</span>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export const AnalyticsPanel: React.FC = () => {
                 case 'rf_prob': return 'Prob';
                 case 'rf_class': return 'Class';
                 case 'ndvi':
-                case 'ndbi': return 'Index';
+                case 'ndbi': return '';
                 case 'persistence': return 'Recurrence';
                 case 'gi_star': return 'z-score';
                 default: return currentLayer?.unit || '';
@@ -175,12 +175,12 @@ export const AnalyticsPanel: React.FC = () => {
             <div className="space-y-1.5 text-xs">
               {persistenceStats.categories.map((cat) => (
                 <div key={cat.category} className="bg-[#0D1525] p-2 rounded-lg border border-[#26354A] space-y-1 shadow-2xs">
-                  <div className="flex justify-between font-medium">
-                    <span className="text-[#A8B5C9] flex items-center space-x-1.5">
+                  <div className="flex justify-between font-medium items-start gap-2">
+                    <span className="text-[#A8B5C9] flex items-center space-x-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ backgroundColor: cat.color_hex }} />
-                      <span className="truncate max-w-[150px]">{cat.category}</span>
+                      <span className="break-words">{cat.category}</span>
                     </span>
-                    <span className="font-mono text-[#F5F7FB] font-bold">{cat.area_km2} km² ({cat.percentage}%)</span>
+                    <span className="font-mono text-[#F5F7FB] font-bold shrink-0">{cat.area_km2} km² ({cat.percentage}%)</span>
                   </div>
                 </div>
               ))}

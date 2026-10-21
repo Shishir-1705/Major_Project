@@ -25,7 +25,7 @@ export const MethodologyPage: React.FC = () => {
         <h1 className="text-xl sm:text-2xl font-extrabold text-[#F5F7FB] tracking-tight">
           Machine Learning-Based Urban Heat Hotspot Detection Methodology
         </h1>
-        <p className="text-xs text-[#8291A8] leading-relaxed max-w-3xl">
+        <p className="text-xs sm:text-sm text-[#8291A8] leading-relaxed max-w-3xl">
           Comprehensive scientific documentation detailing satellite data acquisition, radiometric calibration, spectral index extraction, machine learning classification, and spatial clustering in Mysuru, Karnataka, India.
         </p>
       </section>

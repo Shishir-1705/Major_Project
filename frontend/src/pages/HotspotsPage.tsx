@@ -103,15 +103,19 @@ export const HotspotsPage: React.FC = () => {
               <Cpu className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">ML Hotspot Analysis</h2>
-              <p className="text-[10px] text-[#8291A8] font-medium">Random Forest Predictors (NDVI & NDBI)</p>
+              <h1 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider leading-snug">
+                ML Hotspot Analysis
+              </h1>
+              <p className="text-[10px] text-[#8291A8] font-medium leading-tight">
+                Random Forest Predictors (NDVI & NDBI)
+              </p>
             </div>
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
-            title="Collapse panel"
-            aria-label="Collapse panel"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            title="Collapse sidebar"
+            aria-label="Collapse sidebar"
           >
             <ChevronLeft className="w-4 h-4 hidden md:block" />
             <X className="w-4 h-4 md:hidden" />
@@ -320,8 +324,8 @@ export const HotspotsPage: React.FC = () => {
 
                   <StatCard
                     title="Coverage"
-                    value={hotspotStats?.hotspot_percentage !== undefined ? `${hotspotStats.hotspot_percentage.toFixed(1)}%` : "26.1%"}
-                    unit="percent"
+                    value={hotspotStats?.hotspot_percentage !== undefined ? hotspotStats.hotspot_percentage.toFixed(1) : "26.1"}
+                    unit="%"
                     subtitle="Share of 132.13 km² built domain"
                     icon={Percent}
                     accentColor="#ea580c"

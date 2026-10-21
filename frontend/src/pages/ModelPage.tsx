@@ -48,7 +48,7 @@ export const ModelPage: React.FC = () => {
           <h1 className="text-xl sm:text-2xl font-extrabold text-[#F5F7FB] tracking-tight">
             Random Forest Classifier Specification & Spatial Evaluation
           </h1>
-          <p className="text-xs text-[#8291A8] max-w-3xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#8291A8] max-w-3xl leading-relaxed">
             Locked empirical machine learning model trained strictly on optical surface indices (NDBI & NDVI) to predict relative urban thermal hotspot occurrence without thermal infrared leakage.
           </p>
         </div>
@@ -81,7 +81,7 @@ export const ModelPage: React.FC = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
               <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-1">
                 <span className="text-[10px] text-[#8291A8] uppercase font-semibold block">Algorithm</span>
-                <span className="font-bold text-[#F5F7FB] block truncate">{m.algorithm}</span>
+                <span className="font-bold text-[#F5F7FB] block break-words">{m.algorithm}</span>
               </div>
               <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-1">
                 <span className="text-[10px] text-[#8291A8] uppercase font-semibold block">Decision Trees</span>

@@ -23,8 +23,10 @@ export const StatCard: React.FC<StatCardProps> = ({
   isError = false,
   errorMessage = 'Telemetry unavailable',
 }) => {
+  const displayUnit = unit?.trim();
+
   return (
-    <div className="bg-[#0D1525] border border-[#26354A] rounded-xl p-3 shadow-xs relative overflow-hidden group hover:border-[#19D3C5]/40 transition-all flex flex-col justify-between min-h-[96px]">
+    <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-3 shadow-xs relative overflow-hidden group hover:border-[#19D3C5]/40 transition-all flex flex-col justify-between min-h-[96px]">
       {/* Top Row: Full Title (no truncation) + Compact Accent Icon */}
       <div className="flex items-start justify-between gap-1.5 mb-1">
         <span className="text-[10.5px] font-semibold text-[#8291A8] uppercase tracking-wider block leading-snug break-words flex-1">
@@ -55,9 +57,9 @@ export const StatCard: React.FC<StatCardProps> = ({
             <span className="text-lg font-bold text-[#F5F7FB] tracking-tight font-mono leading-none">
               {value}
             </span>
-            {unit && (
+            {displayUnit && (
               <span className="text-[11px] text-[#A8B5C9] font-sans font-medium">
-                {unit}
+                {displayUnit}
               </span>
             )}
           </>

@@ -36,7 +36,7 @@ export const MapLegend: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-1 shrink-0 ml-1">
-          {currentLayer.unit && (
+          {currentLayer.unit && currentLayer.unit.trim() !== '' && (
             <span className="text-[9.5px] font-mono text-[#8291A8] font-medium hidden sm:inline">
               [{currentLayer.unit}]
             </span>
