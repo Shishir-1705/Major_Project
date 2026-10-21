@@ -39,12 +39,13 @@ export const ClustersPage: React.FC = () => {
     }
   }, [activeLayer, setActiveLayer]);
 
-  const hot90 = giStarStats?.clusters?.find((c) => c.confidence_level === '90%');
+  const hotSig = giStarStats?.clusters?.find((c) => c.confidence_level === '90%' || c.cluster_type.includes('Significant Hotspot') || (c.cluster_type.includes('Hotspot') && c.area_km2 > 0));
   const notSig = giStarStats?.clusters?.find((c) => c.cluster_type.includes('Not Significant'));
 
-  const hot90Area = hot90?.area_km2 ?? 8.856;
-  const hot90Pct = hot90?.percentage ?? 9.46;
+  const sigHotspotArea = hotSig?.area_km2 ?? 8.856;
+  const sigHotspotPct = hotSig?.percentage ?? 9.46;
   const notSigArea = notSig?.area_km2 ?? 84.801;
+  const notSigPct = notSig?.percentage ?? 90.54;
   const totalDomain = giStarStats?.total_built_area_km2 ?? 93.657;
 
   return (
@@ -138,8 +139,8 @@ export const ClustersPage: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 <StatCard
-                  title="Hotspot Cluster"
-                  value={hot90Area.toFixed(2)}
+                  title="Significant Hotspot"
+                  value={sigHotspotArea.toFixed(2)}
                   unit="km²"
                   subtitle="Significant cluster (pFDR < 0.05)"
                   icon={AlertTriangle}
@@ -150,7 +151,7 @@ export const ClustersPage: React.FC = () => {
 
                 <StatCard
                   title="Cluster Share"
-                  value={hot90Pct.toFixed(1)}
+                  value={sigHotspotPct.toFixed(1)}
                   unit="%"
                   subtitle="Statistically significant core"
                   icon={Percent}
@@ -187,30 +188,31 @@ export const ClustersPage: React.FC = () => {
                 Statistical Significance Breakdown
               </div>
               <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-2.5 space-y-2">
-                {(giStarStats?.clusters || [
-                  { cluster_type: "Hotspot Cluster (pFDR < 0.05)", confidence_level: "pFDR < 0.05", area_km2: 8.856, percentage: 9.46, color_hex: "#f46d43" },
-                  { cluster_type: "Not Significant (pFDR ≥ 0.05)", confidence_level: "pFDR ≥ 0.05", area_km2: 84.801, percentage: 90.54, color_hex: "#1e293b" }
-                ])
-                  .filter((c) => c.area_km2 > 0 || c.cluster_type.includes('Not Significant') || c.cluster_type.includes('Hotspot'))
-                  .map((c, idx) => {
-                    const label = c.cluster_type.includes('90%') || c.cluster_type === 'Hotspot Cluster'
-                      ? 'Hotspot Cluster (pFDR < 0.05)'
-                      : c.cluster_type.includes('Not Significant')
-                      ? 'Not Significant (pFDR ≥ 0.05)'
-                      : c.cluster_type;
-                    return (
-                      <div key={idx} className="flex items-center justify-between text-xs p-2 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs gap-2">
-                        <div className="flex items-center space-x-2 min-w-0 flex-1">
-                          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
-                          <span className="text-[#F5F7FB] font-medium text-[11px] leading-tight break-words">{label}</span>
-                        </div>
-                        <div className="text-right shrink-0 font-mono text-[11px]">
-                          <span className="font-bold text-[#19D3C5]">{c.area_km2.toFixed(2)} km²</span>
-                          <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                {[
+                  {
+                    cluster_type: "Significant Hotspot (pFDR < 0.05)",
+                    area_km2: sigHotspotArea,
+                    percentage: sigHotspotPct,
+                    color_hex: "#f46d43"
+                  },
+                  {
+                    cluster_type: "Not Significant (pFDR ≥ 0.05)",
+                    area_km2: notSigArea,
+                    percentage: notSigPct,
+                    color_hex: "#1e293b"
+                  }
+                ].map((c, idx) => (
+                  <div key={idx} className="flex items-center justify-between text-xs p-2 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs gap-2">
+                    <div className="flex items-center space-x-2 min-w-0 flex-1">
+                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
+                      <span className="text-[#F5F7FB] font-medium text-[11px] leading-tight break-words">{c.cluster_type}</span>
+                    </div>
+                    <div className="text-right shrink-0 font-mono text-[11px]">
+                      <span className="font-bold text-[#19D3C5]">{c.area_km2.toFixed(2)} km²</span>
+                      <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
