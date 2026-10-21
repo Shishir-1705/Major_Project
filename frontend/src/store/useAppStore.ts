@@ -21,6 +21,7 @@ interface AppState {
   showAOIBoundary: boolean;
   activeTab: 'overview' | 'thermal' | 'ml' | 'environment' | 'persistence' | 'clusters' | 'methodology';
   hoveredCoordinates: { lat: number; lng: number } | null;
+  selectedLocation: { lat: number; lng: number } | null;
   isMethodologyModalOpen: boolean;
   isSidebarOpen: boolean;
   isAnalyticsOpen: boolean;
@@ -50,6 +51,7 @@ interface AppState {
   setShowAOIBoundary: (show: boolean) => void;
   setActiveTab: (tab: AppState['activeTab']) => void;
   setHoveredCoordinates: (coords: { lat: number; lng: number } | null) => void;
+  setSelectedLocation: (coords: { lat: number; lng: number } | null) => void;
   setIsMethodologyModalOpen: (open: boolean) => void;
   setIsSidebarOpen: (open: boolean) => void;
   setIsAnalyticsOpen: (open: boolean) => void;
@@ -72,6 +74,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   showAOIBoundary: true,
   activeTab: 'overview',
   hoveredCoordinates: null,
+  selectedLocation: null,
   isMethodologyModalOpen: false,
   isSidebarOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
   isAnalyticsOpen: typeof window !== 'undefined' ? window.innerWidth >= 1280 : true,
@@ -180,6 +183,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     get().fetchLayerStats();
   },
   setHoveredCoordinates: (coords) => set({ hoveredCoordinates: coords }),
+  setSelectedLocation: (coords) => set({ selectedLocation: coords }),
   setIsMethodologyModalOpen: (open) => set({ isMethodologyModalOpen: open }),
   setIsSidebarOpen: (open) => set({ isSidebarOpen: open }),
   setIsAnalyticsOpen: (open) => set({ isAnalyticsOpen: open }),

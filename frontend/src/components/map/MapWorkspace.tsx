@@ -1,11 +1,13 @@
 import React from 'react';
-import { MapContainer, TileLayer, Polygon, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polygon, CircleMarker, useMapEvents, useMap } from 'react-leaflet';
 import { useAppStore } from '../../store/useAppStore';
 import { MYSURU_CENTER, MYSURU_DEFAULT_ZOOM, MYSURU_AOI_BOUNDS, LAYERS } from '../../config/constants';
 import { api } from '../../services/api';
 import { MapLegend } from './MapLegend';
+import { MapContextOverlay } from './MapContextOverlay';
+import { SelectedLocationPanel } from './SelectedLocationPanel';
 import { TimelineSlider } from '../controls/TimelineSlider';
-import { Crosshair, Wifi, WifiOff, Globe } from 'lucide-react';
+import { Crosshair, Globe } from 'lucide-react';
 
 // Automatically invalidate Leaflet size when sidebars open/collapse, container resizes, or window resizes
 const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean }> = ({ isSidebarOpen, isAnalyticsOpen }) => {
@@ -46,9 +48,9 @@ const MapResizer: React.FC<{ isSidebarOpen?: boolean; isAnalyticsOpen?: boolean 
   return null;
 };
 
-// Map Event Listener Component for Hover Coordinates
+// Map Event Listener Component for Hover Coordinates and Click Inspection
 const MapEventHandler: React.FC = () => {
-  const { setHoveredCoordinates } = useAppStore();
+  const { setHoveredCoordinates, setSelectedLocation } = useAppStore();
   
   useMapEvents({
     mousemove(e) {
@@ -56,6 +58,9 @@ const MapEventHandler: React.FC = () => {
     },
     mouseout() {
       setHoveredCoordinates(null);
+    },
+    click(e) {
+      setSelectedLocation({ lat: e.latlng.lat, lng: e.latlng.lng });
     }
   });
 
@@ -80,6 +85,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
   const {
     showAOIBoundary,
     hoveredCoordinates,
+    selectedLocation,
     activeLayer,
     selectedDate,
     layerOpacity,
@@ -117,60 +123,6 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
   const cartoBasemapUrl = cartoApiKey
     ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}&api_key=${cartoApiKey}`
     : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-
-  // Format scientifically accurate telemetry title
-  const getTelemetryBadge = () => {
-    switch (activeLayer) {
-      case 'persistence':
-        return (
-          <span className="text-[#A8B5C9]">
-            Spatial Product: <strong className="text-[#F5F7FB] uppercase font-bold">Heat Persistence</strong> (Multi-Temporal)
-          </span>
-        );
-      case 'gi_star':
-        return (
-          <span className="text-[#A8B5C9]">
-            Spatial Product: <strong className="text-[#F5F7FB] uppercase font-bold">Gi* Clusters</strong> (Spatial Statistics)
-          </span>
-        );
-      case 'rf_prob':
-        return (
-          <span className="text-[#A8B5C9]">
-            ML Prediction: <strong className="text-[#F5F7FB] uppercase font-bold">Hotspot Probability</strong> ({selectedDate})
-          </span>
-        );
-      case 'rf_class':
-        return (
-          <span className="text-[#A8B5C9]">
-            ML Prediction: <strong className="text-[#F5F7FB] uppercase font-bold">Hotspot Classification</strong> ({selectedDate})
-          </span>
-        );
-      case 'ndvi':
-        return (
-          <span className="text-[#A8B5C9]">
-            Spectral Index: <strong className="text-[#F5F7FB] uppercase font-bold">NDVI (Vegetation)</strong> ({selectedDate})
-          </span>
-        );
-      case 'ndbi':
-        return (
-          <span className="text-[#A8B5C9]">
-            Spectral Index: <strong className="text-[#F5F7FB] uppercase font-bold">NDBI (Built-up)</strong> ({selectedDate})
-          </span>
-        );
-      case 'lst':
-        return (
-          <span className="text-[#A8B5C9]">
-            Observation: <strong className="text-[#F5F7FB] uppercase font-bold">LST ST_B10</strong> ({selectedDate})
-          </span>
-        );
-      default:
-        return (
-          <span className="text-[#A8B5C9]">
-            Layer: <strong className="text-[#F5F7FB] uppercase font-bold">{currentLayerObj?.shortName || activeLayer}</strong> ({dateOrKey})
-          </span>
-        );
-    }
-  };
 
   return (
     <main className={`relative flex-1 h-full w-full bg-[#080D18] overflow-hidden select-none ${className}`}>
@@ -215,6 +167,33 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
           />
         )}
 
+        {/* Click-Selected Location Target Pin */}
+        {selectedLocation && (
+          <>
+            <CircleMarker
+              center={[selectedLocation.lat, selectedLocation.lng]}
+              radius={6}
+              pathOptions={{
+                color: '#19D3C5',
+                fillColor: '#19D3C5',
+                fillOpacity: 1,
+                weight: 2,
+              }}
+            />
+            <CircleMarker
+              center={[selectedLocation.lat, selectedLocation.lng]}
+              radius={16}
+              pathOptions={{
+                color: '#19D3C5',
+                fillColor: '#19D3C5',
+                fillOpacity: 0.18,
+                weight: 1.5,
+                dashArray: '3, 4',
+              }}
+            />
+          </>
+        )}
+
         <MapEventHandler />
         <MapResizer isSidebarOpen={effectiveSidebarOpen} isAnalyticsOpen={isAnalyticsOpen} />
       </MapContainer>
@@ -244,20 +223,11 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
         </div>
       </div>
 
-      {/* Top-Right Active Telemetry & Backend Status Banner */}
-      <div className="absolute top-3 right-3 z-[1000] pointer-events-none hidden sm:flex flex-col items-end space-y-1.5">
-        {backendConnected ? (
-          <div className="bg-[#080D18]/90 border border-[#26354A] text-[#19D3C5] backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">
-            <Wifi className="w-3.5 h-3.5 text-[#19D3C5]" />
-            {getTelemetryBadge()}
-          </div>
-        ) : (
-          <div className="bg-[#080D18]/90 border border-amber-500/50 text-amber-300 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card text-xs font-medium flex items-center space-x-2">
-            <WifiOff className="w-3.5 h-3.5 text-amber-400" />
-            <span>Backend Offline: Start FastAPI (`uvicorn backend.app.main:app`)</span>
-          </div>
-        )}
-      </div>
+      {/* On-Map Context & Layer Intelligence Overlay (Top-Right) */}
+      <MapContextOverlay />
+
+      {/* Selected Location Information Panel (Bottom-Left) */}
+      <SelectedLocationPanel />
 
       {/* API Error Toast Banner if connection fails */}
       {apiError && !backendConnected && (
@@ -281,7 +251,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
 
       {/* Floating Map Legend at Bottom Right */}
       {showLegend && (
-        <div className="absolute bottom-4 right-4 z-[1000] hidden md:block">
+        <div className="absolute bottom-4 right-4 z-[1000]">
           <MapLegend />
         </div>
       )}

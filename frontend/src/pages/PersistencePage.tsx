@@ -250,7 +250,7 @@ export const PersistencePage: React.FC = () => {
         </aside>
 
       {/* Map Workspace (Takes all remaining width) */}
-      <MapWorkspace showTimeline={false} showLegend={false} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
+      <MapWorkspace showTimeline={false} showLegend={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
     </div>
   );
 };

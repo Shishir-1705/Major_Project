@@ -408,7 +408,7 @@ export const HotspotsPage: React.FC = () => {
         </aside>
 
       {/* Map Workspace (Takes all remaining width) */}
-      <MapWorkspace showLegend={false} showTimeline={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
+      <MapWorkspace showLegend={true} showTimeline={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
     </div>
   );
 };

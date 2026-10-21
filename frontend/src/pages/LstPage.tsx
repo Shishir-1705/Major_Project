@@ -392,7 +392,7 @@ export const LstPage: React.FC = () => {
       </aside>
 
       {/* MAP-FIRST WORKSPACE (Occupies all remaining horizontal space & full viewport height) */}
-      <MapWorkspace showLegend={false} showTimeline={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
+      <MapWorkspace showLegend={true} showTimeline={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />
     </div>
   );
 };
