@@ -23,7 +23,14 @@ export const MapLegend: React.FC = () => {
       {/* Legend Header & Collapse Toggle */}
       <div
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="flex items-center justify-between cursor-pointer group"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsCollapsed(!isCollapsed);
+          }
+        }}
+        tabIndex={0}
+        className="flex items-center justify-between cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden rounded-lg p-0.5"
         role="button"
         aria-expanded={!isCollapsed}
         aria-label="Toggle map legend display"

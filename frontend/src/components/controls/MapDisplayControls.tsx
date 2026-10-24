@@ -43,9 +43,11 @@ export const MapDisplayControls: React.FC<{ className?: string }> = ({ className
         </span>
         <button
           onClick={() => setShowAOIBoundary(!showAOIBoundary)}
-          className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus:outline-hidden ${
+          className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
             showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
           }`}
+          role="switch"
+          aria-checked={showAOIBoundary}
           title={showAOIBoundary ? "Hide AOI boundary" : "Show AOI boundary"}
           aria-label={showAOIBoundary ? "Hide AOI boundary" : "Show AOI boundary"}
         >

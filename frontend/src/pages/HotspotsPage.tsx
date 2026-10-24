@@ -79,9 +79,10 @@ export const HotspotsPage: React.FC = () => {
         <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Open ML Hotspot Controls"
             aria-label="Open ML Hotspot Controls"
+            aria-expanded={isSidebarOpen}
           >
             <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
             <span>Hotspot Controls</span>
@@ -113,9 +114,10 @@ export const HotspotsPage: React.FC = () => {
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Collapse sidebar"
             aria-label="Collapse sidebar"
+            aria-expanded={isSidebarOpen}
           >
             <ChevronLeft className="w-4 h-4 hidden md:block" />
             <X className="w-4 h-4 md:hidden" />
@@ -132,11 +134,12 @@ export const HotspotsPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#111C2E] rounded-xl border border-[#26354A]">
               <button
                 onClick={() => setActiveLayer('rf_prob')}
-                className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-all cursor-pointer ${
                   isProbMode
                     ? 'bg-[#162238] text-[#19D3C5] shadow-xs border border-[#26354A]'
                     : 'text-[#8291A8] hover:text-[#F5F7FB]'
                 }`}
+                aria-pressed={isProbMode}
               >
                 <Activity className="w-3.5 h-3.5 text-red-400" />
                 <span>Probability</span>
@@ -144,11 +147,12 @@ export const HotspotsPage: React.FC = () => {
 
               <button
                 onClick={() => setActiveLayer('rf_class')}
-                className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-all cursor-pointer ${
                   !isProbMode
                     ? 'bg-[#162238] text-[#19D3C5] shadow-xs border border-[#26354A]'
                     : 'text-[#8291A8] hover:text-[#F5F7FB]'
                 }`}
+                aria-pressed={!isProbMode}
               >
                 <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
                 <span>Classification</span>

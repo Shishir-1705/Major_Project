@@ -145,8 +145,20 @@ export const Header: React.FC = () => {
 
         {/* Right Status & Mobile Toggle */}
         <div className="flex items-center space-x-2 sm:space-x-2.5">
-          {/* Server Status Pill */}
-          <div className="flex items-center space-x-1.5 text-xs bg-[#0D1525] border border-[#26354A] px-2.5 py-1 rounded-lg">
+          {/* Server Status Pill (Interactive Retry when Offline) */}
+          <button
+            onClick={() => {
+              if (!backendConnected) {
+                checkServerRecovery();
+              }
+            }}
+            disabled={backendConnected}
+            className={`flex items-center space-x-1.5 text-xs bg-[#0D1525] border border-[#26354A] px-2.5 py-1 rounded-lg focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors ${
+              !backendConnected ? 'hover:bg-[#162238] hover:border-amber-500/50 cursor-pointer' : 'cursor-default'
+            }`}
+            title={backendConnected ? 'Analysis server connected' : 'Click to retry server connection'}
+            aria-label={backendConnected ? 'Analysis server connected' : 'Click to retry server connection'}
+          >
             {backendConnected ? (
               <>
                 <span className="w-2 h-2 rounded-full bg-[#19D3C5] animate-pulse shadow-[0_0_6px_#19D3C5]" />
@@ -163,17 +175,18 @@ export const Header: React.FC = () => {
                 <span className="font-medium hidden md:inline text-[#8291A8]">
                   SERVER
                 </span>
-                <span className="font-mono font-bold text-amber-500 text-[11px]">OFFLINE</span>
+                <span className="font-mono font-bold text-amber-500 text-[11px]">OFFLINE (RETRY)</span>
               </>
             )}
-          </div>
+          </button>
 
           {/* Mobile Menu Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`${isLandingPage ? 'sm:hidden' : 'xl:hidden'} p-1.5 rounded-lg text-[#A8B5C9] hover:text-[#F5F7FB] hover:bg-[#111C2E] border border-[#26354A] transition-colors`}
+            className={`${isLandingPage ? 'sm:hidden' : 'xl:hidden'} p-1.5 rounded-lg text-[#A8B5C9] hover:text-[#F5F7FB] hover:bg-[#111C2E] border border-[#26354A] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer`}
             title={mobileMenuOpen ? 'Close Menu' : 'Open Navigation Menu'}
             aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Navigation Menu'}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5 text-[#19D3C5]" />

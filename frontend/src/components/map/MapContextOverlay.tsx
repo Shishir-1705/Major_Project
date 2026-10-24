@@ -138,7 +138,14 @@ export const MapContextOverlay: React.FC = () => {
       {/* Compact Header Pill */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="bg-[#080D18]/95 border border-[#26354A] hover:border-[#19D3C5]/50 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs cursor-pointer transition-all duration-150 group"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsExpanded(!isExpanded);
+          }
+        }}
+        tabIndex={0}
+        className="bg-[#080D18]/95 border border-[#26354A] hover:border-[#19D3C5]/50 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs cursor-pointer transition-all duration-150 group"
         role="button"
         aria-expanded={isExpanded}
         aria-label="Toggle active map analysis details"

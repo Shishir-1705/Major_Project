@@ -106,9 +106,10 @@ export const LstPage: React.FC = () => {
         <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Open LST Controls"
             aria-label="Open LST Controls"
+            aria-expanded={isSidebarOpen}
           >
             <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
             <span>LST Controls</span>
@@ -141,9 +142,10 @@ export const LstPage: React.FC = () => {
 
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Collapse sidebar"
             aria-label="Collapse sidebar"
+            aria-expanded={isSidebarOpen}
           >
             <ChevronLeft className="w-4 h-4 hidden md:block" />
             <X className="w-4 h-4 md:hidden" />
@@ -239,9 +241,11 @@ export const LstPage: React.FC = () => {
               </span>
               <button
                 onClick={handleToggleRasterVisibility}
-                className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus:outline-hidden ${
+                className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
                   isRasterVisible ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
                 }`}
+                role="switch"
+                aria-checked={isRasterVisible}
                 title={isRasterVisible ? 'Hide LST raster' : 'Show LST raster'}
                 aria-label={isRasterVisible ? 'Hide LST raster' : 'Show LST raster'}
               >
@@ -281,9 +285,11 @@ export const LstPage: React.FC = () => {
               </span>
               <button
                 onClick={() => setShowAOIBoundary(!showAOIBoundary)}
-                className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus:outline-hidden ${
+                className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
                   showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
                 }`}
+                role="switch"
+                aria-checked={showAOIBoundary}
                 title={showAOIBoundary ? 'Hide AOI boundary' : 'Show AOI boundary'}
                 aria-label={showAOIBoundary ? 'Hide AOI boundary' : 'Show AOI boundary'}
               >

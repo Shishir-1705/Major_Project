@@ -39,6 +39,8 @@ export const ToastContainer: React.FC = () => {
         return (
           <div
             key={toast.id}
+            role="alert"
+            aria-live="assertive"
             className={`pointer-events-auto flex items-start space-x-3 p-3.5 rounded-xl border backdrop-blur-md transition-all animate-in fade-in slide-in-from-top-2 ${bgClass}`}
           >
             <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${iconColor}`} />
@@ -54,8 +56,9 @@ export const ToastContainer: React.FC = () => {
 
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-[#8291A8] hover:text-[#F5F7FB] p-0.5 rounded transition-colors shrink-0"
+              className="text-[#8291A8] hover:text-[#F5F7FB] p-0.5 rounded transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden"
               title="Dismiss notification"
+              aria-label="Dismiss notification"
             >
               <X className="w-3.5 h-3.5" />
             </button>

@@ -41,7 +41,9 @@ export const LayerControl: React.FC = () => {
       <button
         key={layer.id}
         onClick={() => setActiveLayer(layer.id)}
-        className={`w-full text-left p-2.5 rounded-xl border transition-all relative overflow-hidden group ${
+        aria-pressed={isActive}
+        aria-label={`Select ${layer.name}`}
+        className={`w-full text-left p-2.5 rounded-xl border transition-all relative overflow-hidden group focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
           isActive
             ? 'bg-[#162238] border-[#19D3C5] shadow-xs ring-1 ring-[#19D3C5]/20'
             : 'bg-[#111C2E] border-[#26354A] hover:bg-[#162238]/60 hover:border-[#374b66]'
