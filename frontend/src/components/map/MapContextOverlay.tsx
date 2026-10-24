@@ -110,8 +110,8 @@ export const MapContextOverlay: React.FC = () => {
           accentColor: '#0891b2',
           badgeText: 'Spatial Statistics',
           description:
-            'Statistically significant spatial clustering of elevated surface temperature (z-scores at 90%, 95%, and 99% confidence). Identifies localized spatial hot spots; does not represent an official meteorological heatwave declaration.',
-          scope: 'Z-score Statistical Clustering (90% to 99% Conf.)',
+            'Statistically significant spatial clustering of elevated surface temperature using Benjamini-Hochberg FDR correction (pFDR < 0.05). Identifies localized surface thermal hot spots; does not represent an official meteorological heatwave declaration.',
+          scope: 'Benjamini-Hochberg FDR-Adjusted (pFDR < 0.05)',
           temporal: '8-Date Seasonal Composite (Apr–May 2023)',
           platform: 'Getis-Ord Gi* Autocorrelation',
         };
@@ -211,7 +211,7 @@ export const MapContextOverlay: React.FC = () => {
             <div className="bg-[#111C2E] p-1.5 rounded-lg border border-[#26354A]">
               <span className="text-[#8291A8] block">Study Domain</span>
               <span className="text-[#19D3C5] font-medium block leading-tight break-words text-[10.5px]">
-                Mysuru AOI (132.1 km²)
+                Mysuru AOI (132.1 km² Built Domain)
               </span>
             </div>
           </div>

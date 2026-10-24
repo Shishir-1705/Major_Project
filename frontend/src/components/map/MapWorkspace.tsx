@@ -171,7 +171,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
             Mysuru Study Area
           </span>
           <span style="color: #8291A8; font-size: 9.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">
-            (132.1 km²)
+            (132.1 km² Built Domain)
           </span>
         </div>
       `,

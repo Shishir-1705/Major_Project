@@ -159,7 +159,7 @@ export const PersistencePage: React.FC = () => {
                   title="Chronic Share"
                   value={chronicPct.toFixed(1)}
                   unit="%"
-                  subtitle="Persistent heat anomaly footprint"
+                  subtitle="Share of 93.66 km² valid domain"
                   icon={Percent}
                   accentColor="#ea580c"
                   isLoading={isLoadingStats}

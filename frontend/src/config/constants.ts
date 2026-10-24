@@ -81,9 +81,9 @@ export const LAYERS: LayerMetadata[] = [
     name: 'Getis-Ord Gi* Clusters',
     shortName: 'Gi* Clusters',
     category: 'spatial',
-    description: 'Spatial hotspot/coldspot clustering statistics',
+    description: 'Benjamini-Hochberg FDR spatial hotspot clusters (pFDR < 0.05)',
     accentColor: '#0891b2', // Teal
-    unit: 'z-score',
+    unit: 'Cluster',
     isCategorical: true,
   },
 ];

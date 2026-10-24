@@ -153,7 +153,7 @@ export const ClustersPage: React.FC = () => {
                   title="Cluster Share"
                   value={sigHotspotPct.toFixed(1)}
                   unit="%"
-                  subtitle="Statistically significant core"
+                  subtitle="Share of 93.66 km² valid domain"
                   icon={Percent}
                   accentColor="#ea580c"
                   isLoading={isLoadingStats}

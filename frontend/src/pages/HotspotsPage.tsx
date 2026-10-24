@@ -379,12 +379,14 @@ export const HotspotsPage: React.FC = () => {
                 <div className="flex items-center justify-between font-mono text-[11px] gap-2">
                   <span className="text-[#8291A8] shrink-0">Precision / Recall:</span>
                   <span className="text-[#F5F7FB] text-right font-medium">
-                    {modelInfo?.locked_test_metrics?.precision ? `${(modelInfo.locked_test_metrics.precision * 100).toFixed(1)}%` : "88.9%"} / {modelInfo?.locked_test_metrics?.recall ? `${(modelInfo.locked_test_metrics.recall * 100).toFixed(1)}%` : "84.4%"}
+                    {modelInfo?.locked_test_metrics?.precision ? `${(modelInfo.locked_test_metrics.precision * 100).toFixed(1)}%` : "86.6%"} / {modelInfo?.locked_test_metrics?.recall ? `${(modelInfo.locked_test_metrics.recall * 100).toFixed(1)}%` : "86.6%"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between font-mono text-[11px] pt-1.5 border-t border-[#26354A] gap-2">
                   <span className="text-[#8291A8] shrink-0">Feature Importance:</span>
-                  <span className="font-bold text-[#F5F7FB] text-right">NDBI 56.9% / NDVI 43.1%</span>
+                  <span className="font-bold text-[#F5F7FB] text-right">
+                    {modelInfo?.feature_importances ? `NDBI ${(modelInfo.feature_importances.NDBI * 100).toFixed(1)}% / NDVI ${(modelInfo.feature_importances.NDVI * 100).toFixed(1)}%` : 'NDBI 61.0% / NDVI 39.0%'}
+                  </span>
                 </div>
               </div>
             </div>

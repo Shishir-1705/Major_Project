@@ -143,7 +143,7 @@ export const AnalyticsPanel: React.FC = () => {
             title="Hotspot Area"
             value={hotspotStats ? hotspotStats.hotspot_area_km2.toFixed(2) : "34.54"}
             unit="km²"
-            subtitle={hotspotStats ? `${hotspotStats.hotspot_percentage.toFixed(1)}% of valid domain` : "Step 10 Prediction"}
+            subtitle={hotspotStats ? `${hotspotStats.hotspot_percentage.toFixed(1)}% of built domain` : "Step 10 Prediction"}
             icon={AlertTriangle}
             accentColor="#ef4444"
             isLoading={isLoadingStats}

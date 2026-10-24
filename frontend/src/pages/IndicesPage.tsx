@@ -327,20 +327,20 @@ export const IndicesPage: React.FC = () => {
                 <div>
                   <div className="flex justify-between font-mono text-[11px] mb-1">
                     <span className="font-medium text-[#A8B5C9]">NDBI (Built-up Factor):</span>
-                    <span className="font-bold text-amber-400">56.94%</span>
+                    <span className="font-bold text-amber-400">61.03%</span>
                   </div>
                   <div className="w-full bg-[#162238] h-2 rounded-full overflow-hidden">
-                    <div className="bg-amber-500 h-full rounded-full" style={{ width: '56.94%' }} />
+                    <div className="bg-amber-500 h-full rounded-full" style={{ width: '61.03%' }} />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between font-mono text-[11px] mb-1">
                     <span className="font-medium text-[#A8B5C9]">NDVI (Vegetation Factor):</span>
-                    <span className="font-bold text-emerald-400">43.06%</span>
+                    <span className="font-bold text-emerald-400">38.97%</span>
                   </div>
                   <div className="w-full bg-[#162238] h-2 rounded-full overflow-hidden">
-                    <div className="bg-emerald-500 h-full rounded-full" style={{ width: '43.06%' }} />
+                    <div className="bg-emerald-500 h-full rounded-full" style={{ width: '38.97%' }} />
                   </div>
                 </div>
               </div>
