@@ -51,15 +51,28 @@ export const OverviewMap: React.FC = () => {
           maxZoom={18}
         />
 
-        {/* Mysuru AOI Polygon Boundary */}
+        {/* Mysuru AOI Polygon Boundary with high-contrast dual-stroke casing */}
+        <Polygon
+          positions={MYSURU_AOI_BOUNDS}
+          pathOptions={{
+            color: '#080D18',
+            weight: 4.5,
+            opacity: 0.8,
+            dashArray: '6, 8',
+            fillColor: 'transparent',
+            fillOpacity: 0,
+            interactive: false,
+          }}
+        />
         <Polygon
           positions={MYSURU_AOI_BOUNDS}
           pathOptions={{
             color: '#19D3C5',
-            weight: 2.5,
+            weight: 2,
             dashArray: '6, 8',
             fillColor: '#19D3C5',
-            fillOpacity: 0.05,
+            fillOpacity: 0.035,
+            interactive: false,
           }}
         />
 

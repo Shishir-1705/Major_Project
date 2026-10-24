@@ -68,3 +68,9 @@
   color: #19D3C5 !important;
   font-weight: 500 !important;
 }
+
+/* Custom Leaflet DivIcon reset for transparent custom markers */
+.leaflet-div-icon.aoi-study-area-label {
+  background: transparent !important;
+  border: none !important;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
-import { MapContainer, TileLayer, Polygon, CircleMarker, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polygon, CircleMarker, Marker, useMapEvents, useMap } from 'react-leaflet';
+import L from 'leaflet';
 import { useAppStore } from '../../store/useAppStore';
 import { MYSURU_CENTER, MYSURU_DEFAULT_ZOOM, MYSURU_AOI_BOUNDS, LAYERS } from '../../config/constants';
 import { api } from '../../services/api';
@@ -83,6 +84,9 @@ const MapEventHandler: React.FC = () => {
   return null;
 };
 
+// Authoritative northern midpoint of the official Mysuru AOI bounding polygon [lat, lng]
+const AOI_NORTH_MIDPOINT: [number, number] = [12.40, 76.625];
+
 export interface MapWorkspaceProps {
   showTimeline?: boolean;
   showLegend?: boolean;
@@ -142,6 +146,40 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
     ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}&api_key=${cartoApiKey}`
     : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
+  // Restrained study area identifier badge associated with northern AOI boundary
+  const aoiLabelIcon = React.useMemo(() => {
+    return L.divIcon({
+      className: 'aoi-study-area-label',
+      html: `
+        <div style="
+          transform: translate(-50%, -100%);
+          margin-top: -6px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(8, 13, 24, 0.92);
+          border: 1px solid rgba(25, 211, 197, 0.65);
+          padding: 3px 8px;
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+          white-space: nowrap;
+          pointer-events: none;
+          user-select: none;
+        ">
+          <span style="width: 5px; height: 5px; border-radius: 50%; background-color: #19D3C5; display: inline-block;"></span>
+          <span style="color: #F5F7FB; font-size: 10px; font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.05em; text-transform: uppercase;">
+            Mysuru Study Area
+          </span>
+          <span style="color: #8291A8; font-size: 9.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">
+            (132.1 km²)
+          </span>
+        </div>
+      `,
+      iconSize: [0, 0],
+      iconAnchor: [0, 0],
+    });
+  }, []);
+
   return (
     <main className={`relative flex-1 h-full w-full bg-[#080D18] overflow-hidden select-none ${className}`}>
       <MapContainer
@@ -171,18 +209,41 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
           />
         )}
 
-        {/* Mysuru AOI Polygon Boundary */}
+        {/* Mysuru AOI Polygon Boundary with high-contrast dual-stroke casing */}
         {showAOIBoundary && (
-          <Polygon
-            positions={MYSURU_AOI_BOUNDS}
-            pathOptions={{
-              color: '#19D3C5',
-              weight: 2,
-              dashArray: '5, 8',
-              fillColor: '#19D3C5',
-              fillOpacity: 0.05,
-            }}
-          />
+          <>
+            {/* Dark background casing stroke (provides high contrast over both light basemaps & bright/saturated rasters) */}
+            <Polygon
+              positions={MYSURU_AOI_BOUNDS}
+              pathOptions={{
+                color: '#080D18',
+                weight: 4.5,
+                opacity: 0.8,
+                dashArray: '6, 8',
+                fillColor: 'transparent',
+                fillOpacity: 0,
+                interactive: false,
+              }}
+            />
+            {/* Primary high-visibility cyan/teal dashed boundary */}
+            <Polygon
+              positions={MYSURU_AOI_BOUNDS}
+              pathOptions={{
+                color: '#19D3C5',
+                weight: 2,
+                dashArray: '6, 8',
+                fillColor: '#19D3C5',
+                fillOpacity: 0.035,
+                interactive: false,
+              }}
+            />
+            {/* Restrained Study Area Label pinned along northern AOI boundary */}
+            <Marker
+              position={AOI_NORTH_MIDPOINT}
+              icon={aoiLabelIcon}
+              interactive={false}
+            />
+          </>
         )}
 
         {/* Click-Selected Location Target Pin */}
