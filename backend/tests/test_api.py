@@ -1,3 +1,6 @@
+import io
+import numpy as np
+from PIL import Image
 import pytest
 from fastapi.testclient import TestClient
 from backend.app.main import app
@@ -62,19 +65,42 @@ def test_5_model_endpoint():
     assert metrics["roc_auc"] == 0.933673
 
 def test_6_valid_raster_tile_rendering():
-    # Fetch a valid tile over Mysuru region (z=12, x=2919, y=1943)
-    response = client.get("/api/v1/tiles/lst/2023-04-01/12/2919/1943.png")
+    # Fetch a valid tile over Mysuru region (z=12, x=2920, y=1906)
+    response = client.get("/api/v1/tiles/lst/2023-04-01/12/2920/1906.png")
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
-    assert len(response.content) > 0
+    assert len(response.content) > 1000  # Must not be the 334-byte empty placeholder
+    img = Image.open(io.BytesIO(response.content))
+    arr = np.array(img)
+    assert np.count_nonzero(arr[:, :, 3] > 0) > 0  # Must contain visible pixels
+
+def test_6b_all_seven_layers_tile_rendering():
+    # Verify non-zero alpha rendering for all 7 analytical layers over Mysuru
+    test_cases = [
+        ("lst", "2023-04-01"),
+        ("ndvi", "2023-04-01"),
+        ("ndbi", "2023-04-01"),
+        ("rf_prob", "2023-04-01"),
+        ("rf_class", "2023-04-01"),
+        ("persistence", "categorical"),
+        ("gi_star", "clustering"),
+    ]
+    for layer, date_or_key in test_cases:
+        res = client.get(f"/api/v1/tiles/{layer}/{date_or_key}/12/2920/1906.png")
+        assert res.status_code == 200
+        assert res.headers["content-type"] == "image/png"
+        assert len(res.content) > 400
+        img = Image.open(io.BytesIO(res.content))
+        arr = np.array(img)
+        assert np.count_nonzero(arr[:, :, 3] > 0) > 0, f"Layer {layer} produced no visible pixels"
 
 def test_7_invalid_layer_error():
-    response = client.get("/api/v1/tiles/invalid_layer_name/2023-04-01/12/2919/1943.png")
+    response = client.get("/api/v1/tiles/invalid_layer_name/2023-04-01/12/2920/1906.png")
     assert response.status_code == 400
     assert "Invalid layer" in response.json()["detail"]
 
 def test_8_invalid_date_error():
-    response = client.get("/api/v1/tiles/lst/2099-01-01/12/2919/1943.png")
+    response = client.get("/api/v1/tiles/lst/2099-01-01/12/2920/1906.png")
     assert response.status_code == 400
     assert "Invalid date" in response.json()["detail"]
 
@@ -83,6 +109,9 @@ def test_9_nodata_tile_rendering():
     response = client.get("/api/v1/tiles/lst/2023-04-01/12/0/0.png")
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
+    img = Image.open(io.BytesIO(response.content))
+    arr = np.array(img)
+    assert np.count_nonzero(arr[:, :, 3]) == 0  # All pixels must be fully transparent
 
 def test_10_zonal_statistics_endpoint():
     response = client.get("/api/v1/statistics/zonal?layer=lst&date=2023-04-01")

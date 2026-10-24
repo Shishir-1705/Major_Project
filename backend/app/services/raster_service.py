@@ -3,21 +3,31 @@ import io
 import hashlib
 import numpy as np
 import rasterio
-from rasterio.windows import from_bounds
+from rasterio.transform import from_bounds as transform_from_bounds
+from rasterio.windows import from_bounds as window_from_bounds
 from PIL import Image
+import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 from pathlib import Path
 from typing import Optional
 
 from ..config import TILE_CACHE_DIR, DATA_STEP9_DIR, DATA_STEP10_DIR, RESULTS_STEP10_DIR, OBSERVATION_DATES
-from ..utils.crs import tile_to_target_crs_bbox
+from ..utils.crs import tile_to_wgs84_bbox
 
 class RasterService:
+    # Authoritative WGS84 Spatial Grid for Mysuru Urban Study Area
+    GRID_WEST = 76.55
+    GRID_SOUTH = 12.20
+    GRID_EAST = 76.78
+    GRID_NORTH = 12.40
+    GRID_WIDTH = 853
+    GRID_HEIGHT = 742
+    GRID_TRANSFORM = transform_from_bounds(GRID_WEST, GRID_SOUTH, GRID_EAST, GRID_NORTH, GRID_WIDTH, GRID_HEIGHT)
+
     @staticmethod
     def get_tile_png(layer: str, date_or_key: str, z: int, x: int, y: int) -> bytes:
-        # Check LRU disk cache first
-        cache_key = f"{layer}_{date_or_key}_{z}_{x}_{y}.png"
+        # Check LRU disk cache first with version prefix to invalidate stale empty tiles
+        cache_key = f"v2_{layer}_{date_or_key}_{z}_{x}_{y}.png"
         cache_file = TILE_CACHE_DIR / cache_key
         if cache_file.exists():
             with open(cache_file, "rb") as f:
@@ -28,11 +38,11 @@ class RasterService:
         if not raster_path.exists():
             raise FileNotFoundError(f"Raster file missing for layer '{layer}' and date/key '{date_or_key}': {raster_path}")
 
-        # Calculate bounding box in EPSG:32643
-        min_x, min_y, max_x, max_y = tile_to_target_crs_bbox(z, x, y)
+        # Calculate bounding box in WGS84
+        min_lng, min_lat, max_lng, max_lat = tile_to_wgs84_bbox(z, x, y)
 
         # Read GeoTIFF window using Rasterio
-        png_bytes = RasterService._render_tile_from_geotiff(raster_path, layer, min_x, min_y, max_x, max_y)
+        png_bytes = RasterService._render_tile_from_geotiff(raster_path, layer, min_lng, min_lat, max_lng, max_lat)
 
         # Save to disk cache
         try:
@@ -63,24 +73,27 @@ class RasterService:
             raise ValueError(f"Unsupported tile layer type '{layer}'")
 
     @staticmethod
-    def _render_tile_from_geotiff(raster_path: Path, layer: str, min_x: float, min_y: float, max_x: float, max_y: float) -> bytes:
-        with rasterio.open(raster_path) as src:
-            bounds = src.bounds
-            
-            # Check if tile intersects raster extent
-            if (max_x < bounds.left or min_x > bounds.right or max_y < bounds.bottom or min_y > bounds.top):
-                return RasterService._create_empty_transparent_png()
+    def _render_tile_from_geotiff(raster_path: Path, layer: str, min_lng: float, min_lat: float, max_lng: float, max_lat: float) -> bytes:
+        west = RasterService.GRID_WEST
+        south = RasterService.GRID_SOUTH
+        east = RasterService.GRID_EAST
+        north = RasterService.GRID_NORTH
 
-            # Window extraction
-            window = from_bounds(min_x, min_y, max_x, max_y, transform=src.transform)
-            
-            resampling = rasterio.enums.Resampling.nearest if (layer in ["rf_class", "persistence", "gi_star", "built_mask"]) else rasterio.enums.Resampling.bilinear
-            try:
-                arr = src.read(1, window=window, out_shape=(256, 256), resampling=resampling)
-            except Exception:
-                return RasterService._create_empty_transparent_png()
+        # Check if requested tile intersects the authoritative raster extent in WGS84
+        if max_lng <= west or min_lng >= east or max_lat <= south or min_lat >= north:
+            return RasterService._create_empty_transparent_png()
 
-            nodata = src.nodata
+        # Window extraction using authoritative WGS84 geotransform
+        window = window_from_bounds(min_lng, min_lat, max_lng, max_lat, transform=RasterService.GRID_TRANSFORM)
+
+        resampling = rasterio.enums.Resampling.nearest if (layer in ["rf_class", "persistence", "gi_star", "built_mask"]) else rasterio.enums.Resampling.bilinear
+        try:
+            with rasterio.open(raster_path) as src:
+                fill_val = np.nan if np.issubdtype(src.dtypes[0], np.floating) else (255 if src.dtypes[0] == np.uint8 else 0)
+                arr = src.read(1, window=window, out_shape=(256, 256), resampling=resampling, boundless=True, fill_value=fill_val)
+                nodata = src.nodata
+        except Exception:
+            return RasterService._create_empty_transparent_png()
 
         if arr is None or arr.size == 0:
             return RasterService._create_empty_transparent_png()
@@ -106,7 +119,7 @@ class RasterService:
         if layer == "lst":
             # LST temperature scale: 30°C to 55°C
             norm = np.clip((arr - 30.0) / (55.0 - 30.0), 0.0, 1.0)
-            cmap = cm.get_cmap('YlOrRd')
+            cmap = matplotlib.colormaps['YlOrRd']
             colored = (cmap(norm) * 255).astype(np.uint8)
             rgba[valid_mask] = colored[valid_mask]
             rgba[~valid_mask] = [0, 0, 0, 0]
@@ -114,7 +127,7 @@ class RasterService:
         elif layer == "ndvi":
             # NDVI scale: -0.2 to +0.8
             norm = np.clip((arr - (-0.2)) / (0.8 - (-0.2)), 0.0, 1.0)
-            cmap = cm.get_cmap('YlGn')
+            cmap = matplotlib.colormaps['YlGn']
             colored = (cmap(norm) * 255).astype(np.uint8)
             rgba[valid_mask] = colored[valid_mask]
             rgba[~valid_mask] = [0, 0, 0, 0]
@@ -122,7 +135,7 @@ class RasterService:
         elif layer == "ndbi":
             # NDBI scale: -0.4 to +0.6
             norm = np.clip((arr - (-0.4)) / (0.6 - (-0.4)), 0.0, 1.0)
-            cmap = cm.get_cmap('YlOrBr')
+            cmap = matplotlib.colormaps['YlOrBr']
             colored = (cmap(norm) * 255).astype(np.uint8)
             rgba[valid_mask] = colored[valid_mask]
             rgba[~valid_mask] = [0, 0, 0, 0]
@@ -130,7 +143,7 @@ class RasterService:
         elif layer == "rf_prob":
             # RF Probability: 0.0 to 1.0
             norm = np.clip(arr, 0.0, 1.0)
-            cmap = cm.get_cmap('Reds')
+            cmap = matplotlib.colormaps['Reds']
             colored = (cmap(norm) * 255).astype(np.uint8)
             # Make low probabilities translucent
             alpha = (norm * 255).astype(np.uint8)
@@ -148,7 +161,7 @@ class RasterService:
             if np.issubdtype(arr.dtype, np.floating):
                 # Continuous Persistence: 0.0 to 1.0
                 norm = np.clip(arr, 0.0, 1.0)
-                cmap = cm.get_cmap('YlOrRd')
+                cmap = matplotlib.colormaps['YlOrRd']
                 colored = (cmap(norm) * 255).astype(np.uint8)
                 rgba[valid_mask] = colored[valid_mask]
                 rgba[~valid_mask] = [0, 0, 0, 0]
@@ -170,7 +183,7 @@ class RasterService:
             if np.issubdtype(arr.dtype, np.floating):
                 # Continuous Gi* z-score: -2.0 to +4.0
                 norm = np.clip((arr - (-2.0)) / (4.0 - (-2.0)), 0.0, 1.0)
-                cmap = cm.get_cmap('RdYlBu_r')
+                cmap = matplotlib.colormaps['RdYlBu_r']
                 colored = (cmap(norm) * 255).astype(np.uint8)
                 rgba[valid_mask] = colored[valid_mask]
                 rgba[~valid_mask] = [0, 0, 0, 0]
@@ -184,7 +197,7 @@ class RasterService:
 
         else:
             norm = np.clip(arr, 0.0, 1.0)
-            cmap = cm.get_cmap('viridis')
+            cmap = matplotlib.colormaps['viridis']
             colored = (cmap(norm) * 255).astype(np.uint8)
             rgba[valid_mask] = colored[valid_mask]
             rgba[~valid_mask] = [0, 0, 0, 0]
