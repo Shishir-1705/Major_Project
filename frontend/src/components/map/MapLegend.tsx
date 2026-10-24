@@ -21,17 +21,10 @@ export const MapLegend: React.FC = () => {
       isCollapsed ? 'w-auto px-3 py-1.5' : 'w-72 sm:w-80 p-3.5'
     }`}>
       {/* Legend Header & Collapse Toggle */}
-      <div
+      <button
+        type="button"
         onClick={() => setIsCollapsed(!isCollapsed)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setIsCollapsed(!isCollapsed);
-          }
-        }}
-        tabIndex={0}
-        className="flex items-center justify-between cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden rounded-lg p-0.5"
-        role="button"
+        className="w-full flex items-center justify-between cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden rounded-lg p-0.5 text-left border-0 bg-transparent"
         aria-expanded={!isCollapsed}
         aria-label="Toggle map legend display"
       >
@@ -54,7 +47,7 @@ export const MapLegend: React.FC = () => {
             <ChevronDown className="w-3.5 h-3.5 text-[#8291A8] group-hover:text-[#F5F7FB]" />
           )}
         </div>
-      </div>
+      </button>
 
       {/* Legend Body (Visible when not collapsed) */}
       {!isCollapsed && (

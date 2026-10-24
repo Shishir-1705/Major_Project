@@ -136,17 +136,10 @@ export const MapContextOverlay: React.FC = () => {
   return (
     <div className="absolute top-3 right-3 z-[1000] max-w-[calc(100vw-24px)] sm:max-w-md pointer-events-auto select-none">
       {/* Compact Header Pill */}
-      <div
+      <button
+        type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setIsExpanded(!isExpanded);
-          }
-        }}
-        tabIndex={0}
-        className="bg-[#080D18]/95 border border-[#26354A] hover:border-[#19D3C5]/50 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs cursor-pointer transition-all duration-150 group"
-        role="button"
+        className="w-full text-left bg-[#080D18]/95 border border-[#26354A] hover:border-[#19D3C5]/50 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs cursor-pointer transition-all duration-150 group"
         aria-expanded={isExpanded}
         aria-label="Toggle active map analysis details"
       >
@@ -179,7 +172,7 @@ export const MapContextOverlay: React.FC = () => {
             <ChevronDown className="w-3.5 h-3.5 text-[#8291A8] group-hover:text-[#F5F7FB]" />
           )}
         </div>
-      </div>
+      </button>
 
       {/* Expanded Scientific Context Panel */}
       {isExpanded && (
@@ -230,6 +223,7 @@ export const MapContextOverlay: React.FC = () => {
               <span className="font-mono text-[#F5F7FB]">{details.temporal}</span>
             </span>
             <button
+              type="button"
               onClick={() => setIsExpanded(false)}
               className="text-[#8291A8] hover:text-[#19D3C5] underline cursor-pointer"
             >
