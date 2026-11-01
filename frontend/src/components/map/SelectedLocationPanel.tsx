@@ -30,9 +30,9 @@ export const SelectedLocationPanel: React.FC = () => {
   const dmsString = `${toDMS(lat, true)}, ${toDMS(lng, false)}`;
 
   return (
-    <div className="absolute bottom-7 sm:bottom-8 left-3 sm:left-4 z-[1050] w-80 max-w-[calc(100vw-24px)] bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl p-3.5 shadow-floating text-xs select-none pointer-events-auto animate-in fade-in slide-in-from-bottom-2 duration-150">
+    <div className="absolute bottom-7 sm:bottom-8 left-3 sm:left-4 z-[1050] w-80 max-w-[calc(100vw-24px)] liquid-glass-slab rounded-2xl p-3.5 shadow-floating text-xs select-none pointer-events-auto animate-in fade-in slide-in-from-bottom-2 duration-150">
       {/* Header with Title & Dismiss Button */}
-      <div className="flex items-center justify-between border-b border-[#26354A]/60 pb-2 mb-2.5">
+      <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5">
         <div className="flex items-center space-x-2">
           <div className="p-1 rounded-md bg-[#19D3C5]/15 text-[#19D3C5]">
             <MapPin className="w-3.5 h-3.5" />
@@ -45,7 +45,7 @@ export const SelectedLocationPanel: React.FC = () => {
 
         <button
           onClick={() => setSelectedLocation(null)}
-          className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors cursor-pointer"
+          className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-white/10 transition-colors cursor-pointer"
           title="Dismiss pin and selection"
           aria-label="Dismiss pin and selection"
         >
@@ -95,14 +95,14 @@ export const SelectedLocationPanel: React.FC = () => {
           </div>
           <div className="text-[9.5px] text-[#A8B5C9] mt-0.5">
             {isInsideAOI
-              ? 'Target pixel falls within the verified 132.13 km² built-up study area.'
+              ? 'Target pixel falls within the verified 135.25 km² analysis domain.'
               : 'Target coordinates are outside the authoritative masked urban boundary.'}
           </div>
         </div>
       </div>
 
       {/* Active Layer Context */}
-      <div className="bg-[#0D1525] p-2 rounded-xl border border-[#26354A] space-y-1 text-[10.5px] mb-2.5">
+      <div className="bg-white/[0.04] p-2 rounded-xl border border-white/10 space-y-1 text-[10.5px] mb-2.5">
         <div className="flex items-center justify-between text-[#8291A8]">
           <span className="flex items-center space-x-1">
             <Layers className="w-3 h-3 text-[#19D3C5]" />
@@ -127,7 +127,7 @@ export const SelectedLocationPanel: React.FC = () => {
       </div>
 
       {/* Scientific Transparency Notice */}
-      <div className="p-2 rounded-xl bg-[#111C2E] border border-[#26354A] text-[9.5px] text-[#8291A8] space-y-1">
+      <div className="p-2 rounded-xl bg-white/[0.03] border border-white/10 text-[9.5px] text-[#8291A8] space-y-1">
         <div className="flex items-center space-x-1 font-semibold text-[#A8B5C9]">
           <Info className="w-3 h-3 text-[#19D3C5] shrink-0" />
           <span>Point Pixel Query Note</span>
@@ -138,10 +138,10 @@ export const SelectedLocationPanel: React.FC = () => {
       </div>
 
       {/* Dismiss Button */}
-      <div className="mt-2.5 pt-2 border-t border-[#26354A]/60 flex justify-end">
+      <div className="mt-2.5 pt-2 border-t border-white/10 flex justify-end">
         <button
           onClick={() => setSelectedLocation(null)}
-          className="px-3 py-1 rounded-lg bg-[#162238] hover:bg-[#26354A] text-[11px] font-semibold text-[#F5F7FB] border border-[#26354A] transition-colors cursor-pointer"
+          className="px-3 py-1 rounded-lg liquid-glass-chip hover:border-[#19D3C5]/40 text-[11px] font-semibold text-[#F5F7FB] border border-white/15 transition-colors cursor-pointer"
         >
           Clear Pin
         </button>

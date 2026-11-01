@@ -4,6 +4,7 @@ from PIL import Image
 import pytest
 from fastapi.testclient import TestClient
 from backend.app.main import app
+from backend.app.config import USE_CANDIDATE_DATA
 
 client = TestClient(app)
 
@@ -94,6 +95,38 @@ def test_6b_all_seven_layers_tile_rendering():
         arr = np.array(img)
         assert np.count_nonzero(arr[:, :, 3] > 0) > 0, f"Layer {layer} produced no visible pixels"
 
+def test_6b_peripheral_tile_rendering_preserves_valid_pixels():
+    """Verify that peripheral tiles crossing the built-domain boundary preserve valid pixels without NaN erosion."""
+    # Tile 12/2921/1906 covers the eastern peripheral fringe of Mysuru (cols 662-853, rows 63-381)
+    for layer, date_or_key, expected_min_pixels in [
+        ("lst", "2023-04-09", 400),
+        ("ndvi", "2023-04-09", 400),
+        ("ndbi", "2023-04-09", 400),
+        ("rf_prob", "2023-04-09", 400),
+        ("rf_class", "2023-04-09", 20),
+        ("persistence", "categorical", 300),
+    ]:
+        res = client.get(f"/api/v1/tiles/{layer}/{date_or_key}/12/2921/1906.png")
+        assert res.status_code == 200
+        assert res.headers["content-type"] == "image/png"
+        img = Image.open(io.BytesIO(res.content))
+        arr = np.array(img)
+        visible_pixels = np.count_nonzero(arr[:, :, 3] > 0)
+        assert visible_pixels >= expected_min_pixels, (
+            f"Layer {layer} lost peripheral pixels: got {visible_pixels}, expected >= {expected_min_pixels}"
+        )
+
+def test_6c_outside_boundary_tiles_strictly_transparent():
+    """Verify that tiles completely outside the valid raster extent remain 100% transparent."""
+    # Tiles outside the AOI bounding box (AOI is 76.55 to 76.78 lon, 12.20 to 12.40 lat)
+    # 12/2917/1905 has max lon 76.4648 < 76.55; 12/2922/1908 is far south-east; 12/0/0 is origin
+    for tile_coords in ["12/2917/1905", "12/2922/1908", "12/0/0"]:
+        res = client.get(f"/api/v1/tiles/lst/2023-04-09/{tile_coords}.png")
+        assert res.status_code == 200
+        img = Image.open(io.BytesIO(res.content))
+        arr = np.array(img)
+        assert np.count_nonzero(arr[:, :, 3] > 0) == 0, f"Tile {tile_coords} leaked visible pixels outside AOI"
+
 def test_7_invalid_layer_error():
     response = client.get("/api/v1/tiles/invalid_layer_name/2023-04-01/12/2920/1906.png")
     assert response.status_code == 400
@@ -136,8 +169,14 @@ def test_10b_zonal_statistics_rf_prob_nodata_filtering():
     assert data["max"] <= 1.0
     assert 0.0 <= data["mean"] <= 1.0
     assert data["min"] != -9999.0
-    assert data["valid_pixels"] == 155625
+    expected_pixels = 147137 if USE_CANDIDATE_DATA else 155625
+    assert data["valid_pixels"] == expected_pixels
     assert data["unit"] == "Probability"
+
+    # Also verify production path fallback
+    res_prod = client.get("/api/v1/statistics/zonal?layer=rf_prob&date=2023-04-01&candidate=false")
+    assert res_prod.status_code == 200
+    assert res_prod.json()["valid_pixels"] == 155625
 
 def test_10c_zonal_statistics_all_layers():
     # Test NDVI, NDBI, RF Class, Persistence, and Gi*
@@ -150,7 +189,18 @@ def test_10c_zonal_statistics_all_layers():
         assert res.status_code == 200, f"Layer {layer} failed: {res.text}"
         data = res.json()
         assert data["unit"] == expected_unit
-        assert data["valid_pixels"] == 155625
+        if USE_CANDIDATE_DATA:
+            if layer in ["ndvi", "ndbi"]:
+                assert data["valid_pixels"] == 519625
+            else:
+                assert data["valid_pixels"] == 147137
+        else:
+            assert data["valid_pixels"] == 155625
+
+        # Check production fallback
+        res_prod = client.get(f"/api/v1/statistics/zonal?layer={layer}&date=2023-04-01&candidate=false")
+        assert res_prod.status_code == 200
+        assert res_prod.json()["valid_pixels"] == 155625
 
     # Multi-temporal / spatial layers
     res_persist = client.get("/api/v1/statistics/zonal?layer=persistence")
@@ -159,13 +209,24 @@ def test_10c_zonal_statistics_all_layers():
     assert p_data["unit"] == "Recurrence"
     assert p_data["min"] >= 0.0
     assert p_data["max"] <= 1.0
-    assert p_data["valid_pixels"] == 104063
+    expected_p_pixels = 150274 if USE_CANDIDATE_DATA else 104063
+    assert p_data["valid_pixels"] == expected_p_pixels
 
     res_gi = client.get("/api/v1/statistics/zonal?layer=gi_star")
     assert res_gi.status_code == 200
     gi_data = res_gi.json()
     assert gi_data["unit"] == "z-score"
-    assert gi_data["valid_pixels"] == 104063
+    expected_gi_pixels = 150274 if USE_CANDIDATE_DATA else 104063
+    assert gi_data["valid_pixels"] == expected_gi_pixels
+
+    # Production fallback checks
+    res_p_prod = client.get("/api/v1/statistics/zonal?layer=persistence&candidate=false")
+    assert res_p_prod.status_code == 200
+    assert res_p_prod.json()["valid_pixels"] == 104063
+
+    res_gi_prod = client.get("/api/v1/statistics/zonal?layer=gi_star&candidate=false")
+    assert res_gi_prod.status_code == 200
+    assert res_gi_prod.json()["valid_pixels"] == 104063
 
 def test_11_hotspot_statistics_endpoint():
     response = client.get("/api/v1/statistics/hotspot?date=2023-04-01")
@@ -187,5 +248,44 @@ def test_13_gi_star_statistics_endpoint():
     response = client.get("/api/v1/statistics/gi-star")
     assert response.status_code == 200
     data = response.json()
-    assert len(data["clusters"]) == 5
+    expected_clusters = 3 if USE_CANDIDATE_DATA else 5
+    assert len(data["clusters"]) == expected_clusters
     assert data["total_built_area_km2"] > 80.0
+
+    if USE_CANDIDATE_DATA:
+        assert data["total_nodes"] == 150274
+        assert abs(data["total_built_area_km2"] - 135.247) < 0.01
+
+        cluster_types = [c["cluster_type"] for c in data["clusters"]]
+        assert any("Hotspot" in t for t in cluster_types)
+        assert any("Coldspot" in t for t in cluster_types)
+        assert any("Not" in t and "Significant" in t for t in cluster_types)
+
+        # Check internal arithmetic consistency
+        area_sum = sum(c["area_km2"] for c in data["clusters"])
+        pct_sum = sum(c["percentage"] for c in data["clusters"])
+        assert abs(area_sum - data["total_built_area_km2"]) < 0.01
+        assert abs(pct_sum - 100.0) < 0.1
+
+        # Check denominator consistency
+        for c in data["clusters"]:
+            expected_pct = (c["area_km2"] / data["total_built_area_km2"]) * 100
+            assert abs(c["percentage"] - expected_pct) < 0.1
+
+    # Test production fallback
+    res_prod = client.get("/api/v1/statistics/gi-star?candidate=false")
+    assert res_prod.status_code == 200
+    prod_data = res_prod.json()
+    assert len(prod_data["clusters"]) == 5
+    assert prod_data["total_nodes"] == 104063
+    assert abs(prod_data["total_built_area_km2"] - 93.657) < 0.01
+
+def test_14_candidate_mode_tile_serving():
+    # Verify candidate tile vs production tile serving works cleanly
+    res_cand = client.get("/api/v1/tiles/lst/2023-04-01/12/2920/1906.png?candidate=true")
+    assert res_cand.status_code == 200
+    assert len(res_cand.content) > 1000
+
+    res_prod = client.get("/api/v1/tiles/lst/2023-04-01/12/2920/1906.png?candidate=false")
+    assert res_prod.status_code == 200
+    assert len(res_prod.content) > 1000

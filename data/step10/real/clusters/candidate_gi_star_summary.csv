@@ -1,0 +1,4 @@
+cluster_type,class_id,pixel_count,pct_domain,area_km2
+"Significant Hotspot Cluster (Gi* > 0, pFDR < 0.05)",1,20795,13.838055818039049,18.7155
+"Significant Coldspot Cluster (Gi* < 0, pFDR < 0.05)",2,26851,17.868027736002237,24.1659
+Not Statistically Significant (pFDR >= 0.05),0,102628,68.29391644595871,92.3652

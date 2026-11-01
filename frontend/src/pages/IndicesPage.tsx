@@ -62,22 +62,22 @@ export const IndicesPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full w-full overflow-hidden relative">
+    <div className="flex h-full w-full p-2.5 sm:p-3.5 gap-2.5 sm:gap-3.5 overflow-hidden relative z-10">
       {/* Mobile Drawer Backdrop */}
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-[#080D18]/70 backdrop-blur-xs z-[1150] md:hidden cursor-pointer"
+          className="fixed inset-0 bg-[#030611]/80 backdrop-blur-md z-[1150] md:hidden cursor-pointer"
           aria-hidden="true"
         />
       )}
 
       {/* Floating Toggle Controls (Top-Left over Map) */}
       {!isSidebarOpen && (
-        <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
+        <div className="absolute top-6 left-6 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl liquid-glass-chip shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Open Environmental Indices Controls"
             aria-label="Open Environmental Indices Controls"
             aria-expanded={isSidebarOpen}
@@ -88,17 +88,17 @@ export const IndicesPage: React.FC = () => {
         </div>
       )}
 
-      {/* COMPACT ENVIRONMENTAL INDICES SIDEBAR (Left-Docked approx 310-320px) */}
+      {/* COMPACT ENVIRONMENTAL INDICES SIDEBAR (Floating Liquid-Glass Console) */}
       <aside
-        className={`bg-[#0D1525] border-r border-[#26354A] flex flex-col h-full shrink-0 select-none transition-transform duration-200
-          absolute md:relative inset-y-0 left-0 w-[310px] max-w-[85vw] lg:w-[320px] z-[1200] md:z-20 shadow-2xl md:shadow-none
+        className={`liquid-glass-slab rounded-2xl border border-white/15 shadow-2xl flex flex-col h-full shrink-0 select-none transition-transform duration-200 overflow-hidden
+          fixed md:relative inset-y-2.5 sm:inset-y-3.5 left-2.5 sm:left-3.5 md:left-0 md:inset-y-0 w-[310px] max-w-[85vw] lg:w-[325px] z-[1200] md:z-20
           ${isSidebarOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full md:hidden md:w-0 pointer-events-none'}
         `}
       >
         {/* Header */}
-        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E] shrink-0">
+        <div className="p-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02] shrink-0">
           <div className="flex items-center space-x-2">
-            <div className={`p-1.5 rounded-lg bg-[#162238] border border-[#26354A] ${isNdvi ? 'text-emerald-400' : 'text-amber-400'}`}>
+            <div className={`p-1.5 rounded-lg liquid-glass-chip border border-white/15 shadow-[0_0_10px_rgba(16,185,129,0.2)] ${isNdvi ? 'text-emerald-400' : 'text-amber-400'}`}>
               {isNdvi ? <Trees className="w-4 h-4" /> : <Building2 className="w-4 h-4" />}
             </div>
             <div>
@@ -112,7 +112,7 @@ export const IndicesPage: React.FC = () => {
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Collapse sidebar"
             aria-label="Collapse sidebar"
             aria-expanded={isSidebarOpen}
@@ -129,12 +129,12 @@ export const IndicesPage: React.FC = () => {
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
               Select Spectral Index
             </div>
-            <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#111C2E] rounded-xl border border-[#26354A]">
+            <div className="grid grid-cols-2 gap-1.5 p-1 liquid-glass-subtle rounded-xl">
               <button
                 onClick={() => setActiveLayer('ndvi')}
                 className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-all cursor-pointer ${
                   isNdvi
-                    ? 'bg-[#162238] text-[#F5F7FB] shadow-xs border border-[#26354A]'
+                    ? 'bg-white/[0.14] text-[#F5F7FB] shadow-xs border border-white/20'
                     : 'text-[#8291A8] hover:text-[#F5F7FB]'
                 }`}
                 aria-pressed={isNdvi}
@@ -147,7 +147,7 @@ export const IndicesPage: React.FC = () => {
                 onClick={() => setActiveLayer('ndbi')}
                 className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-all cursor-pointer ${
                   !isNdvi
-                    ? 'bg-[#162238] text-[#F5F7FB] shadow-xs border border-[#26354A]'
+                    ? 'bg-white/[0.14] text-[#F5F7FB] shadow-xs border border-white/20'
                     : 'text-[#8291A8] hover:text-[#F5F7FB]'
                 }`}
                 aria-pressed={!isNdvi}
@@ -159,7 +159,7 @@ export const IndicesPage: React.FC = () => {
           </div>
 
           {/* Integrated Legend Card */}
-          <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
+          <div className="liquid-glass-subtle p-3 rounded-xl space-y-2 shadow-2xs">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB]">
                 {isNdvi ? 'NDVI Vegetation Legend' : 'NDBI Built-Up Legend'}
@@ -171,7 +171,7 @@ export const IndicesPage: React.FC = () => {
 
             {isNdvi ? (
               <div className="space-y-1.5 pt-1">
-                <div className="h-3 rounded-md w-full bg-gradient-to-r from-amber-900 via-emerald-600 to-emerald-400 border border-[#26354A]" />
+                <div className="h-3 rounded-md w-full bg-gradient-to-r from-amber-900 via-emerald-600 to-emerald-400 border border-white/15" />
                 <div className="flex justify-between text-[10px] font-mono text-[#A8B5C9]">
                   <span>-0.2 (Non-Veg)</span>
                   <span className="text-emerald-400">+0.3</span>
@@ -180,7 +180,7 @@ export const IndicesPage: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-1.5 pt-1">
-                <div className="h-3 rounded-md w-full bg-gradient-to-r from-slate-900 via-amber-700 to-amber-500 border border-[#26354A]" />
+                <div className="h-3 rounded-md w-full bg-gradient-to-r from-slate-900 via-amber-700 to-amber-500 border border-white/15" />
                 <div className="flex justify-between text-[10px] font-mono text-[#A8B5C9]">
                   <span>-0.4 (Pervious)</span>
                   <span className="text-amber-400">0.0</span>
@@ -191,13 +191,13 @@ export const IndicesPage: React.FC = () => {
           </div>
 
             {/* Active Context Banner with Observation Stepper */}
-            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2.5 shadow-2xs">
+            <div className="liquid-glass-subtle p-3 rounded-xl space-y-2.5 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB] flex items-center space-x-1.5">
                   <Calendar className="w-3.5 h-3.5 text-[#19D3C5]" />
                   <span>Observation Date</span>
                 </span>
-                <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-[#162238] border border-[#26354A]">
+                <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-white/[0.08] border border-white/15">
                   {currentDateObj?.satellite || 'Landsat'}
                 </span>
               </div>
@@ -207,7 +207,7 @@ export const IndicesPage: React.FC = () => {
                 <button
                   onClick={handlePrevDate}
                   disabled={currentIndex <= 0}
-                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg liquid-glass-chip text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   title="Previous observation"
                   aria-label="Previous observation"
                 >
@@ -217,11 +217,11 @@ export const IndicesPage: React.FC = () => {
                 <select
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="flex-1 bg-[#0D1525] border border-[#26354A] rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
+                  className="flex-1 bg-white/[0.06] border border-white/15 rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
                   aria-label="Select observation date"
                 >
                   {OBSERVATION_DATES.map((d) => (
-                    <option key={d.date} value={d.date}>
+                    <option key={d.date} value={d.date} className="bg-[#030611] text-[#F5F7FB]">
                       {d.date} • {d.satellite}
                     </option>
                   ))}
@@ -230,7 +230,7 @@ export const IndicesPage: React.FC = () => {
                 <button
                   onClick={handleNextDate}
                   disabled={currentIndex >= OBSERVATION_DATES.length - 1}
-                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg liquid-glass-chip text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   title="Next observation"
                   aria-label="Next observation"
                 >
@@ -238,7 +238,7 @@ export const IndicesPage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="pt-2 border-t border-[#26354A]/60 flex items-center justify-between text-[10.5px]">
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10.5px]">
                 <span className="text-[#8291A8]">Index Domain:</span>
                 <span className="font-mono font-bold text-[#19D3C5]">
                   {isNdvi ? 'NDVI Range [-0.20, +0.80]' : 'NDBI Range [-0.40, +0.60]'}
@@ -296,14 +296,14 @@ export const IndicesPage: React.FC = () => {
             </div>
 
             {/* Spectral Formulation & Physical Meaning */}
-            <div className="p-3.5 rounded-xl border border-[#26354A] bg-[#111C2E] space-y-2 text-xs">
+            <div className="p-3.5 rounded-xl border border-white/10 bg-white/[0.04] space-y-2 text-xs">
               <div className="flex items-center space-x-1.5 font-bold text-[#F5F7FB]">
                 <Info className="w-4 h-4 text-[#19D3C5] shrink-0" />
                 <span>{isNdvi ? 'NDVI Formulation & Bands' : 'NDBI Formulation & Bands'}</span>
               </div>
               {isNdvi ? (
                 <>
-                  <div className="bg-[#0D1525] p-2.5 rounded-lg border border-[#26354A] font-mono text-[11px] text-center text-emerald-400 font-semibold shadow-2xs">
+                  <div className="bg-white/[0.04] p-2.5 rounded-lg border border-white/10 font-mono text-[11px] text-center text-emerald-400 font-semibold shadow-2xs">
                     NDVI = (NIR [B5] - Red [B4]) / (NIR [B5] + Red [B4])
                   </div>
                   <p className="text-[11px] leading-relaxed text-[#8291A8]">
@@ -312,7 +312,7 @@ export const IndicesPage: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <div className="bg-[#0D1525] p-2.5 rounded-lg border border-[#26354A] font-mono text-[11px] text-center text-amber-400 font-semibold shadow-2xs">
+                  <div className="bg-white/[0.04] p-2.5 rounded-lg border border-white/10 font-mono text-[11px] text-center text-amber-400 font-semibold shadow-2xs">
                     NDBI = (SWIR₁ [B6] - NIR [B5]) / (SWIR₁ [B6] + NIR [B5])
                   </div>
                   <p className="text-[11px] leading-relaxed text-[#8291A8]">
@@ -327,13 +327,13 @@ export const IndicesPage: React.FC = () => {
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
                 Random Forest Feature Importance
               </div>
-              <div className="p-3 rounded-xl border border-[#26354A] bg-[#111C2E] space-y-2.5 text-xs">
+              <div className="p-3 rounded-xl border border-white/10 bg-white/[0.04] space-y-2.5 text-xs">
                 <div>
                   <div className="flex justify-between font-mono text-[11px] mb-1">
                     <span className="font-medium text-[#A8B5C9]">NDBI (Built-up Factor):</span>
                     <span className="font-bold text-amber-400">61.03%</span>
                   </div>
-                  <div className="w-full bg-[#162238] h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                     <div className="bg-amber-500 h-full rounded-full" style={{ width: '61.03%' }} />
                   </div>
                 </div>
@@ -343,7 +343,7 @@ export const IndicesPage: React.FC = () => {
                     <span className="font-medium text-[#A8B5C9]">NDVI (Vegetation Factor):</span>
                     <span className="font-bold text-emerald-400">38.97%</span>
                   </div>
-                  <div className="w-full bg-[#162238] h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                     <div className="bg-emerald-500 h-full rounded-full" style={{ width: '38.97%' }} />
                   </div>
                 </div>
@@ -359,7 +359,7 @@ export const IndicesPage: React.FC = () => {
             </div>
 
             {/* Scientific Caveat Notice */}
-            <div className="p-3.5 rounded-xl border border-amber-500/30 bg-[#111C2E] text-amber-200 space-y-1.5 text-xs">
+            <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 space-y-1.5 text-xs">
               <div className="flex items-center space-x-1.5 font-bold text-amber-400">
                 <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>Correlation vs Mechanical Causation</span>

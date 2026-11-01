@@ -97,4 +97,5 @@ class GiStarClusterItem(BaseModel):
 
 class GiStarStatisticsResponse(BaseModel):
     total_built_area_km2: float
+    total_nodes: Optional[int] = None
     clusters: List[GiStarClusterItem]

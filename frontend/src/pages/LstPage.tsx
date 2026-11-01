@@ -91,22 +91,22 @@ export const LstPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full w-full overflow-hidden relative">
+    <div className="flex h-full w-full p-2.5 sm:p-3.5 gap-2.5 sm:gap-3.5 overflow-hidden relative z-10">
       {/* Mobile Drawer Backdrop */}
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-[#080D18]/70 backdrop-blur-xs z-[1150] md:hidden cursor-pointer"
+          className="fixed inset-0 bg-[#030611]/80 backdrop-blur-md z-[1150] md:hidden cursor-pointer"
           aria-hidden="true"
         />
       )}
 
       {/* Floating Toggle Controls (Top-Left over Map) */}
       {!isSidebarOpen && (
-        <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
+        <div className="absolute top-6 left-6 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl liquid-glass-chip shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Open LST Controls"
             aria-label="Open LST Controls"
             aria-expanded={isSidebarOpen}
@@ -117,17 +117,17 @@ export const LstPage: React.FC = () => {
         </div>
       )}
 
-      {/* COMPACT LST SIDEBAR (approx 310-320px) */}
+      {/* COMPACT LST SIDEBAR (Floating Liquid-Glass Console) */}
       <aside
-        className={`bg-[#0D1525] border-r border-[#26354A] flex flex-col h-full shrink-0 select-none transition-transform duration-200
-          absolute md:relative inset-y-0 left-0 w-[310px] max-w-[85vw] lg:w-[320px] z-[1200] md:z-20 shadow-2xl md:shadow-none
+        className={`liquid-glass-slab rounded-2xl border border-white/15 shadow-2xl flex flex-col h-full shrink-0 select-none transition-transform duration-200 overflow-hidden
+          fixed md:relative inset-y-2.5 sm:inset-y-3.5 left-2.5 sm:left-3.5 md:left-0 md:inset-y-0 w-[310px] max-w-[85vw] lg:w-[325px] z-[1200] md:z-20
           ${isSidebarOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full md:hidden md:w-0 pointer-events-none'}
         `}
       >
         {/* Sidebar Header & Collapse Action */}
-        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E] shrink-0">
+        <div className="p-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02] shrink-0">
           <div className="flex items-center space-x-2">
-            <div className="p-1.5 rounded-lg bg-[#162238] text-orange-400 border border-[#26354A]">
+            <div className="p-1.5 rounded-lg liquid-glass-chip text-orange-400 border border-white/15 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
               <Flame className="w-4 h-4" />
             </div>
             <div>
@@ -142,7 +142,7 @@ export const LstPage: React.FC = () => {
 
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Collapse sidebar"
             aria-label="Collapse sidebar"
             aria-expanded={isSidebarOpen}
@@ -165,13 +165,13 @@ export const LstPage: React.FC = () => {
           </section>
 
           {/* SECTION B: OBSERVATION DATE */}
-          <section className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2.5">
+          <section className="liquid-glass-subtle p-3 rounded-xl space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB] flex items-center space-x-1.5">
                 <Calendar className="w-3.5 h-3.5 text-[#19D3C5]" />
                 <span>Observation Date</span>
               </span>
-              <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-[#162238] border border-[#26354A]">
+              <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-white/[0.08] border border-white/15">
                 {currentDateObj?.satellite || 'Landsat'}
               </span>
             </div>
@@ -181,7 +181,7 @@ export const LstPage: React.FC = () => {
               <button
                 onClick={handlePrevDate}
                 disabled={currentIndex <= 0}
-                className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded-lg liquid-glass-chip text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Previous observation"
                 aria-label="Previous observation"
               >
@@ -191,11 +191,11 @@ export const LstPage: React.FC = () => {
               <select
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="flex-1 bg-[#0D1525] border border-[#26354A] rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
+                className="flex-1 bg-white/[0.06] border border-white/15 rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
                 aria-label="Select observation date"
               >
                 {OBSERVATION_DATES.map((d) => (
-                  <option key={d.date} value={d.date}>
+                  <option key={d.date} value={d.date} className="bg-[#030611] text-[#F5F7FB]">
                     {d.date} • {d.satellite}
                   </option>
                 ))}
@@ -204,7 +204,7 @@ export const LstPage: React.FC = () => {
               <button
                 onClick={handleNextDate}
                 disabled={currentIndex >= OBSERVATION_DATES.length - 1}
-                className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 rounded-lg liquid-glass-chip text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Next observation"
                 aria-label="Next observation"
               >
@@ -213,7 +213,7 @@ export const LstPage: React.FC = () => {
             </div>
 
             {/* Observation Metadata */}
-            <div className="pt-2 border-t border-[#26354A]/60 flex items-center justify-between text-[10.5px] text-[#8291A8]">
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10.5px] text-[#8291A8]">
               <span className="flex items-center space-x-1">
                 <Satellite className="w-3 h-3 text-[#19D3C5]" />
                 <span>Sensor:</span>
@@ -223,7 +223,7 @@ export const LstPage: React.FC = () => {
           </section>
 
           {/* SECTION C: MAP DISPLAY CONTROLS */}
-          <section className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-3">
+          <section className="liquid-glass-subtle p-3 rounded-xl space-y-3">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB] flex items-center space-x-1.5">
               <Sliders className="w-3.5 h-3.5 text-[#19D3C5]" />
               <span>Map Display Controls</span>
@@ -242,7 +242,7 @@ export const LstPage: React.FC = () => {
               <button
                 onClick={handleToggleRasterVisibility}
                 className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
-                  isRasterVisible ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
+                  isRasterVisible ? 'bg-[#19D3C5]' : 'bg-white/10 border border-white/20'
                 }`}
                 role="switch"
                 aria-checked={isRasterVisible}
@@ -258,7 +258,7 @@ export const LstPage: React.FC = () => {
             </div>
 
             {/* Layer Opacity Slider */}
-            <div className="space-y-1.5 pt-2 border-t border-[#26354A]/60">
+            <div className="space-y-1.5 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-[#8291A8]">Layer Opacity</span>
                 <span className="font-mono text-[#19D3C5] font-bold">
@@ -272,13 +272,13 @@ export const LstPage: React.FC = () => {
                 step="0.05"
                 value={layerOpacity > 0 ? layerOpacity : lastOpacityRef.current}
                 onChange={(e) => handleOpacitySliderChange(parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-[#162238] rounded-lg appearance-none cursor-pointer accent-[#19D3C5]"
+                className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#19D3C5]"
                 aria-label="Adjust LST raster opacity"
               />
             </div>
 
             {/* Mysuru AOI Boundary Toggle */}
-            <div className="flex items-center justify-between pt-2 border-t border-[#26354A]/60">
+            <div className="flex items-center justify-between pt-2 border-t border-white/10">
               <span className="text-[11.5px] text-[#A8B5C9] font-medium flex items-center space-x-1.5">
                 <MapPin className="w-3.5 h-3.5 text-[#19D3C5]" />
                 <span>Mysuru AOI Boundary</span>
@@ -286,7 +286,7 @@ export const LstPage: React.FC = () => {
               <button
                 onClick={() => setShowAOIBoundary(!showAOIBoundary)}
                 className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
-                  showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
+                  showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-white/10 border border-white/20'
                 }`}
                 role="switch"
                 aria-checked={showAOIBoundary}
@@ -303,7 +303,7 @@ export const LstPage: React.FC = () => {
           </section>
 
           {/* SECTION D: LEGEND */}
-          <section className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2">
+          <section className="liquid-glass-subtle p-3 rounded-xl space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB]">
                 LST Legend
@@ -315,7 +315,7 @@ export const LstPage: React.FC = () => {
               Land Surface Temp (Landsat ST_B10)
             </p>
 
-            <div className="h-3 rounded-md w-full bg-gradient-to-r from-yellow-200 via-orange-500 to-red-700 border border-[#26354A]" />
+            <div className="h-3 rounded-md w-full bg-gradient-to-r from-yellow-200 via-orange-500 to-red-700 border border-white/15" />
 
             <div className="flex justify-between text-[10px] font-mono text-[#A8B5C9]">
               <span>30.0 °C</span>
@@ -324,7 +324,7 @@ export const LstPage: React.FC = () => {
               <span>55.0 °C</span>
             </div>
 
-            <p className="text-[10px] text-[#8291A8] pt-1 border-t border-[#26354A]/60 leading-tight">
+            <p className="text-[10px] text-[#8291A8] pt-1 border-t border-white/10 leading-tight">
               P80 (47.1 °C) defines relative urban thermal hotspots within the built domain.
             </p>
           </section>
@@ -384,7 +384,7 @@ export const LstPage: React.FC = () => {
             </div>
 
             {/* Scientific Notice */}
-            <div className="p-2.5 rounded-xl border border-amber-500/30 bg-[#111C2E] text-amber-200/90 text-[10.5px] space-y-1">
+            <div className="p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 text-[10.5px] space-y-1">
               <div className="flex items-center space-x-1.5 font-bold text-amber-400">
                 <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                 <span>Surface vs Ambient Note</span>

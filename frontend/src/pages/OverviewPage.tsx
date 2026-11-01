@@ -119,40 +119,50 @@ export const OverviewPage: React.FC = () => {
   ];
 
   return (
-    <div className="h-full w-full overflow-y-auto bg-[#080D18] text-[#F5F7FB] p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 select-none">
+    <div className="h-full w-full overflow-y-auto bg-transparent text-[#F5F7FB] p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 select-none relative z-10">
       {/* Hero Header & Context Banner */}
-      <section className="bg-[#0D1525] border border-[#26354A] rounded-2xl p-5 sm:p-7 shadow-xs">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-2 max-w-3xl">
+      <section className="liquid-glass-slab rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden border border-white/16">
+        {/* Ambient atmospheric glow on top-right */}
+        <div
+          className="absolute -top-12 -right-12 w-80 h-80 rounded-full pointer-events-none opacity-20 blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(249, 115, 22, 0.4) 0%, rgba(6, 182, 212, 0.2) 60%, transparent 80%)' }}
+          aria-hidden="true"
+        />
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-3 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full bg-[#19D3C5]/10 text-[#19D3C5] border border-[#19D3C5]/30">
+              <span className="text-[11px] font-mono font-bold uppercase px-3 py-1 rounded-full liquid-glass-chip text-[#19D3C5] border border-[#19D3C5]/30 shadow-xs">
                 Analytical Command Center
               </span>
-              <span className="text-[11px] font-mono font-semibold uppercase px-2.5 py-0.5 rounded-full bg-[#111C2E] text-[#A8B5C9] border border-[#26354A]">
+              <span className="text-[11px] font-mono font-medium uppercase px-3 py-1 rounded-full liquid-glass-chip text-[#E2E8F0] border border-white/15">
                 Mysuru, Karnataka, India
               </span>
-              <span className="text-[11px] font-mono font-semibold uppercase px-2.5 py-0.5 rounded-full bg-[#111C2E] text-[#A8B5C9] border border-[#26354A]">
+              <span className="text-[11px] font-mono font-medium uppercase px-3 py-1 rounded-full liquid-glass-chip text-[#A8B5C9] border border-white/15">
                 EPSG:32643 UTM 43N
               </span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#F5F7FB]">
-              Analytical Overview & Telemetry Hub
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#F8FAFC]">
+              Urban Thermal Intelligence{' '}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#F97316] via-[#FB923C] to-[#FBBF24]">
+                Observatory
+              </span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-[#8291A8] leading-relaxed">
-              Operational dashboard integrating multi-temporal Landsat 8/9 Level-2 observations, real-time zonal statistics, and predictive thermal hotspot classifications across the Mysuru urban footprint.
+            <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed max-w-2xl">
+              Multi-temporal satellite remote sensing observatory synthesizing USGS Landsat 8/9 Level-2 radiometry, optical vegetation-impervious indices, and Random Forest spatial predictions across Mysuru.
             </p>
           </div>
 
           {/* Date Selector Badge */}
-          <div className="shrink-0 bg-[#111C2E] border border-[#26354A] rounded-xl p-3 space-y-2 lg:w-56">
+          <div className="shrink-0 liquid-glass-subtle rounded-2xl p-3.5 space-y-2 lg:w-60 border border-white/14 shadow-lg">
             <div className="flex items-center justify-between text-xs font-semibold text-[#A8B5C9]">
               <span className="flex items-center space-x-1.5">
                 <Calendar className="w-3.5 h-3.5 text-[#19D3C5]" />
-                <span>Observation Date</span>
+                <span className="font-mono text-[11px] uppercase tracking-wide">Observation Cadence</span>
               </span>
-              <span className="text-[10.5px] font-mono font-bold text-[#19D3C5]">
+              <span className="text-[11px] font-mono font-bold text-[#19D3C5]">
                 {dates.find(d => d.date === selectedDate)?.satellite || 'Landsat 9'}
               </span>
             </div>
@@ -160,11 +170,11 @@ export const OverviewPage: React.FC = () => {
             <select
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full bg-[#0D1525] border border-[#26354A] rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
+              className="w-full bg-white/[0.08] border border-white/20 rounded-xl px-3 py-2 text-xs font-mono font-bold text-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#19D3C5] cursor-pointer shadow-inner"
             >
               {dates.map((d) => (
-                <option key={d.date} value={d.date}>
-                  {d.date} ({d.satellite})
+                <option key={d.date} value={d.date} className="bg-[#030611] text-[#F5F7FB]">
+                  {d.date} • {d.satellite}
                 </option>
               ))}
             </select>
@@ -225,20 +235,20 @@ export const OverviewPage: React.FC = () => {
       {/* Main Split: Interactive AOI Map + Workflow Summary */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Interactive Mysuru AOI Geographic Map */}
-        <div className="lg:col-span-7 bg-[#0D1525] border border-[#26354A] rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
+        <div className="lg:col-span-7 liquid-glass-slab rounded-2xl p-5 sm:p-6 shadow-2xl border border-white/14 space-y-3.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Compass className="w-4 h-4 text-[#19D3C5]" />
-              <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F5F7FB]">
+              <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F8FAFC]">
                 Mysuru Study Area (AOI Boundary)
               </h2>
             </div>
-            <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#111C2E] text-[#8291A8] border border-[#26354A]">
+            <span className="text-[10px] font-mono font-medium px-2.5 py-0.5 rounded-full liquid-glass-chip text-[#A8B5C9] border border-white/15">
               CARTO Voyager
             </span>
           </div>
 
-          <p className="text-xs text-[#8291A8]">
+          <p className="text-xs text-[#8291A8] leading-relaxed">
             Geographic boundary encompassing Mysuru's urbanized core and surrounding peri-urban zones. Road networks and place labels are clearly visible.
           </p>
 
@@ -246,11 +256,11 @@ export const OverviewPage: React.FC = () => {
         </div>
 
         {/* Right Column: Research Workflow Pipeline Summary */}
-        <div className="lg:col-span-5 bg-[#0D1525] border border-[#26354A] rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
+        <div className="lg:col-span-5 liquid-glass-slab rounded-2xl p-5 sm:p-6 shadow-2xl border border-white/14 space-y-3.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Layers className="w-4 h-4 text-[#19D3C5]" />
-              <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F5F7FB]">
+              <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F8FAFC]">
                 Analysis Workflow Pipeline
               </h2>
             </div>
@@ -271,9 +281,9 @@ export const OverviewPage: React.FC = () => {
             {workflowSteps.map((s) => (
               <div
                 key={s.step}
-                className="p-3 rounded-xl border border-[#26354A] bg-[#111C2E] flex items-start space-x-3"
+                className="p-3.5 rounded-xl border border-white/12 bg-white/[0.04] hover:bg-white/[0.07] transition-all flex items-start space-x-3 shadow-xs"
               >
-                <div className="w-6 h-6 rounded-lg bg-[#162238] border border-[#19D3C5]/30 text-[#19D3C5] font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-6 h-6 rounded-lg liquid-glass-chip border border-[#19D3C5]/40 text-[#19D3C5] font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                   {s.step}
                 </div>
                 <div className="space-y-0.5">
@@ -287,55 +297,56 @@ export const OverviewPage: React.FC = () => {
       </section>
 
       {/* Analytical Views Navigation Grid */}
-      <section className="space-y-3.5">
+      <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Satellite className="w-4 h-4 text-[#19D3C5]" />
-            <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F5F7FB]">
+            <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F8FAFC]">
               Dedicated Geospatial Analysis Views
             </h2>
           </div>
           <span className="text-xs text-[#8291A8]">Click any card to open detailed explorer</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {analysisViews.map((card) => {
             const Icon = card.icon;
             return (
               <Link
                 key={card.to}
                 to={card.to}
-                className="bg-[#0D1525] border border-[#26354A] rounded-2xl p-4 sm:p-5 shadow-xs hover:border-[#19D3C5]/50 hover:shadow-card transition-all group flex flex-col justify-between"
+                className="liquid-glass-slab rounded-2xl p-5 sm:p-6 shadow-floating border border-white/14 hover:border-[#19D3C5]/50 hover:shadow-[0_16px_40px_rgba(25,211,197,0.18)] transition-all group flex flex-col justify-between"
               >
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div
-                      className="p-2.5 rounded-xl transition-colors"
+                      className="p-2.5 rounded-xl transition-all border border-white/12"
                       style={{
-                        backgroundColor: `${card.color}15`,
+                        backgroundColor: `${card.color}18`,
                         color: card.color,
+                        boxShadow: `0 0 16px ${card.color}25`,
                       }}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded-md bg-[#111C2E] text-[#8291A8] border border-[#26354A]">
+                    <span className="text-[10px] font-mono font-semibold uppercase px-2.5 py-0.5 rounded-md liquid-glass-chip text-[#A8B5C9] border border-white/15">
                       {card.badge}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-bold text-[#F5F7FB] group-hover:text-[#19D3C5] transition-colors">
+                    <h3 className="text-base font-bold text-[#F8FAFC] group-hover:text-[#19D3C5] transition-colors">
                       {card.title}
                     </h3>
-                    <p className="text-xs text-[#8291A8] leading-relaxed mt-1">
+                    <p className="text-xs text-[#94A3B8] leading-relaxed mt-1.5">
                       {card.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#26354A] mt-3 flex items-center justify-between text-xs font-semibold text-[#19D3C5] group-hover:text-[#39E4D5]">
+                <div className="pt-4 border-t border-white/10 mt-4 flex items-center justify-between text-xs font-semibold text-[#19D3C5] group-hover:text-[#39E4D5]">
                   <span>Explore analysis</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                 </div>
               </Link>
             );

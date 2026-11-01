@@ -60,11 +60,11 @@ export const TimelineSlider: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#080D18]/95 border border-[#26354A] backdrop-blur-md rounded-2xl p-1.5 sm:p-2.5 shadow-floating flex items-center space-x-1.5 sm:space-x-3 select-none max-w-full">
+    <div className="liquid-glass-slab rounded-2xl p-2 sm:p-2.5 flex items-center space-x-1.5 sm:space-x-3 select-none max-w-full shadow-2xl border border-white/16 backdrop-blur-2xl">
       {/* Play / Pause Toggle */}
       <button
         onClick={() => setIsPlaying(!isPlaying)}
-        className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#111C2E] text-[#19D3C5] border border-[#26354A] flex items-center justify-center hover:bg-[#162238] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors shadow-2xs shrink-0 cursor-pointer"
+        className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl liquid-glass-chip text-[#19D3C5] flex items-center justify-center hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors shadow-2xs shrink-0 cursor-pointer"
         title={isPlaying ? 'Pause Timeline Playback' : 'Start Timeline Playback'}
         aria-label={isPlaying ? 'Pause Timeline Playback' : 'Start Timeline Playback'}
         aria-pressed={isPlaying}
@@ -85,10 +85,10 @@ export const TimelineSlider: React.FC = () => {
         </button>
 
         {/* Current Date Badge */}
-        <div className="flex items-center space-x-1 sm:space-x-1.5 px-2 py-1 rounded-lg bg-[#0D1525] border border-[#26354A] font-mono text-[11px] sm:text-xs font-bold text-[#F5F7FB] shadow-2xs shrink-0">
+        <div className="flex items-center space-x-1 sm:space-x-1.5 px-2 py-1 rounded-lg liquid-glass-chip font-mono text-[11px] sm:text-xs font-bold text-[#F5F7FB] shadow-2xs shrink-0">
           <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#8291A8]" />
           <span>{selectedDate}</span>
-          <span className="text-[10px] font-sans font-medium text-[#19D3C5] px-1.5 py-0.2 rounded bg-[#111C2E] border border-[#26354A] hidden sm:inline">
+          <span className="text-[10px] font-sans font-medium text-[#19D3C5] px-1.5 py-0.2 rounded bg-white/[0.08] border border-white/15 hidden sm:inline">
             {OBSERVATION_DATES[currentIndex]?.satellite}
           </span>
         </div>
@@ -105,7 +105,7 @@ export const TimelineSlider: React.FC = () => {
       </div>
 
       {/* Discrete 8 Timeline Nodes */}
-      <div className="flex items-center space-x-2 pl-1.5 sm:pl-2 border-l border-[#26354A] overflow-x-auto min-w-0" role="group" aria-label="Timeline dates">
+      <div className="flex items-center space-x-2 pl-1.5 sm:pl-2 border-l border-white/10 overflow-x-auto min-w-0" role="group" aria-label="Timeline dates">
         {OBSERVATION_DATES.map((item) => {
           const isSelected = item.date === selectedDate;
           return (
@@ -120,8 +120,8 @@ export const TimelineSlider: React.FC = () => {
               <div
                 className={`w-3 h-3 rounded-full border transition-all ${
                   isSelected
-                    ? 'bg-[#19D3C5] border-[#19D3C5] scale-125 shadow-xs ring-2 ring-[#19D3C5]/30'
-                    : 'bg-[#162238] border-[#26354A] group-hover:bg-[#374b66]'
+                    ? 'bg-[#19D3C5] border-[#19D3C5] scale-125 shadow-[0_0_8px_#19D3C5] ring-2 ring-[#19D3C5]/40'
+                    : 'bg-white/10 border-white/20 group-hover:bg-white/20'
                 }`}
               />
               <span className={`text-[9.5px] font-mono mt-1 ${isSelected ? 'text-[#19D3C5] font-bold' : 'text-[#8291A8] group-hover:text-[#A8B5C9]'}`}>

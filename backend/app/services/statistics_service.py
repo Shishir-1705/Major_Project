@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 
 from ..config import (
-    DATA_STEP9_DIR, DATA_STEP10_DIR, RESULTS_STEP10_DIR,
-    PERSISTENCE_AREAS_PATH, OBSERVATION_DATES
+    DATA_STEP9_DIR, DATA_STEP10_DIR, DATA_REAL_DIR, RESULTS_STEP10_DIR,
+    PERSISTENCE_AREAS_PATH, OBSERVATION_DATES, USE_CANDIDATE_DATA
 )
 from ..schemas.responses import (
     ZonalStatisticsResponse, HotspotStatisticsResponse,
@@ -36,42 +36,81 @@ class StatisticsService:
     }
 
     @staticmethod
-    def _resolve_raster_path(layer: str, date: Optional[str] = None) -> Path:
-        if layer in ["lst", "ndvi", "ndbi", "ref_label"]:
-            if not date or date not in OBSERVATION_DATES:
-                raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
-            return DATA_STEP10_DIR / f"{layer}_30m_{date}.tif"
+    def _resolve_raster_path(layer: str, date: Optional[str] = None, candidate: bool = False) -> Path:
+        if candidate:
+            if layer in ["lst", "ndvi", "ndbi"]:
+                if not date or date not in OBSERVATION_DATES:
+                    raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
+                return DATA_REAL_DIR / f"{layer}_{date}.tif"
 
-        elif layer in ["rf_prob", "rf_class"]:
-            if not date or date not in OBSERVATION_DATES:
-                raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
-            return RESULTS_STEP10_DIR / f"{layer}_30m_{date}.tif"
+            elif layer in ["valid", "ref_label"]:
+                if not date or date not in OBSERVATION_DATES:
+                    raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
+                return DATA_REAL_DIR / f"valid_{date}.tif"
 
-        elif layer in ["persistence", "continuous_persistence"]:
-            if date == "categorical":
-                return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
-            return RESULTS_STEP10_DIR / "continuous_persistence_30m.tif"
+            elif layer in ["rf_prob", "rf_class"]:
+                if not date or date not in OBSERVATION_DATES:
+                    raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
+                return DATA_REAL_DIR / "predictions" / f"{layer}_{date}.tif"
 
-        elif layer == "categorical_persistence":
-            return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
+            elif layer in ["persistence", "continuous_persistence"]:
+                if date == "categorical":
+                    return DATA_REAL_DIR / "persistence" / "categorical_persistence_30m.tif"
+                return DATA_REAL_DIR / "persistence" / "continuous_persistence_30m.tif"
 
-        elif layer in ["gi_star", "gi_star_statistic"]:
-            if date == "clustering":
-                return RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
-            return RESULTS_STEP10_DIR / "gi_star_statistic_30m.tif"
+            elif layer == "categorical_persistence":
+                return DATA_REAL_DIR / "persistence" / "categorical_persistence_30m.tif"
 
-        elif layer == "gi_star_clustering":
-            return RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
+            elif layer in ["gi_star", "gi_star_statistic"]:
+                if date == "clustering":
+                    return DATA_REAL_DIR / "clusters" / "gi_star_clustering_30m.tif"
+                return DATA_REAL_DIR / "clusters" / "gi_star_statistic_30m.tif"
 
-        elif layer == "built_mask":
-            return DATA_STEP9_DIR / "built_mask_30m.tif"
+            elif layer == "gi_star_clustering":
+                return DATA_REAL_DIR / "clusters" / "gi_star_clustering_30m.tif"
 
+            elif layer == "built_mask":
+                return DATA_STEP9_DIR / "built_mask_30m.tif"
+
+            else:
+                raise ValueError(f"Unknown layer type '{layer}'")
         else:
-            raise ValueError(f"Unknown layer type '{layer}'")
+            if layer in ["lst", "ndvi", "ndbi", "ref_label"]:
+                if not date or date not in OBSERVATION_DATES:
+                    raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
+                return DATA_STEP10_DIR / f"{layer}_30m_{date}.tif"
+
+            elif layer in ["rf_prob", "rf_class"]:
+                if not date or date not in OBSERVATION_DATES:
+                    raise ValueError(f"Date '{date}' is invalid for layer '{layer}'")
+                return RESULTS_STEP10_DIR / f"{layer}_30m_{date}.tif"
+
+            elif layer in ["persistence", "continuous_persistence"]:
+                if date == "categorical":
+                    return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
+                return RESULTS_STEP10_DIR / "continuous_persistence_30m.tif"
+
+            elif layer == "categorical_persistence":
+                return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
+
+            elif layer in ["gi_star", "gi_star_statistic"]:
+                if date == "clustering":
+                    return RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
+                return RESULTS_STEP10_DIR / "gi_star_statistic_30m.tif"
+
+            elif layer == "gi_star_clustering":
+                return RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
+
+            elif layer == "built_mask":
+                return DATA_STEP9_DIR / "built_mask_30m.tif"
+
+            else:
+                raise ValueError(f"Unknown layer type '{layer}'")
 
     @staticmethod
-    def get_zonal_statistics(layer: str, date: Optional[str] = None) -> ZonalStatisticsResponse:
-        raster_path = StatisticsService._resolve_raster_path(layer, date)
+    def get_zonal_statistics(layer: str, date: Optional[str] = None, candidate: Optional[bool] = None) -> ZonalStatisticsResponse:
+        is_candidate = USE_CANDIDATE_DATA if candidate is None else candidate
+        raster_path = StatisticsService._resolve_raster_path(layer, date, candidate=is_candidate)
         if not raster_path.exists():
             raise FileNotFoundError(f"Authoritative raster file missing: {raster_path}")
 
@@ -128,8 +167,9 @@ class StatisticsService:
         )
 
     @staticmethod
-    def get_hotspot_statistics(date: str) -> HotspotStatisticsResponse:
-        rf_class_path = RESULTS_STEP10_DIR / f"rf_class_30m_{date}.tif"
+    def get_hotspot_statistics(date: str, candidate: Optional[bool] = None) -> HotspotStatisticsResponse:
+        is_candidate = USE_CANDIDATE_DATA if candidate is None else candidate
+        rf_class_path = StatisticsService._resolve_raster_path("rf_class", date, candidate=is_candidate)
         if not rf_class_path.exists():
             raise FileNotFoundError(f"RF Class raster missing for date {date}: {rf_class_path}")
 
@@ -169,8 +209,9 @@ class StatisticsService:
         )
 
     @staticmethod
-    def get_persistence_statistics() -> PersistenceStatisticsResponse:
-        if PERSISTENCE_AREAS_PATH.exists():
+    def get_persistence_statistics(candidate: Optional[bool] = None) -> PersistenceStatisticsResponse:
+        is_candidate = USE_CANDIDATE_DATA if candidate is None else candidate
+        if not is_candidate and PERSISTENCE_AREAS_PATH.exists():
             df = pd.read_csv(PERSISTENCE_AREAS_PATH)
             categories = []
             total_area = float(df['area_km2_utm43n'].sum())
@@ -208,8 +249,8 @@ class StatisticsService:
                 categories=categories
             )
 
-        # Fallback to raster computation
-        raster_path = RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
+        # Candidate or raster computation fallback
+        raster_path = (DATA_REAL_DIR / "persistence" / "categorical_persistence_30m.tif") if is_candidate else (RESULTS_STEP10_DIR / "categorical_persistence_30m.tif")
         if not raster_path.exists():
             raise FileNotFoundError(f"Categorical persistence raster missing: {raster_path}")
 
@@ -230,17 +271,18 @@ class StatisticsService:
             return PersistenceStatisticsResponse(
                 total_built_area_km2=round(tot_area, 3),
                 categories=[
-                    PersistenceCategoryItem(category="Category 1: 0% Recurrence (Never Hotspot)", obs_count_range="0%", area_km2=round(c1*PIXEL_AREA_KM2, 3), percentage=round(c1/total*100, 2), color_hex="#1e293b"),
-                    PersistenceCategoryItem(category="Category 2: >0-25% Recurrence (Low)", obs_count_range=">0-25%", area_km2=round(c2*PIXEL_AREA_KM2, 3), percentage=round(c2/total*100, 2), color_hex="#06b6d4"),
-                    PersistenceCategoryItem(category="Category 3: >25-50% Recurrence (Moderate)", obs_count_range=">25-50%", area_km2=round(c3*PIXEL_AREA_KM2, 3), percentage=round(c3/total*100, 2), color_hex="#facc15"),
-                    PersistenceCategoryItem(category="Category 4: >50-75% Recurrence (High)", obs_count_range=">50-75%", area_km2=round(c4*PIXEL_AREA_KM2, 3), percentage=round(c4/total*100, 2), color_hex="#fb923c"),
-                    PersistenceCategoryItem(category="Category 5: >75-100% Recurrence (Persistent / Chronic)", obs_count_range=">75-100%", area_km2=round(c5*PIXEL_AREA_KM2, 3), percentage=round(c5/total*100, 2), color_hex="#ef4444")
+                    PersistenceCategoryItem(category="Category 1: 0% Recurrence (Never Hotspot)", obs_count_range="0%", area_km2=round(c1*PIXEL_AREA_KM2, 3), percentage=round(c1/total*100, 2) if total>0 else 0.0, color_hex="#1e293b"),
+                    PersistenceCategoryItem(category="Category 2: >0-25% Recurrence (Low)", obs_count_range=">0-25%", area_km2=round(c2*PIXEL_AREA_KM2, 3), percentage=round(c2/total*100, 2) if total>0 else 0.0, color_hex="#06b6d4"),
+                    PersistenceCategoryItem(category="Category 3: >25-50% Recurrence (Moderate)", obs_count_range=">25-50%", area_km2=round(c3*PIXEL_AREA_KM2, 3), percentage=round(c3/total*100, 2) if total>0 else 0.0, color_hex="#facc15"),
+                    PersistenceCategoryItem(category="Category 4: >50-75% Recurrence (High)", obs_count_range=">50-75%", area_km2=round(c4*PIXEL_AREA_KM2, 3), percentage=round(c4/total*100, 2) if total>0 else 0.0, color_hex="#fb923c"),
+                    PersistenceCategoryItem(category="Category 5: >75-100% Recurrence (Persistent / Chronic)", obs_count_range=">75-100%", area_km2=round(c5*PIXEL_AREA_KM2, 3), percentage=round(c5/total*100, 2) if total>0 else 0.0, color_hex="#ef4444")
                 ]
             )
 
     @staticmethod
-    def get_gi_star_statistics() -> GiStarStatisticsResponse:
-        raster_path = RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
+    def get_gi_star_statistics(candidate: Optional[bool] = None) -> GiStarStatisticsResponse:
+        is_candidate = USE_CANDIDATE_DATA if candidate is None else candidate
+        raster_path = (DATA_REAL_DIR / "clusters" / "gi_star_clustering_30m.tif") if is_candidate else (RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif")
         if not raster_path.exists():
             raise FileNotFoundError(f"Gi* clustering raster missing: {raster_path}")
 
@@ -249,22 +291,41 @@ class StatisticsService:
             valid_mask = (arr != 255) & (~np.isnan(arr))
             if src.nodata is not None:
                 valid_mask = valid_mask & (arr != src.nodata)
-            
-            c_99 = int(np.sum((arr == 3) & valid_mask))
-            c_95 = int(np.sum((arr == 2) & valid_mask))
-            c_90 = int(np.sum((arr == 1) & valid_mask))
-            c_ns = int(np.sum((arr == 0) & valid_mask))
-            c_cs = int(np.sum((arr < 0) & valid_mask))
-            total = c_99 + c_95 + c_90 + c_ns + c_cs
-            tot_area = total * PIXEL_AREA_KM2
 
-            return GiStarStatisticsResponse(
-                total_built_area_km2=round(tot_area, 3),
-                clusters=[
-                    GiStarClusterItem(cluster_type="Hotspot 99% Confidence", confidence_level="99%", area_km2=round(c_99*PIXEL_AREA_KM2, 3), percentage=round(c_99/total*100, 2), color_hex="#990000"),
-                    GiStarClusterItem(cluster_type="Hotspot 95% Confidence", confidence_level="95%", area_km2=round(c_95*PIXEL_AREA_KM2, 3), percentage=round(c_95/total*100, 2), color_hex="#d73027"),
-                    GiStarClusterItem(cluster_type="Hotspot 90% Confidence", confidence_level="90%", area_km2=round(c_90*PIXEL_AREA_KM2, 3), percentage=round(c_90/total*100, 2), color_hex="#f46d43"),
-                    GiStarClusterItem(cluster_type="Coldspot Cluster", confidence_level="90-99%", area_km2=round(c_cs*PIXEL_AREA_KM2, 3), percentage=round(c_cs/total*100, 2), color_hex="#4575b4"),
-                    GiStarClusterItem(cluster_type="Not Significant", confidence_level="N/A", area_km2=round(c_ns*PIXEL_AREA_KM2, 3), percentage=round(c_ns/total*100, 2), color_hex="#1e293b")
-                ]
-            )
+            if is_candidate:
+                # Candidate FDR-adjusted clustering: 1 = Hotspot, 2 = Coldspot, 0 = Not Significant
+                c_hot = int(np.sum((arr == 1) & valid_mask))
+                c_cold = int(np.sum((arr == 2) & valid_mask))
+                c_ns = int(np.sum((arr == 0) & valid_mask))
+                total = c_hot + c_cold + c_ns
+                tot_area = total * PIXEL_AREA_KM2
+
+                return GiStarStatisticsResponse(
+                    total_built_area_km2=round(tot_area, 3),
+                    total_nodes=total,
+                    clusters=[
+                        GiStarClusterItem(cluster_type="Significant Hotspot Cluster (pFDR < 0.05)", confidence_level="FDR p<0.05", area_km2=round(c_hot*PIXEL_AREA_KM2, 3), percentage=round(c_hot/total*100, 2) if total>0 else 0.0, color_hex="#f46d43"),
+                        GiStarClusterItem(cluster_type="Significant Coldspot Cluster (pFDR < 0.05)", confidence_level="FDR p<0.05", area_km2=round(c_cold*PIXEL_AREA_KM2, 3), percentage=round(c_cold/total*100, 2) if total>0 else 0.0, color_hex="#38bdf8"),
+                        GiStarClusterItem(cluster_type="Not Statistically Significant", confidence_level="pFDR >= 0.05", area_km2=round(c_ns*PIXEL_AREA_KM2, 3), percentage=round(c_ns/total*100, 2) if total>0 else 0.0, color_hex="#1e293b")
+                    ]
+                )
+            else:
+                c_99 = int(np.sum((arr == 3) & valid_mask))
+                c_95 = int(np.sum((arr == 2) & valid_mask))
+                c_90 = int(np.sum((arr == 1) & valid_mask))
+                c_ns = int(np.sum((arr == 0) & valid_mask))
+                c_cs = int(np.sum((arr < 0) & valid_mask))
+                total = c_99 + c_95 + c_90 + c_ns + c_cs
+                tot_area = total * PIXEL_AREA_KM2
+
+                return GiStarStatisticsResponse(
+                    total_built_area_km2=round(tot_area, 3),
+                    total_nodes=total,
+                    clusters=[
+                        GiStarClusterItem(cluster_type="Hotspot 99% Confidence", confidence_level="99%", area_km2=round(c_99*PIXEL_AREA_KM2, 3), percentage=round(c_99/total*100, 2), color_hex="#990000"),
+                        GiStarClusterItem(cluster_type="Hotspot 95% Confidence", confidence_level="95%", area_km2=round(c_95*PIXEL_AREA_KM2, 3), percentage=round(c_95/total*100, 2), color_hex="#d73027"),
+                        GiStarClusterItem(cluster_type="Hotspot 90% Confidence", confidence_level="90%", area_km2=round(c_90*PIXEL_AREA_KM2, 3), percentage=round(c_90/total*100, 2), color_hex="#f46d43"),
+                        GiStarClusterItem(cluster_type="Coldspot Cluster", confidence_level="90-99%", area_km2=round(c_cs*PIXEL_AREA_KM2, 3), percentage=round(c_cs/total*100, 2), color_hex="#38bdf8"),
+                        GiStarClusterItem(cluster_type="Not Significant", confidence_level="N/A", area_km2=round(c_ns*PIXEL_AREA_KM2, 3), percentage=round(c_ns/total*100, 2), color_hex="#1e293b")
+                    ]
+                )

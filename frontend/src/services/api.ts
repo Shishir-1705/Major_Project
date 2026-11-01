@@ -153,7 +153,7 @@ class ApiService {
 
   // 9. Map Tile URL Constructor
   getTileUrlTemplate(layer: LayerType, dateOrKey: string): string {
-    return `${this.baseUrl}/tiles/${layer}/${dateOrKey}/{z}/{x}/{y}.png`;
+    return `${this.baseUrl}/tiles/${layer}/${dateOrKey}/{z}/{x}/{y}.png?v=3.10k`;
   }
 }
 

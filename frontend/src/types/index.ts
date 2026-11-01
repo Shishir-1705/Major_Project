@@ -129,6 +129,7 @@ export interface GiStarClusterItem {
 
 export interface GiStarStatisticsResponse {
   total_built_area_km2: number;
+  total_nodes?: number;
   clusters: GiStarClusterItem[];
 }
 

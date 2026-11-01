@@ -64,22 +64,22 @@ export const HotspotsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full w-full overflow-hidden relative">
+    <div className="flex h-full w-full p-2.5 sm:p-3.5 gap-2.5 sm:gap-3.5 overflow-hidden relative z-10">
       {/* Mobile Drawer Backdrop */}
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-[#080D18]/70 backdrop-blur-xs z-[1150] md:hidden cursor-pointer"
+          className="fixed inset-0 bg-[#030611]/80 backdrop-blur-md z-[1150] md:hidden cursor-pointer"
           aria-hidden="true"
         />
       )}
 
       {/* Floating Toggle Controls (Top-Left over Map) */}
       {!isSidebarOpen && (
-        <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
+        <div className="absolute top-6 left-6 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl liquid-glass-chip shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Open ML Hotspot Controls"
             aria-label="Open ML Hotspot Controls"
             aria-expanded={isSidebarOpen}
@@ -90,17 +90,17 @@ export const HotspotsPage: React.FC = () => {
         </div>
       )}
 
-      {/* COMPACT ML HOTSPOTS SIDEBAR (Left-Docked approx 310-320px) */}
+      {/* COMPACT ML HOTSPOTS SIDEBAR (Floating Liquid-Glass Console) */}
       <aside
-        className={`bg-[#0D1525] border-r border-[#26354A] flex flex-col h-full shrink-0 select-none transition-transform duration-200
-          absolute md:relative inset-y-0 left-0 w-[310px] max-w-[85vw] lg:w-[320px] z-[1200] md:z-20 shadow-2xl md:shadow-none
+        className={`liquid-glass-slab rounded-2xl border border-white/15 shadow-2xl flex flex-col h-full shrink-0 select-none transition-transform duration-200 overflow-hidden
+          fixed md:relative inset-y-2.5 sm:inset-y-3.5 left-2.5 sm:left-3.5 md:left-0 md:inset-y-0 w-[310px] max-w-[85vw] lg:w-[325px] z-[1200] md:z-20
           ${isSidebarOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full md:hidden md:w-0 pointer-events-none'}
         `}
       >
         {/* Header */}
-        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E] shrink-0">
+        <div className="p-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02] shrink-0">
           <div className="flex items-center space-x-2">
-            <div className="p-1.5 rounded-lg bg-[#162238] text-[#19D3C5] border border-[#26354A]">
+            <div className="p-1.5 rounded-lg liquid-glass-chip text-[#19D3C5] border border-white/15 shadow-[0_0_10px_rgba(25,211,197,0.2)]">
               <Cpu className="w-4 h-4" />
             </div>
             <div>
@@ -114,7 +114,7 @@ export const HotspotsPage: React.FC = () => {
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Collapse sidebar"
             aria-label="Collapse sidebar"
             aria-expanded={isSidebarOpen}
@@ -131,12 +131,12 @@ export const HotspotsPage: React.FC = () => {
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
               Select Analysis Representation
             </div>
-            <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#111C2E] rounded-xl border border-[#26354A]">
+            <div className="grid grid-cols-2 gap-1.5 p-1 liquid-glass-subtle rounded-xl">
               <button
                 onClick={() => setActiveLayer('rf_prob')}
                 className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-all cursor-pointer ${
                   isProbMode
-                    ? 'bg-[#162238] text-[#19D3C5] shadow-xs border border-[#26354A]'
+                    ? 'bg-white/[0.14] text-[#19D3C5] shadow-xs border border-white/20'
                     : 'text-[#8291A8] hover:text-[#F5F7FB]'
                 }`}
                 aria-pressed={isProbMode}
@@ -149,7 +149,7 @@ export const HotspotsPage: React.FC = () => {
                 onClick={() => setActiveLayer('rf_class')}
                 className={`flex items-center justify-center space-x-1.5 py-2 px-2 rounded-lg text-xs font-semibold focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-all cursor-pointer ${
                   !isProbMode
-                    ? 'bg-[#162238] text-[#19D3C5] shadow-xs border border-[#26354A]'
+                    ? 'bg-white/[0.14] text-[#19D3C5] shadow-xs border border-white/20'
                     : 'text-[#8291A8] hover:text-[#F5F7FB]'
                 }`}
                 aria-pressed={!isProbMode}
@@ -161,7 +161,7 @@ export const HotspotsPage: React.FC = () => {
           </div>
 
           {/* Integrated Legend Card */}
-          <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
+          <div className="liquid-glass-subtle p-3 rounded-xl space-y-2 shadow-2xs">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB]">
                 {isProbMode ? 'Probability Legend' : 'Classification Legend'}
@@ -173,7 +173,7 @@ export const HotspotsPage: React.FC = () => {
 
             {isProbMode ? (
               <div className="space-y-1.5 pt-1">
-                <div className="h-3 rounded-md w-full bg-gradient-to-r from-slate-200 via-red-400 to-red-600 border border-[#26354A]" />
+                <div className="h-3 rounded-md w-full bg-gradient-to-r from-slate-200 via-red-400 to-red-600 border border-white/15" />
                 <div className="flex justify-between text-[10px] font-mono text-[#A8B5C9]">
                   <span>0.00 (Low)</span>
                   <span className="text-[#19D3C5] font-semibold">0.50 (Cut-off)</span>
@@ -182,16 +182,16 @@ export const HotspotsPage: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-1.5 text-xs pt-1">
-                <div className="flex items-center justify-between p-1.5 bg-[#0D1525] rounded-lg border border-[#26354A]">
+                <div className="flex items-center justify-between p-1.5 bg-white/[0.04] rounded-lg border border-white/10">
                   <div className="flex items-center space-x-2">
                     <span className="w-3.5 h-3.5 rounded bg-red-600 border border-red-500 shadow-xs" />
                     <span className="text-[#F5F7FB] font-medium text-xs">Class 1: Thermal Hotspot</span>
                   </div>
                   <span className="text-[10.5px] font-mono text-[#19D3C5]">Prob ≥ 0.50</span>
                 </div>
-                <div className="flex items-center justify-between p-1.5 bg-[#0D1525] rounded-lg border border-[#26354A]">
+                <div className="flex items-center justify-between p-1.5 bg-white/[0.04] rounded-lg border border-white/10">
                   <div className="flex items-center space-x-2">
-                    <span className="w-3.5 h-3.5 rounded bg-[#162238] border border-[#26354A]" />
+                    <span className="w-3.5 h-3.5 rounded bg-white/[0.08] border border-white/15" />
                     <span className="text-[#A8B5C9] text-xs">Class 0: Non-Hotspot</span>
                   </div>
                   <span className="text-[10.5px] font-mono text-[#8291A8]">Prob &lt; 0.50</span>
@@ -201,13 +201,13 @@ export const HotspotsPage: React.FC = () => {
           </div>
 
             {/* Active Context Banner with Observation Stepper */}
-            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2.5 shadow-2xs">
+            <div className="liquid-glass-subtle p-3 rounded-xl space-y-2.5 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#F5F7FB] flex items-center space-x-1.5">
                   <Calendar className="w-3.5 h-3.5 text-[#19D3C5]" />
                   <span>Observation Date</span>
                 </span>
-                <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-[#162238] border border-[#26354A]">
+                <span className="text-[10px] font-mono text-[#19D3C5] px-1.5 py-0.5 rounded bg-white/[0.08] border border-white/15">
                   {currentDateObj?.satellite || 'Landsat'}
                 </span>
               </div>
@@ -217,30 +217,30 @@ export const HotspotsPage: React.FC = () => {
                 <button
                   onClick={handlePrevDate}
                   disabled={currentIndex <= 0}
-                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg liquid-glass-chip text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   title="Previous observation"
                   aria-label="Previous observation"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
 
-                <select
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="flex-1 bg-[#0D1525] border border-[#26354A] rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
-                  aria-label="Select observation date"
-                >
-                  {OBSERVATION_DATES.map((d) => (
-                    <option key={d.date} value={d.date}>
-                      {d.date} • {d.satellite}
-                    </option>
-                  ))}
-                </select>
+              <select
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="flex-1 bg-white/[0.06] border border-white/15 rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-[#F5F7FB] focus:outline-none focus:ring-1 focus:ring-[#19D3C5] cursor-pointer shadow-2xs"
+                aria-label="Select observation date"
+              >
+                {OBSERVATION_DATES.map((d) => (
+                  <option key={d.date} value={d.date} className="bg-[#030611] text-[#F5F7FB]">
+                    {d.date} • {d.satellite}
+                  </option>
+                ))}
+              </select>
 
                 <button
                   onClick={handleNextDate}
                   disabled={currentIndex >= OBSERVATION_DATES.length - 1}
-                  className="p-1.5 rounded-lg bg-[#0D1525] border border-[#26354A] text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg liquid-glass-chip text-[#8291A8] hover:text-[#F5F7FB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   title="Next observation"
                   aria-label="Next observation"
                 >
@@ -248,7 +248,7 @@ export const HotspotsPage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="pt-2 border-t border-[#26354A]/60 flex items-center justify-between text-[10.5px]">
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10.5px]">
                 <span className="text-[#8291A8]">Active Mode:</span>
                 <span className="font-mono font-bold text-[#19D3C5]">
                   {isProbMode ? 'rf_prob (Continuous [0, 1])' : 'rf_class (Binary {0, 1})'}
@@ -317,7 +317,7 @@ export const HotspotsPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2">
                   <StatCard
                     title="Hotspot Area"
-                    value={hotspotStats?.hotspot_area_km2 !== undefined ? hotspotStats.hotspot_area_km2.toFixed(2) : "34.54"}
+                    value={hotspotStats?.hotspot_area_km2 !== undefined ? hotspotStats.hotspot_area_km2.toFixed(2) : "--"}
                     unit="km²"
                     subtitle="Class 1 (Hotspot) urban area"
                     icon={AlertTriangle}
@@ -328,9 +328,9 @@ export const HotspotsPage: React.FC = () => {
 
                   <StatCard
                     title="Coverage"
-                    value={hotspotStats?.hotspot_percentage !== undefined ? hotspotStats.hotspot_percentage.toFixed(1) : "26.1"}
+                    value={hotspotStats?.hotspot_percentage !== undefined ? hotspotStats.hotspot_percentage.toFixed(1) : "--"}
                     unit="%"
-                    subtitle="Share of 132.13 km² built domain"
+                    subtitle={hotspotStats?.total_built_area_km2 !== undefined ? `Share of ${hotspotStats.total_built_area_km2.toFixed(2)} km² built domain` : "Share of built domain"}
                     icon={Percent}
                     accentColor="#ea580c"
                     isLoading={isLoadingStats}
@@ -339,7 +339,7 @@ export const HotspotsPage: React.FC = () => {
 
                   <StatCard
                     title="Non-Hotspot"
-                    value={hotspotStats?.non_hotspot_area_km2 !== undefined ? hotspotStats.non_hotspot_area_km2.toFixed(2) : "97.59"}
+                    value={hotspotStats?.non_hotspot_area_km2 !== undefined ? hotspotStats.non_hotspot_area_km2.toFixed(2) : "--"}
                     unit="km²"
                     subtitle="Class 0 (Normal) urban area"
                     icon={ShieldCheck}
@@ -350,9 +350,9 @@ export const HotspotsPage: React.FC = () => {
 
                   <StatCard
                     title="Built Domain"
-                    value={hotspotStats?.total_built_area_km2 !== undefined ? hotspotStats.total_built_area_km2.toFixed(2) : "132.13"}
+                    value={hotspotStats?.total_built_area_km2 !== undefined ? hotspotStats.total_built_area_km2.toFixed(2) : "--"}
                     unit="km²"
-                    subtitle="Total active analysis pixels (146,810)"
+                    subtitle={hotspotStats?.total_built_pixels !== undefined ? `Total active analysis pixels (${hotspotStats.total_built_pixels.toLocaleString()})` : "Total active analysis pixels"}
                     icon={Building2}
                     accentColor="#8291A8"
                     isLoading={isLoadingStats}
@@ -367,7 +367,7 @@ export const HotspotsPage: React.FC = () => {
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
                 Locked Model Telemetry
               </div>
-              <div className="p-3 rounded-xl border border-[#26354A] bg-[#111C2E] space-y-2 text-xs">
+              <div className="p-3 rounded-xl border border-white/10 bg-white/[0.04] space-y-2 text-xs">
                 <div className="flex items-start justify-between font-mono text-[11px] gap-2">
                   <span className="text-[#8291A8] shrink-0">Algorithm:</span>
                   <span className="font-bold text-[#F5F7FB] text-right text-[10.5px] break-words" title={modelInfo?.algorithm || 'RandomForestClassifier (100 Trees)'}>
@@ -386,7 +386,7 @@ export const HotspotsPage: React.FC = () => {
                     {modelInfo?.locked_test_metrics?.precision ? `${(modelInfo.locked_test_metrics.precision * 100).toFixed(1)}%` : "86.6%"} / {modelInfo?.locked_test_metrics?.recall ? `${(modelInfo.locked_test_metrics.recall * 100).toFixed(1)}%` : "86.6%"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between font-mono text-[11px] pt-1.5 border-t border-[#26354A] gap-2">
+                <div className="flex items-center justify-between font-mono text-[11px] pt-1.5 border-t border-white/10 gap-2">
                   <span className="text-[#8291A8] shrink-0">Feature Importance:</span>
                   <span className="font-bold text-[#F5F7FB] text-right">
                     {modelInfo?.feature_importances ? `NDBI ${(modelInfo.feature_importances.NDBI * 100).toFixed(1)}% / NDVI ${(modelInfo.feature_importances.NDVI * 100).toFixed(1)}%` : 'NDBI 61.0% / NDVI 39.0%'}
@@ -404,7 +404,7 @@ export const HotspotsPage: React.FC = () => {
             </div>
 
             {/* Scientific Integrity Notice */}
-            <div className="p-3.5 rounded-xl border border-[#26354A] bg-[#111C2E] text-[#A8B5C9] space-y-1.5 text-xs">
+            <div className="p-3.5 rounded-xl border border-white/10 bg-white/[0.03] text-[#A8B5C9] space-y-1.5 text-xs">
               <div className="flex items-center space-x-1.5 font-bold text-[#19D3C5]">
                 <CheckCircle2 className="w-4 h-4 text-[#19D3C5] shrink-0" />
                 <span>Pseudo-Reference Label Protocol</span>

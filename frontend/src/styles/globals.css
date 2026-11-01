@@ -14,53 +14,57 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #080D18;
+  background: #030611;
 }
 ::-webkit-scrollbar-thumb {
-  background: #26354A;
+  background: rgba(255, 255, 255, 0.16);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #374b66;
+  background: rgba(25, 211, 197, 0.4);
 }
 
-/* Modern Clean Leaflet Map Controls Customization (Light Map with Dark Surrounding Controls) */
+/* Modern Clean Leaflet Map Controls Customization (Liquid-Glass Floating Controls) */
 .leaflet-container {
-  background-color: #080D18 !important;
+  background-color: #030611 !important;
   font-family: inherit;
 }
 
 .leaflet-control-zoom {
-  border: 1px solid #26354A !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
-  border-radius: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.75), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25) !important;
+  border-radius: 12px !important;
   overflow: hidden;
-  background-color: #0D1525 !important;
+  background: rgba(8, 16, 32, 0.65) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
 }
 
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
-  background-color: #0D1525 !important;
+  background: rgba(8, 16, 32, 0.5) !important;
   color: #F5F7FB !important;
-  border-bottom: 1px solid #26354A !important;
-  font-weight: 500 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-weight: 600 !important;
   transition: all 0.15s ease !important;
 }
 
 .leaflet-control-zoom-in:hover,
 .leaflet-control-zoom-out:hover {
-  background-color: #162238 !important;
+  background: rgba(25, 211, 197, 0.2) !important;
   color: #19D3C5 !important;
 }
 
 .leaflet-control-attribution {
-  background: rgba(8, 13, 24, 0.85) !important;
+  background: rgba(3, 6, 17, 0.8) !important;
   color: #8291A8 !important;
   font-size: 10px !important;
-  border-top-left-radius: 8px;
-  border-top: 1px solid #26354A !important;
-  border-left: 1px solid #26354A !important;
-  backdrop-filter: blur(8px);
+  border-top-left-radius: 10px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   padding: 3px 10px !important;
 }
 
@@ -74,3 +78,112 @@
   background: transparent !important;
   border: none !important;
 }
+
+/* ==========================================================================
+   Liquid-Glass Design System & Celestial Background Utilities
+   ========================================================================== */
+
+/* Cinematic Deep-Space Background with Multi-Tier Celestial Dust & Stars */
+.space-cinematic-bg {
+  background-color: #030611;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.65), rgba(0, 0, 0, 0)),
+    radial-gradient(1.5px 1.5px at 110px 90px, rgba(25, 211, 197, 0.6), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 190px 170px, rgba(255, 255, 255, 0.55), rgba(0, 0, 0, 0)),
+    radial-gradient(1.2px 1.2px at 280px 60px, rgba(249, 115, 22, 0.55), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 360px 240px, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0)),
+    radial-gradient(1.2px 1.2px at 450px 130px, rgba(56, 189, 248, 0.5), rgba(0, 0, 0, 0)),
+    radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.16) 0%, transparent 60%),
+    radial-gradient(circle at 10% 75%, rgba(249, 115, 22, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 95% 65% at 50% -15%, rgba(14, 32, 64, 0.75) 0%, rgba(3, 6, 17, 0.98) 75%);
+  background-size: 280px 280px, 360px 360px, 420px 420px, 320px 320px, 490px 490px, 390px 390px, 100% 100%, 100% 100%, 100% 100%;
+}
+
+/* Highly Translucent Liquid-Glass Slab (Visible Depth, Never Looks Opaque) */
+.liquid-glass-slab {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(8, 16, 36, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 
+    0 20px 50px -15px rgba(0, 0, 0, 0.8),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Liquid-Glass Floating Chip for telemetry badges and controls */
+.liquid-glass-chip {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.025) 100%), rgba(8, 16, 32, 0.6);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    0 8px 24px -6px rgba(0, 0, 0, 0.65),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+/* Liquid-Glass Panel legacy support */
+.liquid-glass-panel {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(8, 16, 36, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.liquid-glass-subtle {
+  background: rgba(8, 15, 30, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+}
+
+.liquid-glass-pill {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.025) 100%), rgba(8, 16, 32, 0.6);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.55), inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+/* Browser fallback when backdrop-filter is unsupported */
+@supports not (backdrop-filter: blur(1px)) {
+  .liquid-glass-slab,
+  .liquid-glass-panel {
+    background-color: #0A1326;
+  }
+  .liquid-glass-subtle {
+    background-color: #070E1C;
+  }
+  .liquid-glass-chip,
+  .liquid-glass-pill {
+    background-color: #0B162C;
+  }
+}
+
+/* Smooth pulse for radar beacons */
+@keyframes radar-ping {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.animate-radar-ping {
+  animation: radar-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+

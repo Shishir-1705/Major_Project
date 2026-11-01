@@ -39,32 +39,51 @@ export const ClustersPage: React.FC = () => {
     }
   }, [activeLayer, setActiveLayer]);
 
-  const hotSig = giStarStats?.clusters?.find((c) => c.confidence_level === '90%' || c.cluster_type.includes('Significant Hotspot') || (c.cluster_type.includes('Hotspot') && c.area_km2 > 0));
-  const notSig = giStarStats?.clusters?.find((c) => c.cluster_type.includes('Not Significant'));
+  // Robust matching of cluster categories from current statistics API
+  const hotSig = giStarStats?.clusters?.find((c) => {
+    const t = c.cluster_type.toLowerCase();
+    return t.includes('hotspot') || t.includes('hot');
+  });
 
-  const sigHotspotArea = hotSig?.area_km2 ?? 8.856;
-  const sigHotspotPct = hotSig?.percentage ?? 9.46;
-  const notSigArea = notSig?.area_km2 ?? 84.801;
-  const notSigPct = notSig?.percentage ?? 90.54;
-  const totalDomain = giStarStats?.total_built_area_km2 ?? 93.657;
+  const coldSig = giStarStats?.clusters?.find((c) => {
+    const t = c.cluster_type.toLowerCase();
+    return t.includes('coldspot') || t.includes('cold');
+  });
+
+  const notSig = giStarStats?.clusters?.find((c) => {
+    const t = c.cluster_type.toLowerCase();
+    return (t.includes('not') && t.includes('significant')) || t.includes('ns');
+  });
+
+  // Extract dynamic values - strictly NO legacy hardcoded fallbacks
+  const hasStats = Boolean(giStarStats && giStarStats.clusters && giStarStats.clusters.length > 0);
+  const totalDomain = giStarStats?.total_built_area_km2 ?? null;
+
+  const sigHotspotArea = hotSig?.area_km2 ?? null;
+  const sigHotspotPct = hotSig?.percentage ?? null;
+
+  const sigColdspotArea = coldSig?.area_km2 ?? null;
+  const sigColdspotPct = coldSig?.percentage ?? null;
+
+  const notSigArea = notSig?.area_km2 ?? null;
 
   return (
-    <div className="flex h-full w-full overflow-hidden relative">
+    <div className="flex h-full w-full p-2.5 sm:p-3.5 gap-2.5 sm:gap-3.5 overflow-hidden relative z-10">
       {/* Mobile Drawer Backdrop */}
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-[#080D18]/70 backdrop-blur-xs z-[1150] md:hidden cursor-pointer"
+          className="fixed inset-0 bg-[#030611]/80 backdrop-blur-md z-[1150] md:hidden cursor-pointer"
           aria-hidden="true"
         />
       )}
 
       {/* Floating Toggle Controls (Top-Left over Map) */}
       {!isSidebarOpen && (
-        <div className="absolute top-3 left-3 z-[1100] flex items-center space-x-2 pointer-events-auto">
+        <div className="absolute top-6 left-6 z-[1100] flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] hover:bg-[#111C2E] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl liquid-glass-chip shadow-card text-xs font-semibold text-[#F5F7FB] hover:text-[#19D3C5] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Open Spatial Clustering Controls"
             aria-label="Open Spatial Clustering Controls"
             aria-expanded={isSidebarOpen}
@@ -75,17 +94,17 @@ export const ClustersPage: React.FC = () => {
         </div>
       )}
 
-      {/* COMPACT GI* CLUSTERS SIDEBAR (Left-Docked approx 310-320px) */}
+      {/* COMPACT GI* CLUSTERS SIDEBAR (Floating Liquid-Glass Console) */}
       <aside
-        className={`bg-[#0D1525] border-r border-[#26354A] flex flex-col h-full shrink-0 select-none transition-transform duration-200
-          absolute md:relative inset-y-0 left-0 w-[310px] max-w-[85vw] lg:w-[320px] z-[1200] md:z-20 shadow-2xl md:shadow-none
+        className={`liquid-glass-slab rounded-2xl border border-white/15 shadow-2xl flex flex-col h-full shrink-0 select-none transition-transform duration-200 overflow-hidden
+          fixed md:relative inset-y-2.5 sm:inset-y-3.5 left-2.5 sm:left-3.5 md:left-0 md:inset-y-0 w-[310px] max-w-[85vw] lg:w-[325px] z-[1200] md:z-20
           ${isSidebarOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full md:hidden md:w-0 pointer-events-none'}
         `}
       >
         {/* Header */}
-        <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E] shrink-0">
+        <div className="p-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02] shrink-0">
           <div className="flex items-center space-x-2">
-            <div className="p-1.5 rounded-lg bg-[#162238] text-orange-400 border border-[#26354A]">
+            <div className="p-1.5 rounded-lg liquid-glass-chip text-sky-400 border border-white/15 shadow-[0_0_10px_rgba(56,189,248,0.2)]">
               <BarChart2 className="w-4 h-4" />
             </div>
             <div>
@@ -99,7 +118,7 @@ export const ClustersPage: React.FC = () => {
           </div>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-[#8291A8] hover:text-[#F5F7FB] hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden transition-colors cursor-pointer"
             title="Collapse sidebar"
             aria-label="Collapse sidebar"
             aria-expanded={isSidebarOpen}
@@ -112,13 +131,19 @@ export const ClustersPage: React.FC = () => {
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-3.5 space-y-4 min-h-0">
             {/* Active Context Banner */}
-            <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-2 shadow-2xs">
+            <div className="liquid-glass-subtle p-3 rounded-xl space-y-2 shadow-2xs">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#8291A8] font-medium flex items-center space-x-1">
                   <Calendar className="w-3.5 h-3.5 text-[#8291A8]" />
-                  <span>Analysis Domain:</span>
+                  <span>Valid Analysis Domain:</span>
                 </span>
-                <span className="font-mono font-bold text-[#F5F7FB]">{totalDomain} km²</span>
+                <span className="font-mono font-bold text-[#F5F7FB]">
+                  {totalDomain !== null ? `${totalDomain.toFixed(3)} km²` : '--'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#8291A8] font-medium">Study Area Extent:</span>
+                <span className="font-mono text-xs text-[#8291A8]">461.50 km² AOI Envelope</span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#8291A8] font-medium">Spatial Statistic:</span>
@@ -126,7 +151,7 @@ export const ClustersPage: React.FC = () => {
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#8291A8] font-medium">Static Tile Key:</span>
-                <span className="font-mono text-xs font-bold text-[#19D3C5] bg-[#162238] px-2 py-0.5 rounded-md border border-[#26354A]">
+                <span className="font-mono text-xs font-bold text-[#19D3C5] bg-white/[0.08] px-2 py-0.5 rounded-md border border-white/15">
                   clustering
                 </span>
               </div>
@@ -142,35 +167,57 @@ export const ClustersPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-2">
                 <StatCard
                   title="Significant Hotspot"
-                  value={sigHotspotArea.toFixed(2)}
+                  value={sigHotspotArea !== null ? sigHotspotArea.toFixed(2) : '--'}
                   unit="km²"
                   subtitle="Significant cluster (pFDR < 0.05)"
                   icon={AlertTriangle}
                   accentColor="#f46d43"
                   isLoading={isLoadingStats}
-                  isError={!backendConnected && !giStarStats}
+                  isError={!backendConnected && !hasStats}
                 />
 
                 <StatCard
                   title="Cluster Share"
-                  value={sigHotspotPct.toFixed(1)}
+                  value={sigHotspotPct !== null ? sigHotspotPct.toFixed(1) : '--'}
                   unit="%"
-                  subtitle="Share of 93.66 km² valid domain"
+                  subtitle={totalDomain !== null ? `Share of ${totalDomain.toFixed(2)} km² valid domain` : "Share of valid domain"}
                   icon={Percent}
                   accentColor="#ea580c"
                   isLoading={isLoadingStats}
-                  isError={!backendConnected && !giStarStats}
+                  isError={!backendConnected && !hasStats}
+                />
+
+                <StatCard
+                  title="Significant Coldspot"
+                  value={sigColdspotArea !== null ? sigColdspotArea.toFixed(2) : '--'}
+                  unit="km²"
+                  subtitle="Significant cold cluster (pFDR < 0.05)"
+                  icon={ShieldCheck}
+                  accentColor="#38bdf8"
+                  isLoading={isLoadingStats}
+                  isError={!backendConnected && !hasStats}
+                />
+
+                <StatCard
+                  title="Coldspot Share"
+                  value={sigColdspotPct !== null ? sigColdspotPct.toFixed(1) : '--'}
+                  unit="%"
+                  subtitle={totalDomain !== null ? `Share of ${totalDomain.toFixed(2)} km² valid domain` : "Share of valid domain"}
+                  icon={Percent}
+                  accentColor="#0284c7"
+                  isLoading={isLoadingStats}
+                  isError={!backendConnected && !hasStats}
                 />
 
                 <StatCard
                   title="Not Significant"
-                  value={notSigArea.toFixed(2)}
+                  value={notSigArea !== null ? notSigArea.toFixed(2) : '--'}
                   unit="km²"
-                  subtitle="Random spatial distribution"
+                  subtitle="Not statistically significant at FDR-adjusted p < 0.05."
                   icon={ShieldCheck}
                   accentColor="#8291A8"
                   isLoading={isLoadingStats}
-                  isError={!backendConnected && !giStarStats}
+                  isError={!backendConnected && !hasStats}
                 />
 
                 <StatCard
@@ -189,32 +236,28 @@ export const ClustersPage: React.FC = () => {
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#8291A8] px-1">
                 Statistical Significance Breakdown
               </div>
-              <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-2.5 space-y-2">
-                {[
-                  {
-                    cluster_type: "Significant Hotspot (pFDR < 0.05)",
-                    area_km2: sigHotspotArea,
-                    percentage: sigHotspotPct,
-                    color_hex: "#f46d43"
-                  },
-                  {
-                    cluster_type: "Not Significant (pFDR ≥ 0.05)",
-                    area_km2: notSigArea,
-                    percentage: notSigPct,
-                    color_hex: "#1e293b"
-                  }
-                ].map((c, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs p-2 bg-[#0D1525] rounded-lg border border-[#26354A] shadow-2xs gap-2">
-                    <div className="flex items-center space-x-2 min-w-0 flex-1">
-                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.color_hex }} />
-                      <span className="text-[#F5F7FB] font-medium text-[11px] leading-tight break-words">{c.cluster_type}</span>
+              <div className="liquid-glass-subtle rounded-xl p-2.5 space-y-2">
+                {giStarStats?.clusters?.map((c, idx) => {
+                  const isCold = c.cluster_type.toLowerCase().includes('cold');
+                  const badgeColor = isCold ? '#38bdf8' : c.color_hex;
+                  return (
+                    <div key={idx} className="flex items-center justify-between text-xs p-2 bg-white/[0.04] rounded-lg border border-white/10 shadow-2xs gap-2">
+                      <div className="flex items-center space-x-2 min-w-0 flex-1">
+                        <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: badgeColor }} />
+                        <span className="text-[#F5F7FB] font-medium text-[11px] leading-tight break-words">{c.cluster_type}</span>
+                      </div>
+                      <div className="text-right shrink-0 font-mono text-[11px]">
+                        <span className="font-bold text-[#19D3C5]">{c.area_km2.toFixed(2)} km²</span>
+                        <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
+                      </div>
                     </div>
-                    <div className="text-right shrink-0 font-mono text-[11px]">
-                      <span className="font-bold text-[#19D3C5]">{c.area_km2.toFixed(2)} km²</span>
-                      <span className="text-[#8291A8] ml-1">({c.percentage.toFixed(1)}%)</span>
-                    </div>
+                  );
+                })}
+                {(!giStarStats || !giStarStats.clusters || giStarStats.clusters.length === 0) && (
+                  <div className="text-center text-xs text-[#8291A8] py-3">
+                    {isLoadingStats ? "Loading cluster distributions..." : "Cluster statistics unavailable."}
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
@@ -227,7 +270,7 @@ export const ClustersPage: React.FC = () => {
             </div>
 
             {/* Spatial Corroboration Card */}
-            <div className="p-3.5 rounded-xl border border-[#26354A] bg-[#111C2E] text-[#A8B5C9] space-y-1.5 text-xs">
+            <div className="p-3.5 rounded-xl border border-white/10 bg-white/[0.03] text-[#A8B5C9] space-y-1.5 text-xs">
               <div className="flex items-center space-x-1.5 font-bold text-[#19D3C5]">
                 <CheckCircle2 className="w-4 h-4 text-[#19D3C5] shrink-0" />
                 <span>Spatial Autocorrelation Corroboration</span>
@@ -236,11 +279,19 @@ export const ClustersPage: React.FC = () => {
                 The Getis-Ord $G_i^*$ statistic evaluates whether high thermal values cluster in space more than expected by random chance.
               </p>
               <p className="text-[11px] leading-relaxed text-[#8291A8]">
-                The identified <strong>8.86 km² (9.46%)</strong> statistically significant hot spot cluster (Benjamini-Hochberg FDR pFDR &lt; 0.05) precisely mirrors the <strong>8.81 km² (9.40%)</strong> Category 5 chronic persistence zone in central Mysuru, providing rigorous statistical proof of localized thermal intensification.
+                {sigHotspotArea !== null && sigHotspotPct !== null ? (
+                  <>
+                    The identified <strong className="text-[#F5F7FB]">{sigHotspotArea.toFixed(2)} km² ({sigHotspotPct.toFixed(1)}%)</strong> statistically significant hotspot cluster (Benjamini-Hochberg FDR pFDR &lt; 0.05) corroborates zones of elevated thermal persistence across Mysuru, providing rigorous statistical proof of localized thermal intensification beyond spatial randomness.
+                  </>
+                ) : (
+                  <>
+                    Statistically significant hotspot clusters (Benjamini-Hochberg FDR pFDR &lt; 0.05) corroborate zones of elevated thermal persistence across Mysuru, providing rigorous statistical proof of localized thermal intensification beyond spatial randomness.
+                  </>
+                )}
               </p>
             </div>
-          </div>
-        </aside>
+        </div>
+      </aside>
 
       {/* Map Workspace (Takes all remaining width) */}
       <MapWorkspace showTimeline={false} showLegend={true} isSidebarOpen={isSidebarOpen} className="flex-1 h-full" />

@@ -7,10 +7,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Data Paths
 DATA_STEP9_DIR = BASE_DIR / "data" / "step9"
 DATA_STEP10_DIR = BASE_DIR / "data" / "step10"
+DATA_REAL_DIR = DATA_STEP10_DIR / "real"
 RESULTS_STEP10_DIR = BASE_DIR / "results" / "step10"
 RESULTS_STEP10_9_DIR = BASE_DIR / "results" / "step10_9"
 MODELS_DIR = BASE_DIR / "models"
 TILE_CACHE_DIR = BASE_DIR / ".tile_cache"
+
+# Candidate vs Production Data Flag
+USE_CANDIDATE_DATA = os.getenv("USE_CANDIDATE_DATA", "true").lower() in ("true", "1", "yes") and DATA_REAL_DIR.exists()
 
 # Model File
 LOCKED_MODEL_PATH = MODELS_DIR / "random_forest_final_step10_8.joblib"

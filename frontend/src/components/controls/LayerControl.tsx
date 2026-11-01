@@ -45,8 +45,8 @@ export const LayerControl: React.FC = () => {
         aria-label={`Select ${layer.name}`}
         className={`w-full text-left p-2.5 rounded-xl border transition-all relative overflow-hidden group focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
           isActive
-            ? 'bg-[#162238] border-[#19D3C5] shadow-xs ring-1 ring-[#19D3C5]/20'
-            : 'bg-[#111C2E] border-[#26354A] hover:bg-[#162238]/60 hover:border-[#374b66]'
+            ? 'bg-white/[0.12] border-[#19D3C5] shadow-xs ring-1 ring-[#19D3C5]/30'
+            : 'bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20'
         }`}
       >
         {/* Active Accent Bar */}
@@ -59,9 +59,9 @@ export const LayerControl: React.FC = () => {
 
         <div className="flex items-start space-x-2.5 pl-1">
           <div
-            className="p-1.5 rounded-lg mt-0.5 shrink-0 transition-colors"
+            className="p-1.5 rounded-lg mt-0.5 shrink-0 transition-colors border border-white/10"
             style={{
-              backgroundColor: isActive ? `${layer.accentColor}25` : '#162238',
+              backgroundColor: isActive ? `${layer.accentColor}25` : 'rgba(255, 255, 255, 0.05)',
               color: isActive ? layer.accentColor : '#8291A8',
             }}
           >
@@ -74,7 +74,7 @@ export const LayerControl: React.FC = () => {
                 {layer.shortName}
               </span>
               {layer.category === 'ml' && (
-                <span className="text-[9px] font-bold font-mono uppercase px-1.5 py-0.2 rounded-md bg-[#162238] text-[#19D3C5] border border-[#26354A] shrink-0">
+                <span className="text-[9px] font-bold font-mono uppercase px-1.5 py-0.2 rounded-md bg-white/[0.08] text-[#19D3C5] border border-white/15 shrink-0">
                   ML
                 </span>
               )}
@@ -94,20 +94,20 @@ export const LayerControl: React.FC = () => {
   }
 
   return (
-    <aside className="w-72 sm:w-80 bg-[#0D1525] border-r border-[#26354A] flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 left-0">
+    <aside className="w-72 sm:w-80 liquid-glass-slab border-r border-white/12 flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 left-0">
       {/* Header */}
-      <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
+      <div className="p-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
         <div className="flex items-center space-x-2">
           <Sliders className="w-4 h-4 text-[#19D3C5]" />
           <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Raster Map Layers</h2>
         </div>
         <div className="flex items-center space-x-1.5">
-          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#162238] text-[#19D3C5] border border-[#26354A]">
+          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-white/[0.08] text-[#19D3C5] border border-white/15">
             7 Rasters
           </span>
           <button
             onClick={toggleSidebar}
-            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors"
+            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-white/10 transition-colors cursor-pointer"
             title="Collapse sidebar"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -152,7 +152,7 @@ export const LayerControl: React.FC = () => {
       </div>
 
       {/* Visualization Controls Footer */}
-      <div className="p-3.5 border-t border-[#26354A] bg-[#111C2E] space-y-3">
+      <div className="p-3.5 border-t border-white/10 bg-white/[0.02] space-y-3">
         {/* Layer Opacity Slider */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-xs">
@@ -169,17 +169,17 @@ export const LayerControl: React.FC = () => {
             step="0.05"
             value={layerOpacity}
             onChange={(e) => setLayerOpacity(parseFloat(e.target.value))}
-            className="w-full h-1.5 bg-[#162238] rounded-lg appearance-none cursor-pointer accent-[#19D3C5]"
+            className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#19D3C5]"
           />
         </div>
 
         {/* Mysuru AOI Boundary Toggle */}
-        <div className="flex items-center justify-between pt-1 border-t border-[#26354A]">
+        <div className="flex items-center justify-between pt-1 border-t border-white/10">
           <span className="text-xs text-[#F5F7FB] font-medium">Mysuru AOI Boundary</span>
           <button
             onClick={() => setShowAOIBoundary(!showAOIBoundary)}
             className={`w-9 h-5 rounded-full transition-colors relative p-0.5 ${
-              showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
+              showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-white/10 border border-white/20'
             }`}
           >
             <div

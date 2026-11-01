@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, HTTPException, Query, Response
 from fastapi.responses import Response
 
@@ -112,7 +113,14 @@ def get_model_info():
     return MetadataService.get_model_info()
 
 @router.get("/tiles/{layer}/{date_or_key}/{z}/{x}/{y}.png")
-def get_raster_tile(layer: str, date_or_key: str, z: int, x: int, y: int):
+def get_raster_tile(
+    layer: str,
+    date_or_key: str,
+    z: int,
+    x: int,
+    y: int,
+    candidate: Optional[bool] = Query(None, description="Serve candidate real Landsat raster if true, production if false")
+):
     """
     Renders dynamic 256x256 Web Mercator PNG map tiles from authoritative GeoTIFF rasters with caching.
     """
@@ -125,11 +133,11 @@ def get_raster_tile(layer: str, date_or_key: str, z: int, x: int, y: int):
             raise HTTPException(status_code=400, detail=f"Invalid date '{date_or_key}'. Must be one of {OBSERVATION_DATES}")
 
     try:
-        png_bytes = RasterService.get_tile_png(layer, date_or_key, z, x, y)
+        png_bytes = RasterService.get_tile_png(layer, date_or_key, z, x, y, candidate=candidate)
         return Response(
             content=png_bytes,
             media_type="image/png",
-            headers={"Cache-Control": "public, max-age=86400"}
+            headers={"Cache-Control": "public, max-age=3600, must-revalidate"}
         )
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Requested raster tile not found")
@@ -139,38 +147,46 @@ def get_raster_tile(layer: str, date_or_key: str, z: int, x: int, y: int):
 @router.get("/statistics/zonal", response_model=ZonalStatisticsResponse)
 def get_zonal_statistics(
     layer: str = Query(..., description="Layer ID (e.g. lst, ndvi, ndbi, rf_prob, continuous_persistence)"),
-    date: str = Query(None, description="Observation date (YYYY-MM-DD)")
+    date: str = Query(None, description="Observation date (YYYY-MM-DD)"),
+    candidate: Optional[bool] = Query(None, description="Compute from candidate real Landsat data if true, production if false")
 ):
     """Calculates zonal statistics (min, max, mean, std, valid pixels, area) from real project rasters."""
     try:
-        return StatisticsService.get_zonal_statistics(layer, date)
+        return StatisticsService.get_zonal_statistics(layer, date, candidate=candidate)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Requested raster dataset not found")
 
 @router.get("/statistics/hotspot", response_model=HotspotStatisticsResponse)
-def get_hotspot_statistics(date: str = Query(..., description="Observation date (YYYY-MM-DD)")):
+def get_hotspot_statistics(
+    date: str = Query(..., description="Observation date (YYYY-MM-DD)"),
+    candidate: Optional[bool] = Query(None, description="Compute from candidate real Landsat data if true, production if false")
+):
     """Returns hotspot pixel counts, area in km², and hotspot percentage for a given observation date."""
     if date not in OBSERVATION_DATES:
         raise HTTPException(status_code=400, detail=f"Invalid date '{date}'. Must be one of {OBSERVATION_DATES}")
     try:
-        return StatisticsService.get_hotspot_statistics(date)
+        return StatisticsService.get_hotspot_statistics(date, candidate=candidate)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Hotspot raster dataset not found for requested date")
 
 @router.get("/statistics/persistence", response_model=PersistenceStatisticsResponse)
-def get_persistence_statistics():
+def get_persistence_statistics(
+    candidate: Optional[bool] = Query(None, description="Compute from candidate real Landsat data if true, production if false")
+):
     """Returns 4-level categorical persistence areas (None, Transient, Moderate, Persistent)."""
     try:
-        return StatisticsService.get_persistence_statistics()
+        return StatisticsService.get_persistence_statistics(candidate=candidate)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Persistence analysis dataset not found")
 
 @router.get("/statistics/gi-star", response_model=GiStarStatisticsResponse)
-def get_gi_star_statistics():
+def get_gi_star_statistics(
+    candidate: Optional[bool] = Query(None, description="Compute from candidate real Landsat data if true, production if false")
+):
     """Returns Getis-Ord Gi* spatial cluster areas (99%, 95%, 90% Hotspots, Coldspots, Not Significant)."""
     try:
-        return StatisticsService.get_gi_star_statistics()
+        return StatisticsService.get_gi_star_statistics(candidate=candidate)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Spatial clustering analysis dataset not found")

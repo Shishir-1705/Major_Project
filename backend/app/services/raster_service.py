@@ -7,11 +7,10 @@ from rasterio.transform import from_bounds as transform_from_bounds
 from rasterio.windows import from_bounds as window_from_bounds
 from PIL import Image
 import matplotlib
-import matplotlib.pyplot as plt
 from pathlib import Path
 from typing import Optional
 
-from ..config import TILE_CACHE_DIR, DATA_STEP9_DIR, DATA_STEP10_DIR, RESULTS_STEP10_DIR, OBSERVATION_DATES
+from ..config import TILE_CACHE_DIR, DATA_STEP9_DIR, DATA_STEP10_DIR, DATA_REAL_DIR, RESULTS_STEP10_DIR, OBSERVATION_DATES, USE_CANDIDATE_DATA
 from ..utils.crs import tile_to_wgs84_bbox
 
 class RasterService:
@@ -25,16 +24,18 @@ class RasterService:
     GRID_TRANSFORM = transform_from_bounds(GRID_WEST, GRID_SOUTH, GRID_EAST, GRID_NORTH, GRID_WIDTH, GRID_HEIGHT)
 
     @staticmethod
-    def get_tile_png(layer: str, date_or_key: str, z: int, x: int, y: int) -> bytes:
-        # Check LRU disk cache first with version prefix to invalidate stale empty tiles
-        cache_key = f"v2_{layer}_{date_or_key}_{z}_{x}_{y}.png"
+    def get_tile_png(layer: str, date_or_key: str, z: int, x: int, y: int, candidate: Optional[bool] = None) -> bytes:
+        is_candidate = USE_CANDIDATE_DATA if candidate is None else candidate
+
+        # Check LRU disk cache with candidate/production prefix to avoid cross-contamination
+        cache_key = f"{'cand_v1' if is_candidate else 'v3'}_{layer}_{date_or_key}_{z}_{x}_{y}.png"
         cache_file = TILE_CACHE_DIR / cache_key
         if cache_file.exists():
             with open(cache_file, "rb") as f:
                 return f.read()
 
         # Resolve GeoTIFF raster path
-        raster_path = RasterService._resolve_raster_path(layer, date_or_key)
+        raster_path = RasterService._resolve_raster_path(layer, date_or_key, candidate=is_candidate)
         if not raster_path.exists():
             raise FileNotFoundError(f"Raster file missing for layer '{layer}' and date/key '{date_or_key}': {raster_path}")
 
@@ -54,23 +55,55 @@ class RasterService:
         return png_bytes
 
     @staticmethod
-    def _resolve_raster_path(layer: str, date_or_key: str) -> Path:
-        if layer in ["lst", "ndvi", "ndbi", "ref_label"]:
-            return DATA_STEP10_DIR / f"{layer}_30m_{date_or_key}.tif"
-        elif layer in ["rf_prob", "rf_class"]:
-            return RESULTS_STEP10_DIR / f"{layer}_30m_{date_or_key}.tif"
-        elif layer == "persistence":
-            if date_or_key == "categorical":
-                return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
-            return RESULTS_STEP10_DIR / "continuous_persistence_30m.tif"
-        elif layer == "gi_star":
-            if date_or_key == "clustering":
-                return RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
-            return RESULTS_STEP10_DIR / "gi_star_statistic_30m.tif"
-        elif layer == "built_mask":
-            return DATA_STEP9_DIR / "built_mask_30m.tif"
+    def _resolve_raster_path(layer: str, date_or_key: str, candidate: bool = False) -> Path:
+        # Prevent arbitrary path navigation
+        if ".." in layer or ".." in date_or_key or "/" in layer or "\\" in layer or "/" in date_or_key or "\\" in date_or_key:
+            raise ValueError(f"Invalid characters in layer '{layer}' or date/key '{date_or_key}'")
+
+        if candidate:
+            if layer in ["lst", "ndvi", "ndbi"]:
+                return DATA_REAL_DIR / f"{layer}_{date_or_key}.tif"
+            elif layer in ["valid", "ref_label"]:
+                return DATA_REAL_DIR / f"valid_{date_or_key}.tif"
+            elif layer in ["rf_prob", "rf_class"]:
+                return DATA_REAL_DIR / "predictions" / f"{layer}_{date_or_key}.tif"
+            elif layer == "persistence":
+                if date_or_key == "categorical":
+                    return DATA_REAL_DIR / "persistence" / "categorical_persistence_30m.tif"
+                elif date_or_key == "observation_count":
+                    return DATA_REAL_DIR / "persistence" / "valid_observation_count_30m.tif"
+                elif date_or_key == "eligibility":
+                    return DATA_REAL_DIR / "persistence" / "persistence_eligibility_mask_30m.tif"
+                else:
+                    return DATA_REAL_DIR / "persistence" / "continuous_persistence_30m.tif"
+            elif layer == "gi_star":
+                if date_or_key == "clustering":
+                    return DATA_REAL_DIR / "clusters" / "gi_star_clustering_30m.tif"
+                elif date_or_key == "pvalue_fdr":
+                    return DATA_REAL_DIR / "clusters" / "gi_star_pvalue_fdr_30m.tif"
+                else:
+                    return DATA_REAL_DIR / "clusters" / "gi_star_statistic_30m.tif"
+            elif layer == "built_mask":
+                return DATA_STEP9_DIR / "built_mask_30m.tif"
+            else:
+                raise ValueError(f"Unsupported tile layer type '{layer}'")
         else:
-            raise ValueError(f"Unsupported tile layer type '{layer}'")
+            if layer in ["lst", "ndvi", "ndbi", "ref_label"]:
+                return DATA_STEP10_DIR / f"{layer}_30m_{date_or_key}.tif"
+            elif layer in ["rf_prob", "rf_class"]:
+                return RESULTS_STEP10_DIR / f"{layer}_30m_{date_or_key}.tif"
+            elif layer == "persistence":
+                if date_or_key == "categorical":
+                    return RESULTS_STEP10_DIR / "categorical_persistence_30m.tif"
+                return RESULTS_STEP10_DIR / "continuous_persistence_30m.tif"
+            elif layer == "gi_star":
+                if date_or_key == "clustering":
+                    return RESULTS_STEP10_DIR / "gi_star_clustering_30m.tif"
+                return RESULTS_STEP10_DIR / "gi_star_statistic_30m.tif"
+            elif layer == "built_mask":
+                return DATA_STEP9_DIR / "built_mask_30m.tif"
+            else:
+                raise ValueError(f"Unsupported tile layer type '{layer}'")
 
     @staticmethod
     def _render_tile_from_geotiff(raster_path: Path, layer: str, min_lng: float, min_lat: float, max_lng: float, max_lat: float) -> bytes:
@@ -86,7 +119,8 @@ class RasterService:
         # Window extraction using authoritative WGS84 geotransform
         window = window_from_bounds(min_lng, min_lat, max_lng, max_lat, transform=RasterService.GRID_TRANSFORM)
 
-        resampling = rasterio.enums.Resampling.nearest if (layer in ["rf_class", "persistence", "gi_star", "built_mask"]) else rasterio.enums.Resampling.bilinear
+        # Nearest-neighbor resampling strictly preserves source pixel values without edge-erosion or NaN contamination
+        resampling = rasterio.enums.Resampling.nearest
         try:
             with rasterio.open(raster_path) as src:
                 fill_val = np.nan if np.issubdtype(src.dtypes[0], np.floating) else (255 if src.dtypes[0] == np.uint8 else 0)
@@ -118,7 +152,8 @@ class RasterService:
 
         if layer == "lst":
             # LST temperature scale: 30°C to 55°C
-            norm = np.clip((arr - 30.0) / (55.0 - 30.0), 0.0, 1.0)
+            safe_arr = np.where(valid_mask, arr, 30.0)
+            norm = np.clip((safe_arr - 30.0) / (55.0 - 30.0), 0.0, 1.0)
             cmap = matplotlib.colormaps['YlOrRd']
             colored = (cmap(norm) * 255).astype(np.uint8)
             rgba[valid_mask] = colored[valid_mask]
@@ -126,7 +161,8 @@ class RasterService:
 
         elif layer == "ndvi":
             # NDVI scale: -0.2 to +0.8
-            norm = np.clip((arr - (-0.2)) / (0.8 - (-0.2)), 0.0, 1.0)
+            safe_arr = np.where(valid_mask, arr, -0.2)
+            norm = np.clip((safe_arr - (-0.2)) / (0.8 - (-0.2)), 0.0, 1.0)
             cmap = matplotlib.colormaps['YlGn']
             colored = (cmap(norm) * 255).astype(np.uint8)
             rgba[valid_mask] = colored[valid_mask]
@@ -134,7 +170,8 @@ class RasterService:
 
         elif layer == "ndbi":
             # NDBI scale: -0.4 to +0.6
-            norm = np.clip((arr - (-0.4)) / (0.6 - (-0.4)), 0.0, 1.0)
+            safe_arr = np.where(valid_mask, arr, -0.4)
+            norm = np.clip((safe_arr - (-0.4)) / (0.6 - (-0.4)), 0.0, 1.0)
             cmap = matplotlib.colormaps['YlOrBr']
             colored = (cmap(norm) * 255).astype(np.uint8)
             rgba[valid_mask] = colored[valid_mask]
@@ -142,7 +179,8 @@ class RasterService:
 
         elif layer == "rf_prob":
             # RF Probability: 0.0 to 1.0
-            norm = np.clip(arr, 0.0, 1.0)
+            safe_arr = np.where(valid_mask, arr, 0.0)
+            norm = np.clip(safe_arr, 0.0, 1.0)
             cmap = matplotlib.colormaps['Reds']
             colored = (cmap(norm) * 255).astype(np.uint8)
             # Make low probabilities translucent
@@ -188,11 +226,15 @@ class RasterService:
                 rgba[valid_mask] = colored[valid_mask]
                 rgba[~valid_mask] = [0, 0, 0, 0]
             else:
-                # Gi* Clusters: 1 = Significant Hotspot Cluster (Orange #f46d43), 0 = Not Significant (Transparent)
-                rgba[valid_mask & (arr == 3)] = [153, 0, 0, 220]      # 99% Hotspot (Dark Red)
-                rgba[valid_mask & (arr == 2)] = [215, 48, 39, 200]    # 95% Hotspot (Red)
-                rgba[valid_mask & (arr == 1)] = [244, 109, 67, 200]   # Hotspot Cluster (Orange)
-                rgba[valid_mask & (arr < 0)] = [69, 117, 180, 200]    # Coldspot (Blue)
+                # Gi* Clusters:
+                # 1 = Significant Hotspot Cluster (Orange #f46d43)
+                # 2 = Significant Coldspot Cluster (Sky Blue #38bdf8)
+                # 3 = Legacy 99% Hotspot (Dark Red #990000)
+                # 0 = Not Significant (Transparent)
+                rgba[valid_mask & (arr == 3)] = [153, 0, 0, 220]      # Legacy 99% Hotspot (Dark Red)
+                rgba[valid_mask & (arr == 1)] = [244, 109, 67, 220]   # Significant Hotspot (Orange)
+                rgba[valid_mask & (arr == 2)] = [56, 189, 248, 200]   # Significant Coldspot (Sky Blue)
+                rgba[valid_mask & (arr < 0)] = [69, 117, 180, 200]    # Legacy Coldspot (Navy Blue)
                 rgba[~valid_mask | (arr == 0) | (arr == 255)] = [0, 0, 0, 0]
 
         else:

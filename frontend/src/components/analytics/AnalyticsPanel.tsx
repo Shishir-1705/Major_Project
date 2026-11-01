@@ -29,20 +29,20 @@ export const AnalyticsPanel: React.FC = () => {
   }
 
   return (
-    <aside className="w-80 sm:w-88 bg-[#0D1525] border-l border-[#26354A] flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
+    <aside className="w-80 sm:w-88 liquid-glass-slab border-l border-white/12 flex flex-col h-full shrink-0 select-none z-30 shadow-floating lg:shadow-xs transition-all duration-200 absolute lg:relative inset-y-0 right-0">
       {/* Panel Header */}
-      <div className="p-3.5 border-b border-[#26354A] flex items-center justify-between bg-[#111C2E]">
+      <div className="p-3.5 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
         <div className="flex items-center space-x-2">
           <BarChart2 className="w-4 h-4 text-[#19D3C5]" />
           <h2 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Spatial Analytics & Model</h2>
         </div>
         <div className="flex items-center space-x-1.5">
-          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#162238] text-[#19D3C5] border border-[#26354A]">
+          <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-white/[0.08] text-[#19D3C5] border border-white/15">
             Mysuru AOI
           </span>
           <button
             onClick={toggleAnalytics}
-            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-[#162238] transition-colors"
+            className="p-1 rounded-md text-[#8291A8] hover:text-[#F5F7FB] hover:bg-white/10 transition-colors"
             title="Collapse analytics"
           >
             <ChevronRight className="w-4 h-4" />
@@ -53,7 +53,7 @@ export const AnalyticsPanel: React.FC = () => {
       {/* Analytics Content Scrollable Body */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
         {/* Active Context Banner */}
-        <div className="bg-[#111C2E] p-3 rounded-xl border border-[#26354A] space-y-1.5 shadow-2xs">
+        <div className="bg-white/[0.04] p-3 rounded-xl border border-white/10 space-y-1.5 shadow-2xs">
           <div className="flex items-center justify-between text-xs">
             <span className="text-[#8291A8] font-medium">Observation Date:</span>
             <span className="font-mono font-bold text-[#F5F7FB]">{selectedDate}</span>
@@ -62,7 +62,7 @@ export const AnalyticsPanel: React.FC = () => {
             <span className="text-[#8291A8] font-medium">Satellite Sensor:</span>
             <span className="text-[#19D3C5] font-semibold">{currentDateObj?.satellite || 'Landsat OLI/TIRS'}</span>
           </div>
-          <div className="flex items-center justify-between text-xs pt-1.5 border-t border-[#26354A]">
+          <div className="flex items-center justify-between text-xs pt-1.5 border-t border-white/10">
             <span className="text-[#8291A8] font-medium shrink-0">Active Layer:</span>
             <span className="text-[#F5F7FB] font-bold break-words text-right">{currentLayer?.shortName}</span>
           </div>
@@ -165,7 +165,7 @@ export const AnalyticsPanel: React.FC = () => {
 
         {/* Dynamic Categorical Persistence Stats (if active layer is persistence) */}
         {activeLayer === 'persistence' && persistenceStats && (
-          <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-3.5 space-y-2.5 shadow-xs">
+          <div className="bg-white/[0.04] border border-white/10 rounded-xl p-3.5 space-y-2.5 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Hotspot Persistence Breakdown</h4>
@@ -174,7 +174,7 @@ export const AnalyticsPanel: React.FC = () => {
             </div>
             <div className="space-y-1.5 text-xs">
               {persistenceStats.categories.map((cat) => (
-                <div key={cat.category} className="bg-[#0D1525] p-2 rounded-lg border border-[#26354A] space-y-1 shadow-2xs">
+                <div key={cat.category} className="bg-white/[0.04] p-2 rounded-lg border border-white/10 space-y-1 shadow-2xs">
                   <div className="flex justify-between font-medium items-start gap-2">
                     <span className="text-[#A8B5C9] flex items-center space-x-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ backgroundColor: cat.color_hex }} />
@@ -190,7 +190,7 @@ export const AnalyticsPanel: React.FC = () => {
 
         {/* Dynamic Gi* Cluster Stats (if active layer is gi_star) */}
         {activeLayer === 'gi_star' && giStarStats && (
-          <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-3.5 space-y-2.5 shadow-xs">
+          <div className="bg-white/[0.04] border border-white/10 rounded-xl p-3.5 space-y-2.5 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Getis-Ord Gi* Clusters</h4>
@@ -199,7 +199,7 @@ export const AnalyticsPanel: React.FC = () => {
             </div>
             <div className="space-y-1.5 text-xs">
               {giStarStats.clusters.map((cls) => (
-                <div key={cls.cluster_type} className="bg-[#0D1525] p-2 rounded-lg border border-[#26354A] space-y-1 shadow-2xs">
+                <div key={cls.cluster_type} className="bg-white/[0.04] p-2 rounded-lg border border-white/10 space-y-1 shadow-2xs">
                   <div className="flex justify-between font-medium">
                     <span className="text-[#A8B5C9] flex items-center space-x-1.5">
                       <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ backgroundColor: cls.color_hex }} />
@@ -221,7 +221,7 @@ export const AnalyticsPanel: React.FC = () => {
           const ndbiVal = modelInfo ? (modelInfo.feature_importances.NDBI * 100).toFixed(2) : "61.03";
           const ndviVal = modelInfo ? (modelInfo.feature_importances.NDVI * 100).toFixed(2) : "38.97";
           return (
-            <div className="bg-[#111C2E] border border-[#26354A] rounded-xl p-3.5 space-y-2.5 shadow-xs">
+            <div className="bg-white/[0.04] border border-white/10 rounded-xl p-3.5 space-y-2.5 shadow-xs">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold text-[#F5F7FB] uppercase tracking-wider">Gini Feature Attribution</h4>
                 <span className="text-[10px] font-mono text-[#8291A8] font-medium">Sum = 1.000</span>
@@ -235,7 +235,7 @@ export const AnalyticsPanel: React.FC = () => {
                     </span>
                     <span className="font-mono text-[#F5F7FB] font-bold">{ndbiVal}%</span>
                   </div>
-                  <div className="h-2 rounded-full bg-[#162238] overflow-hidden">
+                  <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                     <div className="h-full bg-purple-500 rounded-full transition-all" style={{ width: `${ndbiVal}%` }} />
                   </div>
                 </div>
@@ -247,7 +247,7 @@ export const AnalyticsPanel: React.FC = () => {
                     </span>
                     <span className="font-mono text-[#F5F7FB] font-bold">{ndviVal}%</span>
                   </div>
-                  <div className="h-2 rounded-full bg-[#162238] overflow-hidden">
+                  <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                     <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${ndviVal}%` }} />
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export const AnalyticsPanel: React.FC = () => {
         })()}
 
         {/* Integration Status Footer */}
-        <div className="p-3 bg-[#111C2E] rounded-xl border border-[#26354A] text-[11px] text-[#A8B5C9] space-y-1">
+        <div className="p-3 bg-white/[0.03] rounded-xl border border-white/10 text-[11px] text-[#A8B5C9] space-y-1">
           <div className="flex items-center space-x-1 text-[#19D3C5] font-semibold">
             <Info className="w-3.5 h-3.5 shrink-0 text-[#19D3C5]" />
             <span>Research Platform Status</span>

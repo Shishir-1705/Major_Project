@@ -168,10 +168,10 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
         ">
           <span style="width: 5px; height: 5px; border-radius: 50%; background-color: #19D3C5; display: inline-block;"></span>
           <span style="color: #F5F7FB; font-size: 10px; font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.05em; text-transform: uppercase;">
-            Mysuru Study Area
+            Mysuru Study Area Boundary
           </span>
           <span style="color: #8291A8; font-size: 9.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">
-            (132.1 km² Built Domain)
+            (135.25 km² Valid Analysis Domain)
           </span>
         </div>
       `,
@@ -181,11 +181,11 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
   }, []);
 
   return (
-    <main className={`relative flex-1 h-full w-full bg-[#080D18] overflow-hidden select-none ${className}`}>
+    <main className={`relative flex-1 h-full w-full bg-[#030611] rounded-2xl overflow-hidden border border-white/15 shadow-2xl select-none ${className}`}>
       <MapContainer
         center={MYSURU_CENTER}
         zoom={MYSURU_DEFAULT_ZOOM}
-        className="h-full w-full"
+        className="h-full w-full rounded-2xl overflow-hidden"
         zoomControl={true}
       >
         {/* CARTO Voyager Road-Oriented Geographic Base Map with Authenticated Tile URL */}
@@ -284,7 +284,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
           effectiveSidebarOpen ? 'top-3' : 'top-14'
         }`}
       >
-        <div className="bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs">
+        <div className="liquid-glass-chip px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs">
           <Crosshair className="w-3.5 h-3.5 text-[#19D3C5]" />
           <span className="text-[#8291A8] font-medium">Cursor:</span>
           {hoveredCoordinates ? (
@@ -296,7 +296,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
           )}
         </div>
 
-        <div className="bg-[#080D18]/90 border border-[#26354A] backdrop-blur-md px-3 py-1 rounded-xl shadow-card flex items-center space-x-2 text-[11px] font-mono text-[#A8B5C9]">
+        <div className="liquid-glass-chip px-3 py-1 rounded-xl shadow-card flex items-center space-x-2 text-[11px] font-mono text-[#A8B5C9]">
           <Globe className="w-3 h-3 text-[#8291A8]" />
           <span>CRS: <strong className="text-[#F5F7FB] font-bold">EPSG:32643 (UTM 43N)</strong></span>
         </div>
@@ -311,7 +311,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
       {/* API Error Banner with Retry Action if connection fails */}
       {apiError && !backendConnected && (
         <div className="absolute top-14 right-3 z-[1000] max-w-sm pointer-events-auto">
-          <div className="bg-[#080D18]/95 border border-[#26354A] text-[#F5F7FB] backdrop-blur-md p-3.5 rounded-xl shadow-card text-xs space-y-2">
+          <div className="liquid-glass-slab border-amber-500/40 text-[#F5F7FB] p-3.5 rounded-xl shadow-card text-xs space-y-2">
             <div className="flex items-center justify-between gap-2">
               <span className="font-bold text-amber-400 flex items-center space-x-1.5">
                 <AlertCircle className="w-3.5 h-3.5 shrink-0" />
@@ -320,7 +320,7 @@ export const MapWorkspace: React.FC<MapWorkspaceProps> = ({
               <button
                 onClick={() => fetchInitialData()}
                 disabled={isLoadingMetadata}
-                className="flex items-center space-x-1 text-[10.5px] font-semibold text-[#19D3C5] hover:text-[#39E4D5] bg-[#162238] px-2.5 py-1 rounded-lg border border-[#26354A] hover:border-[#19D3C5]/40 transition-colors disabled:opacity-50 cursor-pointer shadow-2xs"
+                className="flex items-center space-x-1 text-[10.5px] font-semibold text-[#19D3C5] hover:text-[#39E4D5] liquid-glass-chip px-2.5 py-1 rounded-lg border-white/15 hover:border-[#19D3C5]/40 transition-colors disabled:opacity-50 cursor-pointer shadow-2xs"
                 title="Retry backend connection"
                 aria-label="Retry backend connection"
               >

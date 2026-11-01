@@ -11,7 +11,7 @@ export const MapDisplayControls: React.FC<{ className?: string }> = ({ className
   } = useAppStore();
 
   return (
-    <div className={`p-3 rounded-xl border border-[#26354A] bg-[#0D1525] space-y-3 ${className}`}>
+    <div className={`p-3 rounded-xl liquid-glass-subtle space-y-3 ${className}`}>
       {/* Opacity Slider */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs">
@@ -30,13 +30,13 @@ export const MapDisplayControls: React.FC<{ className?: string }> = ({ className
           step="0.05"
           value={layerOpacity}
           onChange={(e) => setLayerOpacity(parseFloat(e.target.value))}
-          className="w-full h-1.5 bg-[#162238] rounded-lg appearance-none cursor-pointer accent-[#19D3C5]"
+          className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#19D3C5]"
           aria-label="Adjust map layer opacity"
         />
       </div>
 
       {/* AOI Boundary Switch */}
-      <div className="flex items-center justify-between pt-2 border-t border-[#26354A]">
+      <div className="flex items-center justify-between pt-2 border-t border-white/10">
         <span className="text-xs text-[#F5F7FB] font-medium flex items-center space-x-1.5">
           <MapPin className="w-3.5 h-3.5 text-[#19D3C5]" />
           <span>Mysuru AOI Boundary</span>
@@ -44,7 +44,7 @@ export const MapDisplayControls: React.FC<{ className?: string }> = ({ className
         <button
           onClick={() => setShowAOIBoundary(!showAOIBoundary)}
           className={`w-9 h-5 rounded-full transition-colors relative p-0.5 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden cursor-pointer ${
-            showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-[#162238] border border-[#26354A]'
+            showAOIBoundary ? 'bg-[#19D3C5]' : 'bg-white/10 border border-white/20'
           }`}
           role="switch"
           aria-checked={showAOIBoundary}

@@ -139,7 +139,7 @@ export const MapContextOverlay: React.FC = () => {
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full text-left bg-[#080D18]/95 border border-[#26354A] hover:border-[#19D3C5]/50 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden backdrop-blur-md px-3 py-1.5 rounded-xl shadow-card flex items-center space-x-2 text-xs cursor-pointer transition-all duration-150 group"
+        className="w-full text-left liquid-glass-chip hover:border-[#19D3C5]/50 focus-visible:ring-2 focus-visible:ring-[#19D3C5] focus-visible:outline-hidden px-3 py-1.5 rounded-xl flex items-center space-x-2 text-xs cursor-pointer transition-all duration-150 group"
         aria-expanded={isExpanded}
         aria-label="Toggle active map analysis details"
       >
@@ -176,9 +176,9 @@ export const MapContextOverlay: React.FC = () => {
 
       {/* Expanded Scientific Context Panel */}
       {isExpanded && (
-        <div className="mt-1.5 bg-[#0D1525]/95 border border-[#26354A] backdrop-blur-md rounded-xl p-3 shadow-floating text-xs space-y-2 animate-in fade-in slide-in-from-top-1 duration-150">
+        <div className="mt-1.5 liquid-glass-slab rounded-xl p-3 shadow-floating text-xs space-y-2 animate-in fade-in slide-in-from-top-1 duration-150">
           {/* Header Row */}
-          <div className="flex items-start justify-between border-b border-[#26354A]/60 pb-2">
+          <div className="flex items-start justify-between border-b border-white/10 pb-2">
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-[#19D3C5]">
                 {details.badgeText}
@@ -190,7 +190,7 @@ export const MapContextOverlay: React.FC = () => {
                 {details.subtitle}
               </p>
             </div>
-            <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#162238] border border-[#26354A] text-[#A8B5C9] shrink-0">
+            <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded liquid-glass-chip text-[#A8B5C9] shrink-0">
               {details.platform}
             </span>
           </div>
@@ -202,22 +202,22 @@ export const MapContextOverlay: React.FC = () => {
 
           {/* Context Details Grid */}
           <div className="grid grid-cols-2 gap-1.5 text-[10px] pt-1">
-            <div className="bg-[#111C2E] p-1.5 rounded-lg border border-[#26354A]">
+            <div className="bg-white/[0.04] p-1.5 rounded-lg border border-white/10">
               <span className="text-[#8291A8] block">Analytical Scope</span>
               <span className="text-[#F5F7FB] font-medium block leading-tight break-words text-[10.5px]" title={details.scope}>
                 {details.scope}
               </span>
             </div>
-            <div className="bg-[#111C2E] p-1.5 rounded-lg border border-[#26354A]">
+            <div className="bg-white/[0.04] p-1.5 rounded-lg border border-white/10">
               <span className="text-[#8291A8] block">Study Domain</span>
               <span className="text-[#19D3C5] font-medium block leading-tight break-words text-[10.5px]">
-                Mysuru AOI (132.1 km² Built Domain)
+                Mysuru AOI (135.25 km² Valid Analysis Domain)
               </span>
             </div>
           </div>
 
           {/* Footer Temporal Stamp */}
-          <div className="flex items-center justify-between pt-1 border-t border-[#26354A]/60 text-[10px] text-[#8291A8]">
+          <div className="flex items-center justify-between pt-1 border-t border-white/10 text-[10px] text-[#8291A8]">
             <span className="flex items-center space-x-1">
               <Calendar className="w-3 h-3 text-[#19D3C5]" />
               <span className="font-mono text-[#F5F7FB]">{details.temporal}</span>
